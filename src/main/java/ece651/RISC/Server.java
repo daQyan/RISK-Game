@@ -7,18 +7,24 @@ public class Server {
     //should implement sockets here
     private ArrayList<Player> players;
     private Map myMap;
-
     private ArrayList<MoveAction> moveActions;
     private ArrayList<AttackAction> attackActions;
 
+    public Server(ArrayList<Player> players, Map myMap, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
+        this.players = players;
+        this.myMap = myMap;
+        this.moveActions = moveActions;
+        this.attackActions = attackActions;
+    }
 
-    public void addMoves(Territory sourceTerritory, Territory targetTerritory, int hitUnits) {
+
+    public void addMove(Territory sourceTerritory, Territory targetTerritory, int hitUnits) {
         // check hitUnits valid
         MoveAction move = new MoveAction(sourceTerritory, targetTerritory, hitUnits);
         moveActions.add(move);
     }
 
-    public void addAttacks(Territory sourceTerritory, Territory targetTerritory, int hitUnits) {
+    public void addAttack(Territory sourceTerritory, Territory targetTerritory, int hitUnits) {
         // check hitUnits valid
         AttackAction attack = new AttackAction(sourceTerritory, targetTerritory, hitUnits);
         attackActions.add(attack);

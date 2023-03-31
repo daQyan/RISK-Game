@@ -9,12 +9,14 @@ public class Territory {
     private Player owner;
     private int numUnits;
     private Set<Territory> adjacents;
+    private Set<Territory> accessibles;
 
-    public Territory(String name, Player owner, int numUnits, Set<Territory> adjacents) {
+    public Territory(String name, Player owner, int numUnits, Set<Territory> adjacents, Set<Territory> accessibles) {
         this.name = name;
         this.owner = owner;
         this.numUnits = numUnits;
         this.adjacents = adjacents;
+        this.accessibles = accessibles;
     }
 
 
@@ -28,7 +30,9 @@ public class Territory {
     }
 
 
-
+    public Set<Territory> getAccessibls(){
+        return accessibles;
+    }
     //update numUnits
 
     public void updateUnits(int unitChanged) {
