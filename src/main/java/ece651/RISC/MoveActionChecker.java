@@ -1,9 +1,6 @@
 package ece651.RISC;
 
 public class MoveActionChecker<T> extends ActionChecker<T> {
-    public MoveActionChecker(ActionChecker<T> next) {
-        super(next);
-    }
     @Override
     protected String checkMyRule(Territory sourceTerritory, Territory targetTerritory, int Units) {
         //if the soldiers the player tries to move exceed the existing number, return error message

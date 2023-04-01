@@ -1,11 +1,6 @@
 package ece651.RISC;
 
 public class AttackActionChecker<T> extends ActionChecker<T> {
-
-    public AttackActionChecker(ActionChecker<T> next) {
-        super(next);
-    }
-
     @Override
     protected String checkMyRule(Territory sourceTerritory, Territory targetTerritory, int Units) {
         //if the attacking units are larger than the source territory's units, return error message
