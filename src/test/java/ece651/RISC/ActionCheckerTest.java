@@ -2,6 +2,8 @@ package ece651.RISC;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.ArrayList;
 
 public class ActionCheckerTest {
@@ -19,7 +21,9 @@ public class ActionCheckerTest {
     }
     @Test
     public void testMoveRule(){
-
+        ArrayList<Territory> temp = createTestHelper();
+        MoveAction mv1 = new MoveAction(temp.get(0), temp.get(1), 1);
+        assertEquals();
 
     }
     @Test

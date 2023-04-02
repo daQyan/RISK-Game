@@ -1,8 +1,6 @@
 package ece651.RISC;
 
 public class MoveAction extends Action {
-
-
     public MoveAction(Territory sourceTerritory, Territory targetTerritory, int hitUnits) {
         super(sourceTerritory, targetTerritory, hitUnits);
     }
@@ -10,9 +8,13 @@ public class MoveAction extends Action {
     /**
      * move the units from one territory to the target one
      */
-    public void moveTerritory() {
+    public String moveTerritory() {
         // check adjacent and owned
-        sourceTerritory.updateUnits(-hitUnits);
-        targetTerritory.updateUnits(hitUnits);
+        String checkMove = myAC.checkAttackRule(this.sourceTerritory, this.targetTerritory, hitUnits);
+        if(checkMove == null){
+            sourceTerritory.updateUnits(-hitUnits);
+            targetTerritory.updateUnits(hitUnits);
+        }
+        return checkMove;
     }
 }

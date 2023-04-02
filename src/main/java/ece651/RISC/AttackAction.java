@@ -9,9 +9,13 @@ public class AttackAction extends Action {
     /**
      * attack the territory from the chosen territory
      */
-    public void attackTerritory() {
+    public String attackTerritory() {
         // check adjacent and not owned
-        sourceTerritory.updateUnits(-hitUnits);
-        targetTerritory.updateUnits(hitUnits);
+        String checkAttack = myAC.checkAttackRule(this.sourceTerritory, this.targetTerritory, hitUnits);
+        if(checkAttack == null){
+            sourceTerritory.updateUnits(-hitUnits);
+            targetTerritory.updateUnits(hitUnits);
+        }
+        return checkAttack;
     }
 }
