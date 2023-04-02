@@ -21,7 +21,6 @@ public class Game {
         // check moveUnits valid
         MoveAction move = new MoveAction(sourceTerritory, targetTerritory, moveUnits);
         moveActions.add(move);
-
     }
 
     public void addAttack(Territory sourceTerritory, Territory targetTerritory, int hitUnits) {
@@ -33,23 +32,34 @@ public class Game {
     /**
      * do all the move action in the list
      */
-    public void parseMoves() {
+    public void executeMoves() {
         for (MoveAction move: moveActions) {
             move.moveTerritory();
         }
     }
 
-    public void parseAttacks() {
+    public void executeAttacks() {
         for (AttackAction attack: attackActions) {
             attack.attackTerritory();
-//            if (checkOwnership(attack.targetTerritory)){
-//                updateOwnership(attack.targetTerritory);
-//
-//            }
-
         }
     }
 
+    public void checkStatus(){
+        for(Player p : players){
+            if(p.getMyTerritory().isEmpty()){
+                p.changeStatus(PlayerStatus.status.LOSE);
+            }
+            if(p.getMyTerritory().size() == myMap.getMapSize()){
+                p.changeStatus(PlayerStatus.status.WIN);
+            }
+        }
+    }
+    public void playOneTurn(){
+        executeMoves();
+        executeAttacks();
+        checkStatus();
+
+    }
 
 
 
