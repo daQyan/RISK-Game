@@ -21,6 +21,7 @@ public class Game {
         // check moveUnits valid
         MoveAction move = new MoveAction(sourceTerritory, targetTerritory, moveUnits);
         moveActions.add(move);
+
     }
 
     public void addAttack(Territory sourceTerritory, Territory targetTerritory, int hitUnits) {
@@ -40,6 +41,12 @@ public class Game {
 
     public void executeAttacks() {
         for (AttackAction attack: attackActions) {
+            String result = attack.attackTerritory();
+            if (result == "Owner Changed") {
+                int newUnits = -attack.targetTerritory.getUnit();
+                attack.targetTerritory.changeOwner(newUnits, attack.sourceTerritory.getOwner());
+                // let player update its territory later
+            }
             attack.attackTerritory();
         }
     }

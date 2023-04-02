@@ -2,8 +2,10 @@ package ece651.RISC;
 
 public class AttackAction extends Action {
 
+    private Player attacker;
     public AttackAction(Territory sourceTerritory, Territory targetTerritory, int hitUnits) {
         super(sourceTerritory, targetTerritory, hitUnits);
+        attacker = sourceTerritory.getOwner();
     }
 
     /**
@@ -11,11 +13,19 @@ public class AttackAction extends Action {
      */
     public String attackTerritory() {
         // check adjacent and not owned
-        String checkAttack = myAC.checkAttackRule(this.sourceTerritory, this.targetTerritory, hitUnits);
-        if(checkAttack == null){
-            sourceTerritory.updateUnits(-hitUnits);
-            targetTerritory.updateUnits(hitUnits);
+        // see if the owner is changed
+        if (sourceTerritory.getOwner() == attacker) {
+            String checkAttack = myAC.checkAttackRule(this.sourceTerritory, this.targetTerritory, hitUnits);
+            if(checkAttack == null){
+                sourceTerritory.updateUnits(-hitUnits);
+                targetTerritory.updateUnits(hitUnits);
+            }
+
+            if (targetTerritory.getUnit() < 0) {
+                checkAttack = "Owner Changed";
+            }
+            return checkAttack;
         }
-        return checkAttack;
+        return "Attack failed because of owner switch!";
     }
 }
