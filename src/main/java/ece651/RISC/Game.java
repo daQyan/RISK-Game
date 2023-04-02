@@ -8,26 +8,31 @@ public class Game {
     private Map myMap;
     private ArrayList<MoveAction> moveActions;
     private ArrayList<AttackAction> attackActions;
+    private ActionChecker myAC;
 
     public Game(ArrayList<Player> players, Map myMap, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
         this.players = players;
         this.myMap = myMap;
         this.moveActions = moveActions;
         this.attackActions = attackActions;
+        this.myAC = new ActionChecker();
     }
 
 
-    public void addMove(Territory sourceTerritory, Territory targetTerritory, int hitUnits) {
-        // check hitUnits valid
-
-        MoveAction move = new MoveAction(sourceTerritory, targetTerritory, hitUnits);
-        moveActions.add(move);
+    public void addMove(Territory sourceTerritory, Territory targetTerritory, int moveUnits) {
+        // check moveUnits valid
+        if(myAC.checkMoveRule(sourceTerritory, targetTerritory, moveUnits) == null){
+            MoveAction move = new MoveAction(sourceTerritory, targetTerritory, moveUnits);
+            moveActions.add(move);
+        }
     }
 
     public void addAttack(Territory sourceTerritory, Territory targetTerritory, int hitUnits) {
         // check hitUnits valid
-        AttackAction attack = new AttackAction(sourceTerritory, targetTerritory, hitUnits);
-        attackActions.add(attack);
+        if(myAC.checkAttackRule(sourceTerritory, targetTerritory, hitUnits) == null){
+            AttackAction attack = new AttackAction(sourceTerritory, targetTerritory, hitUnits);
+            attackActions.add(attack);
+        }
     }
 
     /**

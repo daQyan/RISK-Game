@@ -5,8 +5,11 @@ import java.util.ArrayList;
 
 public class Server {
     //should implement sockets here
+    private Game game;
 
-    Game game;
+//    public Server(){
+//        this.game = new Game();
+//    }
 
 
 
