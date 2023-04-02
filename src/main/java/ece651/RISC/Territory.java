@@ -33,6 +33,10 @@ public class Territory {
     public Set<Territory> getAccessibls(){
         return accessibles;
     }
+
+    public void addAccessible(Territory accessible) {
+        this.accessibles.add(accessible);
+    }
     //update numUnits
 
     public void updateUnits(int unitChanged) {
@@ -43,6 +47,8 @@ public class Territory {
     public String getName() {
         return name;
     }
+
+    public Player getOwner(){ return owner; }
 
     public int getUnit() {
         return numUnits;

@@ -1,8 +1,6 @@
 package ece651.RISC;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Map {
     private Set<Territory> Areas;
@@ -11,6 +9,7 @@ public class Map {
         Areas = areas;
     }
 
+    //only for 3 players
     private Set<Territory> createTerritory(){
         Set<Territory> myTerritories = new HashSet<>();
         Territory Narnia = new Territory("Narnia", null, 0, null, null);
@@ -69,9 +68,40 @@ public class Map {
     public Map(int numPlayers){
         if(numPlayers == 3){
             this.Areas = createTerritory();
-
         }
+    }
 
+    //for every turn, update the accessible territories for all the territory
+    public void updateAccessible(){
+        for(Territory t : Areas){
+            Player p = t.getOwner();
+            Queue<Territory> next = new LinkedList<>();
+            for(Territory n : t.getAdjacents()){
+                if(n.getOwner().equals(p)){
+                    next.add(n);
+                }
+            }
+            searchAccessible(p, t, next);
+        }
+    }
+
+    //helper function to search every accessible territory
+    public void searchAccessible(Player owner, Territory t, Queue<Territory> next){
+        if(next.isEmpty()){
+            return;
+        }
+        while(!next.isEmpty()){
+            Territory temp = next.peek();
+            t.addAccessible(temp);
+            if(temp.getOwner().equals(owner)){
+                for(Territory i : temp.getAdjacents()){
+                    if(i.getOwner().equals(owner)) {
+                        next.add(i);
+                    }
+                }
+            }
+            next.poll();
+        }
     }
 
 }
