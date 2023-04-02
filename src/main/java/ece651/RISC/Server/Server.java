@@ -1,7 +1,4 @@
-package ece651.RISC;
-
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
-import java.util.ArrayList;
+package ece651.RISC.Server;
 
 public class Server {
     //should implement sockets here

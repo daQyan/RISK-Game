@@ -1,8 +1,8 @@
-package ece651.RISC;
+package ece651.RISC.shared;
 
 public class Action {
-    protected Territory sourceTerritory;
-    protected Territory targetTerritory;
+    public Territory sourceTerritory;
+    public Territory targetTerritory;
     protected int hitUnits;
     protected ActionChecker myAC;
 

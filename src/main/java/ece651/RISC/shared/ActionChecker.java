@@ -1,4 +1,4 @@
-package ece651.RISC;
+package ece651.RISC.shared;
 
 public class ActionChecker {
     public String checkAttackRule(Territory sourceTerritory, Territory targetTerritory, int Units) {

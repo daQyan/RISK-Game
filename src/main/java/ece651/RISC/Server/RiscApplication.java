@@ -1,4 +1,4 @@
-package ece651.RISC;
+package ece651.RISC.Server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

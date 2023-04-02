@@ -1,4 +1,7 @@
-package ece651.RISC;
+package ece651.RISC.Server;
+
+import ece651.RISC.shared.Map;
+import ece651.RISC.shared.Territory;
 
 import java.util.ArrayList;
 
