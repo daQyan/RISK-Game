@@ -33,20 +33,20 @@ public class Game {
     /**
      * do all the move action in the list
      */
-    public void parseMoves() {
+    public void executeMoves() {
         for (MoveAction move: moveActions) {
             move.moveTerritory();
         }
     }
 
-    public void parseAttacks() {
+    public void executeAttacks() {
         for (AttackAction attack: attackActions) {
-            attack.attackTerritory();
-//            if (checkOwnership(attack.targetTerritory)){
-//                updateOwnership(attack.targetTerritory);
-//
-//            }
-
+            String result = attack.attackTerritory();
+            if (result == "Owner Changed") {
+                int newUnits = -attack.targetTerritory.getUnit();
+                attack.targetTerritory.changeOwner(newUnits, attack.sourceTerritory.getOwner());
+                // let player update its territory later
+            }
         }
     }
 

@@ -20,6 +20,12 @@ public class Territory {
     }
 
 
+    public void changeOwner(int newUnits, Player newOwner) {
+        owner = newOwner;
+        numUnits = newUnits;
+    }
+
+
     public Set<Territory> getAdjacents() {
         return adjacents;
     }
@@ -40,7 +46,7 @@ public class Territory {
     //update numUnits
 
     public void updateUnits(int unitChanged) {
-        this.numUnits = numUnits + unitChanged;
+        numUnits += unitChanged;
     }
 
 
