@@ -10,7 +10,7 @@ public class MoveAction extends Action {
      */
     public String moveTerritory() {
         // check adjacent and owned
-        String checkMove = myAC.checkAttackRule(this.sourceTerritory, this.targetTerritory, hitUnits);
+        String checkMove = myAC.checkMoveRule(this.sourceTerritory, this.targetTerritory, hitUnits);
         if(checkMove == null){
             sourceTerritory.updateUnits(-hitUnits);
             targetTerritory.updateUnits(hitUnits);
