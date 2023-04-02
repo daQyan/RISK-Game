@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Player {
     //should implement socket here
+    Game game;
     private int name;
     private ArrayList<Territory> myTerritory;
 
