@@ -75,7 +75,9 @@ public class Game {
     }
 
     public void playGame(){
-        //initialize the game
+        //initialize the game with players
+
+        //play the game until having a winner
         while(!this.myStatus.equals(Status.gameStatus.FINISHED)){
             playOneTurn();
         }
