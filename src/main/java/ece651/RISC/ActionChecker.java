@@ -3,8 +3,11 @@ package ece651.RISC;
 public class ActionChecker {
     public String checkAttackRule(Player owner, Territory sourceTerritory, Territory targetTerritory, int Units) {
         //if the attacking units are larger than the source territory's units, return error message
-        if(Units > sourceTerritory.getUnit()){
-            return("The attack action is invalid: there's not enough soldier in " + sourceTerritory.getName() +" to deploy!");
+        if(Units > sourceTerritory.getUnit()) {
+            return ("The attack action is invalid: there's not enough soldier in " + sourceTerritory.getName() + " to deploy!");
+        }
+        else if(Units < 0){
+            return("The attack action is invalid: you should at least deploy 1 soldier to attack!");
         }
         //if there's no valid path from the source territory to the target territory, return error message
         else if(!sourceTerritory.getAdjacents().contains(targetTerritory)){
@@ -16,7 +19,7 @@ public class ActionChecker {
         }
         // if the owner of the territory is changed
         else if(! sourceTerritory.getOwner().equals(owner)) {
-            return ("Attack failed because of owner switch!");
+            return ("The attack action is invalid: attack failed because owner of the source territory has changed!");
         }
         return null;
     }
