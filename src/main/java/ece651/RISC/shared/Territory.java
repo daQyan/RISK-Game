@@ -1,6 +1,7 @@
-package ece651.RISC;
+package ece651.RISC.shared;
 
-import java.util.ArrayList;
+import ece651.RISC.Server.Player;
+
 import java.util.Iterator;
 import java.util.Set;
 

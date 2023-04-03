@@ -1,4 +1,9 @@
-package ece651.RISC;
+package ece651.RISC.Server;
+
+import ece651.RISC.Combat;
+import ece651.RISC.Status;
+import ece651.RISC.shared.Action;
+import ece651.RISC.shared.Territory;
 
 public class AttackAction extends Action {
     private Combat myCombat;

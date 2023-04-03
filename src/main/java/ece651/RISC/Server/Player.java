@@ -1,4 +1,8 @@
-package ece651.RISC;
+package ece651.RISC.Server;
+
+import ece651.RISC.Server.Game;
+import ece651.RISC.Status;
+import ece651.RISC.shared.Territory;
 
 import java.util.ArrayList;
 import java.util.Set;

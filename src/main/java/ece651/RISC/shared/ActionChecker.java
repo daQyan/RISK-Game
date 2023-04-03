@@ -1,4 +1,6 @@
-package ece651.RISC;
+package ece651.RISC.shared;
+
+import ece651.RISC.Server.Player;
 
 public class ActionChecker {
     public String checkAttackRule(Player owner, Territory sourceTerritory, Territory targetTerritory, int Units) {

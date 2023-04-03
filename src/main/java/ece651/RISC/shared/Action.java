@@ -1,8 +1,11 @@
-package ece651.RISC;
+package ece651.RISC.shared;
+
+import ece651.RISC.Server.Player;
+import ece651.RISC.Status;
 
 public abstract class Action {
-    protected Territory sourceTerritory;
-    protected Territory targetTerritory;
+    public Territory sourceTerritory;
+    public Territory targetTerritory;
     protected int hitUnits;
     protected ActionChecker myAC;
     protected Status.actionStatus type;
