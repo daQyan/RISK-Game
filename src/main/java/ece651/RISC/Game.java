@@ -19,14 +19,14 @@ public class Game {
 
     public void addMove(Territory sourceTerritory, Territory targetTerritory, int moveUnits) {
         // check moveUnits valid
-        MoveAction move = new MoveAction(sourceTerritory, targetTerritory, moveUnits);
+        MoveAction move = new MoveAction(sourceTerritory, targetTerritory, moveUnits, Status.actionStatus.MOVE, sourceTerritory.getOwner());
         moveActions.add(move);
 
     }
 
     public void addAttack(Territory sourceTerritory, Territory targetTerritory, int hitUnits) {
         // check hitUnits valid
-        AttackAction attack = new AttackAction(sourceTerritory, targetTerritory, hitUnits);
+        AttackAction attack = new AttackAction(sourceTerritory, targetTerritory, hitUnits, Status.actionStatus.ATTACK, sourceTerritory.getOwner());
         attackActions.add(attack);
     }
 
@@ -54,18 +54,18 @@ public class Game {
     public void checkStatus(){
         for(Player p : players){
             if(p.getMyTerritory().isEmpty()){
-                p.changeStatus(PlayerStatus.status.LOSE);
+                p.changeStatus(Status.playerStatus.LOSE);
             }
             if(p.getMyTerritory().size() == myMap.getMapSize()){
-                p.changeStatus(PlayerStatus.status.WIN);
+                p.changeStatus(Status.playerStatus.WIN);
             }
         }
     }
+
     public void playOneTurn(){
         executeMoves();
         executeAttacks();
         checkStatus();
-
     }
 
 

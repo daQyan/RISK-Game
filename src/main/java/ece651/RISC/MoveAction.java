@@ -1,7 +1,7 @@
 package ece651.RISC;
 
 public class MoveAction extends Action {
-    public MoveAction(Territory sourceTerritory, Territory targetTerritory, int hitUnits, String type, Player owner) {
+    public MoveAction(Territory sourceTerritory, Territory targetTerritory, int hitUnits, Status.actionStatus type, Player owner) {
         super(sourceTerritory, targetTerritory, hitUnits, type, owner);
     }
 

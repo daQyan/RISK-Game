@@ -5,10 +5,10 @@ public abstract class Action {
     protected Territory targetTerritory;
     protected int hitUnits;
     protected ActionChecker myAC;
-    protected String type;
+    protected Status.actionStatus type;
     protected Player owner;
 
-    public Action(Territory sourceTerritory, Territory targetTerritory, int hitUnits, String type, Player owner) {
+    public Action(Territory sourceTerritory, Territory targetTerritory, int hitUnits, Status.actionStatus type, Player owner) {
         this.sourceTerritory = sourceTerritory;
         this.targetTerritory = targetTerritory;
         this.hitUnits = hitUnits;

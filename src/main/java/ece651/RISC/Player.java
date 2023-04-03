@@ -7,14 +7,14 @@ public class Player {
     //should implement socket here
     Game game;
     private int name;
-    private PlayerStatus.status myStatus;
+    private Status.playerStatus myStatus;
 
     private Set<Territory> myTerritory;
 
     public Player(int name, Set<Territory> myTerritory) {
         this.name = name;
         this.myTerritory = myTerritory;
-        this.myStatus = PlayerStatus.status.PLAYING;
+        this.myStatus = Status.playerStatus.PLAYING;
     }
 
     public Set<Territory> getMyTerritory() {
@@ -25,7 +25,7 @@ public class Player {
         return name;
     }
 
-    public void changeStatus(PlayerStatus.status s){
+    public void changeStatus(Status.playerStatus s){
         myStatus = s;
     }
 
