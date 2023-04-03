@@ -2,6 +2,7 @@ package ece651.RISC.Client;
 
 import ece651.RISC.shared.Action;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Client {
@@ -19,9 +20,9 @@ public class Client {
         // TODO
     }
 
-    public void oneRound() {
+    public void oneRound() throws IOException {
         ArrayList<Action> actions = new ArrayList<>();
-        player.oneRound(actions);
+        player.doOneTurn(actions);
         // send actions to server
     }
 
