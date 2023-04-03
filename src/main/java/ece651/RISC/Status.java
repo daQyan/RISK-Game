@@ -10,4 +10,8 @@ public class Status {
         MOVE,
         ATTACK
     }
+    public enum gameStatus{
+        PLAYING,
+        FINISHED
+    }
 }

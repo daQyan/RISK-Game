@@ -8,12 +8,14 @@ public class Game {
     private Map myMap;
     private ArrayList<MoveAction> moveActions;
     private ArrayList<AttackAction> attackActions;
+    private Status.gameStatus myStatus;
 
     public Game(ArrayList<Player> players, Map myMap, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
         this.players = players;
         this.myMap = myMap;
         this.moveActions = moveActions;
         this.attackActions = attackActions;
+        this.myStatus = Status.gameStatus.PLAYING;
     }
 
 
@@ -58,14 +60,25 @@ public class Game {
             }
             if(p.getMyTerritory().size() == myMap.getMapSize()){
                 p.changeStatus(Status.playerStatus.WIN);
+                this.myStatus = Status.gameStatus.FINISHED;
             }
         }
     }
-
+    //play one turn of the game
     public void playOneTurn(){
         executeMoves();
         executeAttacks();
         checkStatus();
+        if(this.myStatus.equals(Status.gameStatus.FINISHED)){
+
+        }
+    }
+
+    public void playGame(){
+        //initialize the game
+        while(!this.myStatus.equals(Status.gameStatus.FINISHED)){
+            playOneTurn();
+        }
     }
 
 

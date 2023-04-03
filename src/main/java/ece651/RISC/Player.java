@@ -10,6 +10,8 @@ public class Player {
     private Status.playerStatus myStatus;
 
     private Set<Territory> myTerritory;
+    private ArrayList<MoveAction> myMoveOrder;
+    private ArrayList<AttackAction> myAttackOrder;
 
     public Player(String name, Set<Territory> myTerritory) {
         this.name = name;
@@ -29,6 +31,9 @@ public class Player {
         myStatus = s;
     }
 
+    public void parseMoveAction(String order){
+
+    }
     // checkIsMyTerritory
 
 }
