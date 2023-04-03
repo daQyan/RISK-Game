@@ -14,15 +14,15 @@ public class Map {
     //only for 3 players
     private Set<Territory> createTerritory(){
         Set<Territory> myTerritories = new HashSet<>();
-        Territory Narnia = new Territory("Narnia", null, 0, null, null);
-        Territory Midkemia = new Territory("Midkemia", null, 0, null, null);
-        Territory Oz = new Territory("Oz", null, 0, null, null);
-        Territory Gondor = new Territory("Gondor", null, 0, null, null);
-        Territory Mordor = new Territory("Mordor", null, 0, null, null);
-        Territory Hogwarts = new Territory("Hogwarts", null, 0, null, null);
-        Territory Elantris = new Territory("Elantris", null, 0, null, null);
-        Territory Scadrial = new Territory("Scadrial", null, 0, null, null);
-        Territory Roshar = new Territory("Roshar", null, 0, null, null);
+        Territory Narnia = new Territory(0, "Narnia", null, 0, null, null);
+        Territory Midkemia = new Territory(1, "Midkemia", null, 0, null, null);
+        Territory Oz = new Territory(2, "Oz", null, 0, null, null);
+        Territory Gondor = new Territory(3, "Gondor", null, 0, null, null);
+        Territory Mordor = new Territory(4, "Mordor", null, 0, null, null);
+        Territory Hogwarts = new Territory(5, "Hogwarts", null, 0, null, null);
+        Territory Elantris = new Territory(6, "Elantris", null, 0, null, null);
+        Territory Scadrial = new Territory(7, "Scadrial", null, 0, null, null);
+        Territory Roshar = new Territory(8, "Roshar", null, 0, null, null);
 
         Narnia.addAdjacent(Midkemia);
         Narnia.addAdjacent(Elantris);
