@@ -6,12 +6,12 @@ import java.util.Set;
 public class Player {
     //should implement socket here
     Game game;
-    private int name;
+    private final String name;
     private Status.playerStatus myStatus;
 
     private Set<Territory> myTerritory;
 
-    public Player(int name, Set<Territory> myTerritory) {
+    public Player(String name, Set<Territory> myTerritory) {
         this.name = name;
         this.myTerritory = myTerritory;
         this.myStatus = Status.playerStatus.PLAYING;
@@ -21,7 +21,7 @@ public class Player {
         return myTerritory;
     }
 
-    public int getName() {
+    public String getName() {
         return name;
     }
 
