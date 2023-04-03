@@ -1,35 +1,37 @@
 package ece651.RISC.Server;
 
-import ece651.RISC.Server.Player;
+import ece651.RISC.Combat;
+import ece651.RISC.Status;
 import ece651.RISC.shared.Action;
 import ece651.RISC.shared.Territory;
 
 public class AttackAction extends Action {
-
-    private Player attacker;
-    public AttackAction(Territory sourceTerritory, Territory targetTerritory, int hitUnits) {
-        super(sourceTerritory, targetTerritory, hitUnits);
-        attacker = sourceTerritory.getOwner();
+    private Combat myCombat;
+    public AttackAction(Territory sourceTerritory, Territory targetTerritory, int hitUnits, Status.actionStatus type, Player owner) {
+        super(sourceTerritory, targetTerritory, hitUnits, type, owner);
     }
 
     /**
      * attack the territory from the chosen territory
      */
     public String attackTerritory() {
-        // check adjacent and not owned
-        // see if the owner is changed
-        if (sourceTerritory.getOwner() == attacker) {
-            String checkAttack = myAC.checkAttackRule(this.sourceTerritory, this.targetTerritory, hitUnits);
-            if(checkAttack == null){
-                sourceTerritory.updateUnits(-hitUnits);
-                targetTerritory.updateUnits(hitUnits);
+        String checkAttack = myAC.checkAttackRule(this.owner, this.sourceTerritory, this.targetTerritory, hitUnits);
+        if(checkAttack == null){
+            while(hitUnits > 0 && targetTerritory.getUnit() >= 0){
+                if(myCombat.rollCombatDice() == true){
+                    targetTerritory.updateUnits(-1);
+                }
+                else{
+                    --hitUnits;
+                    sourceTerritory.updateUnits(-1);
+                }
             }
-
+            // if the attack wins
             if (targetTerritory.getUnit() < 0) {
-                checkAttack = "Owner Changed";
+                targetTerritory.changeOwner(hitUnits, this.owner);
+                checkAttack = this.owner.getName() + " has taken over " + targetTerritory.getName() + "!";
             }
-            return checkAttack;
         }
-        return "Attack failed because of owner switch!";
+        return checkAttack;
     }
 }

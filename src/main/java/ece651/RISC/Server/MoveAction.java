@@ -1,11 +1,12 @@
 package ece651.RISC.Server;
 
+import ece651.RISC.Status;
 import ece651.RISC.shared.Action;
 import ece651.RISC.shared.Territory;
 
 public class MoveAction extends Action {
-    public MoveAction(Territory sourceTerritory, Territory targetTerritory, int hitUnits) {
-        super(sourceTerritory, targetTerritory, hitUnits);
+    public MoveAction(Territory sourceTerritory, Territory targetTerritory, int hitUnits, Status.actionStatus type, Player owner) {
+        super(sourceTerritory, targetTerritory, hitUnits, type, owner);
     }
 
     /**
@@ -13,7 +14,7 @@ public class MoveAction extends Action {
      */
     public String moveTerritory() {
         // check adjacent and owned
-        String checkMove = myAC.checkMoveRule(this.sourceTerritory, this.targetTerritory, hitUnits);
+        String checkMove = myAC.checkMoveRule(this.owner, this.sourceTerritory, this.targetTerritory, hitUnits);
         if(checkMove == null){
             sourceTerritory.updateUnits(-hitUnits);
             targetTerritory.updateUnits(hitUnits);
