@@ -14,6 +14,12 @@ import static java.lang.System.out;
 
 public class Player {
     //should implement socket here
+    private final int id;
+
+    public int getId() {
+        return id;
+    }
+
     private String name;
     private Status.playerStatus myStatus;
     private Set<Territory> myTerritory;
@@ -24,7 +30,8 @@ public class Player {
     private PrintStream out;
 
 
-    public Player(String name, Set<Territory> myTerritory) {
+    public Player(int id, String name, Set<Territory> myTerritory) {
+        this.id = id;
         this.name = name;
         this.myTerritory = myTerritory;
         this.myStatus = Status.playerStatus.PLAYING;

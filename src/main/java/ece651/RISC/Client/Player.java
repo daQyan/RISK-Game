@@ -17,7 +17,7 @@ public class Player {
         this.myMap = myMap;
     }
 
-    private ArrayList<Terriory> myTerriories;
+    private ArrayList<Territory> myTerriories;
 
     final BufferedReader inputReader;
     final PrintStream out;
@@ -30,7 +30,7 @@ public class Player {
         this.myTerriories = new ArrayList<>();
     }
 
-    public void addTerriories(Terriory t){
+    public void addTerriories(Territory t){
         myTerriories.add(t);
     }
 
@@ -38,7 +38,7 @@ public class Player {
     public String toString() {
         String res = name + ":" + System.lineSeparator() +
                 "-------------" + System.lineSeparator();
-        for(Terriory t: myTerriories){
+        for(Territory t: myTerriories){
             res += (t.toString() + System.lineSeparator());
         }
         return res;
@@ -74,5 +74,9 @@ public class Player {
                 out.println("Invalid input, please input again");
                 doOneTurn(actions);
         }
+    }
+
+    public String toJSON(){
+        return name;
     }
 }
