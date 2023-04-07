@@ -2,20 +2,21 @@ package ece651.RISC.Server;
 
 import ece651.RISC.Status;
 import ece651.RISC.shared.GameMap;
+import ece651.RISC.shared.Player;
 import ece651.RISC.shared.Territory;
 
 import java.util.ArrayList;
 
 public class Game {
 
-    private ArrayList<Player> players;
+    private ArrayList<ServerPlayer> serverPlayers;
     private GameMap myMap;
     private ArrayList<MoveAction> moveActions;
     private ArrayList<AttackAction> attackActions;
     private Status.gameStatus myStatus;
 
-    public Game(ArrayList<Player> players, GameMap myMap, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
-        this.players = players;
+    public Game(ArrayList<ServerPlayer> serverPlayers, GameMap myMap, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
+        this.serverPlayers = serverPlayers;
         this.myMap = myMap;
         this.moveActions = moveActions;
         this.attackActions = attackActions;
@@ -49,8 +50,9 @@ public class Game {
         for (AttackAction attack: attackActions) {
             String result = attack.attackTerritory();
             if (result == "Owner Changed") {
-                int newUnits = -attack.targetTerritory.getUnit();
-                attack.targetTerritory.changeOwner(newUnits, attack.sourceTerritory.getOwner());
+                int newUnits = -attack.targetTerritory.getNumUnits();
+                attack.targetTerritory.setOwner(attack.sourceTerritory.getOwner());
+                attack.targetTerritory.setNumUnits(newUnits);
                 // let player update its territory later
             }
             attack.attackTerritory();
@@ -58,12 +60,12 @@ public class Game {
     }
 
     public void checkStatus(){
-        for(Player p : players){
-            if(p.getMyTerritory().isEmpty()){
-                p.changeStatus(Status.playerStatus.LOSE);
+        for(ServerPlayer sp : serverPlayers){
+            if(sp.getTerritories().isEmpty()){
+                sp.changeStatus(Status.playerStatus.LOSE);
             }
-            if(p.getMyTerritory().size() == myMap.getMapSize()){
-                p.changeStatus(Status.playerStatus.WIN);
+            if(sp.getTerritories().size() == myMap.getMapSize()){
+                sp.changeStatus(Status.playerStatus.WIN);
                 this.myStatus = Status.gameStatus.FINISHED;
             }
         }

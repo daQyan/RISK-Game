@@ -19,12 +19,12 @@ public class JSONConvertor {
         return res;
     }
 
-    public void addAdjacents(String json, TerritoryMap map) {
-        List<TerritoryRelation> adjacentRelations= JSON.parseArray(json, TerritoryRelation.class);
-        for(TerritoryRelation adjacentRelation: adjacentRelations) {
-            int selfId =  adjacentRelation.getSelfId();
+    public void setRelations(String json, TerritoryMap map, boolean adjacent) {
+        List<TerritoryRelation> relations= JSON.parseArray(json, TerritoryRelation.class);
+        for(TerritoryRelation relation: relations) {
+            int selfId =  relation.getSelfId();
             Territory selfTerritory = map.getTerritoryById(selfId);
-            for(int id: adjacentRelation.getRelatedIds()){
+            for(int id: relation.getRelatedIds()){
                 Territory relatedTerritory = map.getTerritoryById(id);
                 selfTerritory.addAdjacent(relatedTerritory);
             }

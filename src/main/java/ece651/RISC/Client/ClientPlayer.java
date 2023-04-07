@@ -2,46 +2,24 @@ package ece651.RISC.Client;
 
 import ece651.RISC.shared.Action;
 import ece651.RISC.shared.GameMap;
+import ece651.RISC.shared.Player;
+import ece651.RISC.shared.Territory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Set;
 
-public class Player {
-    private final String name;
-
-    private GameMap myMap;
-
-    public void setMyMap(GameMap myMap) {
-        this.myMap = myMap;
-    }
-
-    private ArrayList<Territory> myTerriories;
+public class ClientPlayer extends Player {
 
     final BufferedReader inputReader;
     final PrintStream out;
 
-    public Player(String name, GameMap myMap, BufferedReader inputReader, PrintStream out) {
-        this.name = name;
-        this.myMap = myMap;
+    public ClientPlayer(int id, String name, Set<Territory> territories, BufferedReader inputReader, PrintStream out) {
+        super(id, name, territories);
         this.inputReader = inputReader;
         this.out = out;
-        this.myTerriories = new ArrayList<>();
-    }
-
-    public void addTerriories(Territory t){
-        myTerriories.add(t);
-    }
-
-    @Override
-    public String toString() {
-        String res = name + ":" + System.lineSeparator() +
-                "-------------" + System.lineSeparator();
-        for(Territory t: myTerriories){
-            res += (t.toString() + System.lineSeparator());
-        }
-        return res;
     }
 
     public void move(ArrayList<Action> actions) throws  IOException {

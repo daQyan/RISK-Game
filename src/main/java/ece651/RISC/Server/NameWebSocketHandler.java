@@ -2,6 +2,7 @@ package ece651.RISC.Server;
 import com.alibaba.fastjson2.JSON;
 
 import ece651.RISC.Server.config.WebSocketEndpoint;
+import ece651.RISC.shared.Player;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -43,7 +44,7 @@ public class NameWebSocketHandler extends TextWebSocketHandler {
                 pushMsg(session, "The room is full, please join another game!");
                 return;
             }
-            ClientManager.addPlayer(session.getId(), new Player(playerName));
+            ClientManager.addPlayer(session.getId(), new Player(1, playerName));
         }
 
         if(ClientManager.getSize() < 3) {
@@ -56,7 +57,7 @@ public class NameWebSocketHandler extends TextWebSocketHandler {
         // get clients' unit allocation, respond the Territory
         if(MsgType.equals("player_units")) {
             playerName = jsonObject.getString("name");
-            ClientManager.addPlayer(session.getId(), new Player(playerName));
+            ClientManager.addPlayer(session.getId(), new Player(1, playerName));
         }
         // All the player has come, allocating territories and units
 //        initTerritory(ClientManager.getValues());
