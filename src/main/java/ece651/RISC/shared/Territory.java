@@ -1,6 +1,7 @@
 package ece651.RISC.shared;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,13 +22,13 @@ public class Territory {
     private Player owner;
 
     @JSONField(serialize = false, deserialize = false)
-    private Set<Territory> adjacents;
+    private ArrayList<Territory> adjacents;
 
     @JSONField(serialize = false, deserialize = false)
-    private Set<Territory> accessibles;
+    private ArrayList<Territory> accessibles;
 
     public Territory() {}
-    public Territory(int id, String name, int unit, Player owner, Set<Territory> adjacents, Set<Territory> accessibles) {
+    public Territory(int id, String name, int unit, Player owner, ArrayList<Territory> adjacents, ArrayList<Territory> accessibles) {
         this.id = id;
         this.name = name;
         this.numUnits = unit;
@@ -37,7 +38,7 @@ public class Territory {
     }
 
     public Territory(int id, String name, int unit, Player owner) {
-        this(id, name, unit, owner, new HashSet<>(), new HashSet<>());
+        this(id, name, unit, owner, new ArrayList<>(), new ArrayList<>());
     }
 
     public Territory(int id, String name, int unit) {
@@ -80,11 +81,11 @@ public class Territory {
         this.owner = ownerPlayer;
     }
 
-    public Set<Territory> getAdjacents() {
+    public ArrayList<Territory> getAdjacents() {
         return adjacents;
     }
 
-    public void setAdjacents(Set<Territory> adjacents) {
+    public void setAdjacents(ArrayList<Territory> adjacents) {
         this.adjacents = adjacents;
     }
 
@@ -92,11 +93,11 @@ public class Territory {
         this.adjacents.add(adjacent);
     }
 
-    public Set<Territory> getAccessibles() {
+    public ArrayList<Territory> getAccessibles() {
         return accessibles;
     }
 
-    public void setAccessibles(Set<Territory> accessibles) {
+    public void setAccessibles(ArrayList<Territory> accessibles) {
         this.accessibles = accessibles;
     }
 
