@@ -4,10 +4,10 @@ import ece651.RISC.Server.Player;
 
 import java.util.*;
 
-public class Map {
+public class GameMap {
     private Set<Territory> Areas;
 
-    public Map(Set<Territory> areas) {
+    public GameMap(Set<Territory> areas) {
         Areas = areas;
     }
 
@@ -67,7 +67,7 @@ public class Map {
         return myTerritories;
     }
     //default: 3 player, each player with 3 territories
-    public Map(int numPlayers){
+    public GameMap(int numPlayers){
         if(numPlayers == 3){
             this.Areas = createTerritory();
         }

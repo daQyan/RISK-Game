@@ -1,7 +1,7 @@
 package ece651.RISC.Server;
 
 import ece651.RISC.Status;
-import ece651.RISC.shared.Map;
+import ece651.RISC.shared.GameMap;
 import ece651.RISC.shared.Territory;
 
 import java.util.ArrayList;
@@ -9,12 +9,12 @@ import java.util.ArrayList;
 public class Game {
 
     private ArrayList<Player> players;
-    private Map myMap;
+    private GameMap myMap;
     private ArrayList<MoveAction> moveActions;
     private ArrayList<AttackAction> attackActions;
     private Status.gameStatus myStatus;
 
-    public Game(ArrayList<Player> players, Map myMap, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
+    public Game(ArrayList<Player> players, GameMap myMap, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
         this.players = players;
         this.myMap = myMap;
         this.moveActions = moveActions;
