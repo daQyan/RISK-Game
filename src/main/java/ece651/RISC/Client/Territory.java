@@ -24,6 +24,11 @@ public class Territory {
         return adjacents;
     }
 
+    public Territory(String name) {
+        this.name = name;
+        this.adjacents = new HashSet<>();
+    }
+
     public Territory(String name, int unit) {
         this.name = name;
         this.unit = unit;
