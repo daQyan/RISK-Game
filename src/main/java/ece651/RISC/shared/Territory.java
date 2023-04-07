@@ -104,6 +104,13 @@ public class Territory {
         this.accessibles.add(accessible);
     }
 
+    public int getUnit(){ return this.numUnits;}
+
+    public void changeOwner(int newUnits, Player newOwner){
+        this.numUnits = newUnits;
+        this.owner = newOwner;
+    }
+
     public String toJSON(){
         String json = JSON.toJSONString(this);
         return json;
