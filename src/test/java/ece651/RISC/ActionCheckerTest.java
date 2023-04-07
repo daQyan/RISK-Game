@@ -1,8 +1,9 @@
 package ece651.RISC;
 
-import ece651.RISC.Server.AttackAction;
-import ece651.RISC.Server.MoveAction;
+import ece651.RISC.shared.AttackAction;
+import ece651.RISC.shared.MoveAction;
 import ece651.RISC.shared.Player;
+import ece651.RISC.shared.Status;
 import ece651.RISC.shared.Territory;
 import org.junit.jupiter.api.Test;
 

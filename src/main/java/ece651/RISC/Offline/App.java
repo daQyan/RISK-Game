@@ -1,12 +1,8 @@
-package ece651.RISC.shared;
+package ece651.RISC.Offline;
 
-import ece651.RISC.Server.Server;
+import ece651.RISC.shared.Player;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class App {
 
@@ -14,12 +10,17 @@ public class App {
     private Player p1;
     private Player p2;
     private Player p3;
-    private Server server;
-
 
     public void main(String[] args) throws IOException {
 
         System.out.println("GAME START");
+        // 初始化territories
+        // 初始化Client Players
+        // 初始化OfflineClient2Server
+        // 初始化OffineServer2Client
+        // 初始化ServerGame
+        // 初始化ClientGame
+
         // initPlayers(p1, p2, p3);
         // initMap
         // sendTerritory to 3 p

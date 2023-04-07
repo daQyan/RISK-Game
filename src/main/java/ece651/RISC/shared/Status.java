@@ -1,4 +1,4 @@
-package ece651.RISC;
+package ece651.RISC.shared;
 
 public class Status {
     public enum playerStatus{

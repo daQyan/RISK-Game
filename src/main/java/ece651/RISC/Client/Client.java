@@ -22,7 +22,7 @@ public class Client {
 
     public void oneRound() throws IOException {
         ArrayList<Action> actions = new ArrayList<>();
-        player.doOneTurn(actions);
+        player.playOneTurn();
         // send actions to server
     }
 

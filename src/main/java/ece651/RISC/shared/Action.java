@@ -1,8 +1,6 @@
 package ece651.RISC.shared;
 
 import com.alibaba.fastjson2.JSONObject;
-import ece651.RISC.shared.Player;
-import ece651.RISC.Status;
 
 public abstract class Action {
     public Territory sourceTerritory;

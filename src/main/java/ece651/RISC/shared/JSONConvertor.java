@@ -1,47 +1,34 @@
 package ece651.RISC.shared;
 
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
-import ece651.RISC.shared.Territory;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class JSONConvertor {
-    public TerritoryMap convertTerritories(String json) {
-        TerritoryMap res = new TerritoryMap();
+    public void convertTerritories(GameMap gm, String json) {
         List<Territory> territories= JSON.parseArray(json, Territory.class);
         for(Territory territory: territories) {
             int id = territory.getId();
-            res.addTerritory(id, territory);
+            gm.setArea(id, territory);
         }
-        return res;
     }
 
-    public void setRelations(String json, TerritoryMap map, boolean adjacent) {
+    public void setRelations(String json, GameMap gm, boolean adjacent) {
         List<TerritoryRelation> relations= JSON.parseArray(json, TerritoryRelation.class);
         for(TerritoryRelation relation: relations) {
             int selfId =  relation.getSelfId();
-            Territory selfTerritory = map.getTerritoryById(selfId);
+            Territory selfTerritory = gm.getArea(selfId);
             for(int id: relation.getRelatedIds()){
-                Territory relatedTerritory = map.getTerritoryById(id);
-                selfTerritory.addAdjacent(relatedTerritory);
+                Territory relatedTerritory = gm.getArea(selfId);
+                if(adjacent) {
+                    selfTerritory.addAdjacent(relatedTerritory);
+                } else {
+                    selfTerritory.addAccessible(relatedTerritory);
+                }
+
             }
         }
     }
 
-    public void addAccessibles(String json, TerritoryMap map) {
-        List<TerritoryRelation> adjacentRelations= JSON.parseArray(json, TerritoryRelation.class);
-        for(TerritoryRelation adjacentRelation: adjacentRelations) {
-            int selfId =  adjacentRelation.getSelfId();
-            Territory selfTerritory = map.getTerritoryById(selfId);
-            for(int id: adjacentRelation.getRelatedIds()){
-                Territory relatedTerritory = map.getTerritoryById(id);
-                selfTerritory.addAccessible(relatedTerritory);
-            }
-        }
-    }
 }
 
 

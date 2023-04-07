@@ -9,7 +9,7 @@ public class GameMap {
         Areas = areas;
     }
 
-    public Set<Territory> getAreas() {
+    public ArrayList<Territory> getAreas() {
         return Areas;
     }
 
@@ -50,17 +50,20 @@ public class GameMap {
             next.poll();
         }
     }
-    public void naturalIncrease(){
-        for(Territory t : Areas){
-            t.updateUnits(1);
-        }
-    }
     public int getMapSize(){
         return Areas.size();
     }
 
     public ArrayList<Territory> getAllAreas(){
         return this.Areas;
+    }
+
+    public void setArea(int id, Territory t){
+        Areas.set(id, t);
+    }
+
+    public Territory getArea(int id) {
+        return Areas.get(id);
     }
 
 }

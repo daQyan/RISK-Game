@@ -1,6 +1,5 @@
 package ece651.RISC;
 
-import ece651.RISC.Server.ServerPlayer;
 import ece651.RISC.shared.Player;
 import ece651.RISC.shared.Territory;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,7 @@ class TerritoryTest {
     @Test
     void testGetOwner() {
         // Create a player and a territory with that player as the owner
-        ServerPlayer owner = new ServerPlayer(0, "Player 1", new HashSet<>());
+        Player owner = new Player(0, "Player 1", new HashSet<>());
         Territory territory = new Territory(0, "Territory 1", 0, owner);
 
         // Check that the territory's owner matches the original player

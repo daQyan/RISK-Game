@@ -1,6 +1,6 @@
-package ece651.RISC.Server;
+package ece651.RISC.shared;
 
-import ece651.RISC.Status;
+import ece651.RISC.shared.Status;
 import ece651.RISC.shared.Action;
 import ece651.RISC.shared.Territory;
 import ece651.RISC.shared.Player;

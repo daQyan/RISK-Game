@@ -2,7 +2,6 @@ package ece651.RISC.shared;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.annotation.JSONField;
-import ece651.RISC.Status;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,20 +14,29 @@ public class Player {
     @JSONField(serialize = false, deserialize = false)
     protected Set<Territory> territories;
 
-    protected Status.playerStatus myStatus;
+    protected Status.playerStatus status;
+
+    public void setStatus(Status.playerStatus status) {
+        this.status = status;
+    }
+
+    public Status.playerStatus getStatus() {
+        return status;
+    }
+
     protected GameMap map;
 
-    public Player(int id, String name, Set<Territory> territories, GameMap map) {
+    public Player(int id, String name, Set<Territory> territories) {
         this.id = id;
         this.name = name;
         this.territories = territories;
-        this.map = map;
+        this.status = Status.playerStatus.PLAYING;
     }
 
     public Player(int id, String name) {
-        // TODO modified ??
-        this(id, name, new HashSet<>(), null);
+        this(id, name, new HashSet<>());
     }
+
 
 
     public int getId() {
@@ -58,8 +66,6 @@ public class Player {
     public void addTerriories(Territory t){
         territories.add(t);
     }
-
-    public void changeStatus(Status.playerStatus ps){ this.myStatus = ps; }
 
     public Set<Territory> getMyTerritory(){ return territories; }
 
