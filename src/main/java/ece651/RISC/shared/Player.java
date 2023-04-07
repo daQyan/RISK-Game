@@ -16,15 +16,18 @@ public class Player {
     protected Set<Territory> territories;
 
     protected Status.playerStatus myStatus;
+    protected GameMap map;
 
-    public Player(int id, String name, Set<Territory> territories) {
+    public Player(int id, String name, Set<Territory> territories, GameMap map) {
         this.id = id;
         this.name = name;
         this.territories = territories;
+        this.map = map;
     }
 
     public Player(int id, String name) {
-        this(id, name, new HashSet<>());
+        // TODO modified ??
+        this(id, name, new HashSet<>(), null);
     }
 
 
