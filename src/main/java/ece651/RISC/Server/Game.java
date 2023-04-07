@@ -2,6 +2,7 @@ package ece651.RISC.Server;
 
 import ece651.RISC.Status;
 import ece651.RISC.shared.GameMap;
+import ece651.RISC.shared.MapController;
 import ece651.RISC.shared.Player;
 import ece651.RISC.shared.Territory;
 
@@ -12,6 +13,7 @@ public class Game {
 
     private ArrayList<Player> players;
     private GameMap myMap;
+    private MapController myMapController;
     private MapFactory myMapFactory;
     private ArrayList<MoveAction> moveActions;
     private ArrayList<AttackAction> attackActions;
@@ -24,6 +26,7 @@ public class Game {
         this.attackActions = attackActions;
         this.myStatus = Status.gameStatus.PLAYING;
         this.myMapFactory = new MapFactory();
+        this.myMapController= new MapController(myMap);
     }
 
 
