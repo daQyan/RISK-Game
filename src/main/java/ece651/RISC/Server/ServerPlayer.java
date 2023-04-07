@@ -2,6 +2,7 @@ package ece651.RISC.Server;
 
 import ece651.RISC.Status;
 import ece651.RISC.shared.Action;
+import ece651.RISC.shared.Player;
 import ece651.RISC.shared.Territory;
 
 import java.io.BufferedReader;
@@ -10,19 +11,9 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Set;
 
-import static java.lang.System.out;
-
-public class Player {
+public class ServerPlayer extends Player {
     //should implement socket here
-    private final int id;
-
-    public int getId() {
-        return id;
-    }
-
-    private String name;
     private Status.playerStatus myStatus;
-    private Set<Territory> myTerritory;
     private ArrayList<MoveAction> myMoveOrder;
     private ArrayList<AttackAction> myAttackOrder;
 
@@ -30,19 +21,9 @@ public class Player {
     private PrintStream out;
 
 
-    public Player(int id, String name, Set<Territory> myTerritory) {
-        this.id = id;
-        this.name = name;
-        this.myTerritory = myTerritory;
+    public ServerPlayer(int id, String name, Set<Territory> myTerritory) {
+        super(id, name, myTerritory);
         this.myStatus = Status.playerStatus.PLAYING;
-    }
-
-    public Set<Territory> getMyTerritory() {
-        return myTerritory;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void changeStatus(Status.playerStatus s){
@@ -68,7 +49,7 @@ public class Player {
     private String getMyTerritoryName() {
         String s = null;
         // TODO: init myTerritory first
-        for (Territory t : myTerritory) {
+        for (Territory t : getTerritories()) {
             s += t.getName();
         }
         return s;
@@ -89,7 +70,7 @@ public class Player {
                 "with the format <unit1> <unit2> <unit3>");
         String unitsPlacement = inputReader.readLine();
         //TODO: check input valid: <format>, <sum>
-        parseUnitsPlacement(unitsPlacement, myTerritory);
+        parseUnitsPlacement(unitsPlacement, getTerritories());
     }
 
     // parse the input from user and update its Territories

@@ -3,6 +3,7 @@ package ece651.RISC.Server;
 import ece651.RISC.Status;
 import ece651.RISC.shared.Action;
 import ece651.RISC.shared.Territory;
+import ece651.RISC.shared.Player;
 
 public class MoveAction extends Action {
     public MoveAction(Territory sourceTerritory, Territory targetTerritory, int hitUnits, Status.actionStatus type, Player owner) {

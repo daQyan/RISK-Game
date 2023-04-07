@@ -4,6 +4,7 @@ import ece651.RISC.Combat;
 import ece651.RISC.Status;
 import ece651.RISC.shared.Action;
 import ece651.RISC.shared.Territory;
+import ece651.RISC.shared.Player;
 
 public class AttackAction extends Action {
     private Combat myCombat;
@@ -17,7 +18,7 @@ public class AttackAction extends Action {
     public String attackTerritory() {
         String checkAttack = myAC.checkAttackRule(this.owner, this.sourceTerritory, this.targetTerritory, hitUnits);
         if(checkAttack == null){
-            while(hitUnits > 0 && targetTerritory.getUnit() >= 0){
+            while(hitUnits > 0 && targetTerritory.getNumUnits() >= 0){
                 if(myCombat.rollCombatDice() == true){
                     targetTerritory.updateUnits(-1);
                 }
@@ -27,8 +28,9 @@ public class AttackAction extends Action {
                 }
             }
             // if the attack wins
-            if (targetTerritory.getUnit() < 0) {
-                targetTerritory.changeOwner(hitUnits, this.owner);
+            if (targetTerritory.getNumUnits() < 0) {
+                targetTerritory.setOwner(this.owner);
+                targetTerritory.setNumUnits(hitUnits);
                 checkAttack = this.owner.getName() + " has taken over " + targetTerritory.getName() + "!";
             }
         }

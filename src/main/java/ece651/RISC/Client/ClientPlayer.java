@@ -1,47 +1,26 @@
 package ece651.RISC.Client;
 
 import ece651.RISC.shared.Action;
-import ece651.RISC.shared.Map;
+import ece651.RISC.shared.Player;
+import ece651.RISC.shared.Territory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
-public class Player {
-    private final String name;
-
-    private Map myMap;
-
-    public void setMyMap(Map myMap) {
-        this.myMap = myMap;
-    }
-
-    private ArrayList<Territory> myTerriories;
-
+public class ClientPlayer extends Player {
     final BufferedReader inputReader;
     final PrintStream out;
 
-    public Player(String name, Map myMap, BufferedReader inputReader, PrintStream out) {
-        this.name = name;
-        this.myMap = myMap;
+    public ClientPlayer(int id, String name, BufferedReader inputReader, PrintStream out) {
+        super(id, name);
         this.inputReader = inputReader;
         this.out = out;
-        this.myTerriories = new ArrayList<>();
     }
 
-    public void addTerriories(Territory t){
-        myTerriories.add(t);
-    }
-
-    @Override
-    public String toString() {
-        String res = name + ":" + System.lineSeparator() +
-                "-------------" + System.lineSeparator();
-        for(Territory t: myTerriories){
-            res += (t.toString() + System.lineSeparator());
-        }
-        return res;
+    public ClientPlayer(int id, String name) {
+        this(id, name, null, null);
     }
 
     public void move(ArrayList<Action> actions) throws  IOException {
@@ -74,9 +53,5 @@ public class Player {
                 out.println("Invalid input, please input again");
                 doOneTurn(actions);
         }
-    }
-
-    public String toJSON(){
-        return name;
     }
 }

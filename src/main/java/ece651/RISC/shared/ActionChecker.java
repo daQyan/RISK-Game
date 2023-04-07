@@ -1,11 +1,9 @@
 package ece651.RISC.shared;
 
-import ece651.RISC.Server.Player;
-
 public class ActionChecker {
     public String checkAttackRule(Player owner, Territory sourceTerritory, Territory targetTerritory, int Units) {
         //if the attacking units are larger than the source territory's units, return error message
-        if(Units > sourceTerritory.getUnit()) {
+        if(Units > sourceTerritory.getNumUnits()) {
             return ("The attack action is invalid: there's not enough soldier in " + sourceTerritory.getName() + " to deploy!");
         }
         else if(Units < 0){
@@ -26,15 +24,15 @@ public class ActionChecker {
         return null;
     }
     public String checkMoveRule(Player owner, Territory sourceTerritory, Territory targetTerritory, int Units) {
-        if(!owner.equals(sourceTerritory.getOwner())){
+        if(owner == null || !owner.equals(sourceTerritory.getOwner())){
             return ("The move action is not valid: " + owner.getName() +  " does not own " + sourceTerritory.getName() + "!");
         }
         //if the soldiers the player tries to move exceed the existing number, return error message
-        else if(sourceTerritory.getUnit() < Units){
+        else if(sourceTerritory.getNumUnits() < Units){
             return ("The move action is not valid: there's not enough soldiers in the " + sourceTerritory.getName() + "!");
         }
         //if there's no valid path between the source territory and target territory, return error message
-        else if(!sourceTerritory.getAccessibls().contains(targetTerritory)){
+        else if(!sourceTerritory.getAccessibles().contains(targetTerritory)){
             return("The move action is not valid: there's no valid path from " + sourceTerritory.getName() + " to " +  targetTerritory.getName() + "!");
         }
         return null;

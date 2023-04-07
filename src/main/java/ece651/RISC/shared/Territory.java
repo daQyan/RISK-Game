@@ -1,117 +1,122 @@
 package ece651.RISC.shared;
 
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
-import ece651.RISC.Server.Player;
-
-import java.util.ArrayList;
+import java.net.URISyntaxException;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.annotation.JSONField;
+
 public class Territory {
-    private final int id;
+    @JSONField(name = "id")
+    private int id;
+
+    @JSONField(name = "name")
+    private String name;
+
+    @JSONField(name = "num_units")
+    private int numUnits;
+
+    @JSONField(name = "owner")
+    private Player owner;
+
+    @JSONField(serialize = false, deserialize = false)
+    private Set<Territory> adjacents;
+
+    @JSONField(serialize = false, deserialize = false)
+    private Set<Territory> accessibles;
+
+    public Territory() {}
+    public Territory(int id, String name, int unit, Player owner, Set<Territory> adjacents, Set<Territory> accessibles) {
+        this.id = id;
+        this.name = name;
+        this.numUnits = unit;
+        this.owner = owner;
+        this.accessibles = accessibles;
+        this.adjacents = adjacents;
+    }
+
+    public Territory(int id, String name, int unit, Player owner) {
+        this(id, name, unit, owner, new HashSet<>(), new HashSet<>());
+    }
+
+    public Territory(int id, String name, int unit) {
+        this(id, name, unit, null);
+    }
 
     public int getId() {
         return id;
     }
 
-    private final String name;
-    private Player owner;
-    private int numUnits;
-    private Set<Territory> adjacents;
-    private Set<Territory> accessibles;
-
-    public Territory(int id, String name, Player owner, int numUnits, Set<Territory> adjacents, Set<Territory> accessibles) {
+    public void setId(int id) {
         this.id = id;
-        this.name = name;
-        this.owner = owner;
-        this.numUnits = numUnits;
-        this.adjacents = adjacents;
-        this.accessibles = accessibles;
     }
-
-    public Territory(int id, String name, int numUnits){
-        this(id, name, null, numUnits, new HashSet<>(), new HashSet<>());
-    }
-    public void changeOwner(int newUnits, Player newOwner) {
-        owner = newOwner;
-        numUnits = newUnits;
-    }
-
-
-    public Set<Territory> getAdjacents() {
-        return adjacents;
-    }
-
-
-    public void addAdjacent(Territory adjacent) {
-        this.adjacents.add(adjacent);
-    }
-
-
-    public Set<Territory> getAccessibls(){
-        return accessibles;
-    }
-
-    public void addAccessible(Territory accessible) {
-        this.accessibles.add(accessible);
-    }
-    //update numUnits
-
-    public void updateUnits(int unitChanged) {
-        numUnits += unitChanged;
-    }
-
 
     public String getName() {
         return name;
     }
 
-    public Player getOwner(){ return owner; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public int getUnit() {
+    public int getNumUnits() {
         return numUnits;
     }
 
-
-    @Override
-    public String toString() {
-        String adjacentString = "";
-        Iterator<Territory> it = adjacents.iterator();
-        while(it.hasNext()){
-            adjacentString += it.next().getName();
-            if(it.hasNext()){
-                adjacentString += ", ";
-            }
-        }
-        return numUnits + " units in " + name +" (next to: " + adjacentString + ")";
+    public void setNumUnits(int unit) {
+        this.numUnits = unit;
     }
 
+    public void updateUnits(int unit) {
+        this.numUnits += unit;
+    }
 
-    //change owner
+    public Player getOwner() {
+        return owner;
+    }
 
+    public void setOwner(Player ownerPlayer) {
+        this.owner = ownerPlayer;
+    }
 
-    //plus 1 unit every round
+    public Set<Territory> getAdjacents() {
+        return adjacents;
+    }
 
-    public String toJSON() {
-        JSONObject json = new JSONObject();
-        json.put("id", id);
-        json.put("name", name);
-        json.put("numUnits", numUnits);
-        if(owner != null){
-            json.put("player", owner.getName());
-        }
-        JSONArray adjacentsId = new JSONArray();
-        for(Territory adjacent: adjacents){
-            adjacentsId.add(adjacent.getId());
-        }
-        json.put("adjacents", adjacentsId.toJSONString());
-        JSONArray accessiblesId = new JSONArray();
-        for(Territory accessible: accessibles){
-            accessiblesId.add(accessible.getId());
-        }
-        json.put("accessibles", accessiblesId.toJSONString());
-        return json.toJSONString();
+    public void setAdjacents(Set<Territory> adjacents) {
+        this.adjacents = adjacents;
+    }
+
+    public void addAdjacent(Territory adjacent) {
+        this.adjacents.add(adjacent);
+    }
+
+    public Set<Territory> getAccessibles() {
+        return accessibles;
+    }
+
+    public void setAccessibles(Set<Territory> accessibles) {
+        this.accessibles = accessibles;
+    }
+
+    public void addAccessible(Territory accessible) {
+        this.accessibles.add(accessible);
+    }
+
+    public String toJSON(){
+        String json = JSON.toJSONString(this);
+        return json;
+    }
+
+    public static void main(String[] args) throws URISyntaxException {
+        Player cp = new Player(1, "cp");
+        Territory t = new Territory(1, "test", 10, cp);
+        String json = t.toJSON();
+        System.out.println(json);
+        Territory t2 = JSON.parseObject(json, Territory.class);
+        System.out.println(t2.toJSON());
     }
 }
+
+
