@@ -5,16 +5,16 @@ import ece651.RISC.shared.Territory;
 import java.util.HashMap;
 
 public class Game {
-    private HashMap<Integer, Territory> territories;
+    private HashMap<Integer, Territory> clientMap;
 
     public void Game(){
-        this.territories = new HashMap<>();
+        this.clientMap = new HashMap<>();
     }
     public void setClientMap(HashMap<Integer, Territory> clientMap) {
-        territories = clientMap;
+        clientMap = clientMap;
     }
 
     public Territory getTerritoryById(int id) {
-        return territories.get(id);
+        return clientMap.get(id);
     }
 }
