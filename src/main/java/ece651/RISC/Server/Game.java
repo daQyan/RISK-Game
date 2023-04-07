@@ -1,20 +1,20 @@
 package ece651.RISC.Server;
 
 import ece651.RISC.Status;
-import ece651.RISC.shared.Map;
+import ece651.RISC.shared.GameMap;
 import ece651.RISC.shared.Territory;
 
 import java.util.ArrayList;
 
 public class Game {
 
-    private ArrayList<ServerPlayer> players;
-    private Map myMap;
+    private ArrayList<Player> players;
+    private GameMap myMap;
     private ArrayList<MoveAction> moveActions;
     private ArrayList<AttackAction> attackActions;
     private Status.gameStatus myStatus;
 
-    public Game(ArrayList<ServerPlayer> players, Map myMap, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
+    public Game(ArrayList<Player> players, GameMap myMap, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
         this.players = players;
         this.myMap = myMap;
         this.moveActions = moveActions;
@@ -49,9 +49,8 @@ public class Game {
         for (AttackAction attack: attackActions) {
             String result = attack.attackTerritory();
             if (result == "Owner Changed") {
-                int newUnits = -attack.targetTerritory.getNumUnits();
-                attack.targetTerritory.setOwner(attack.sourceTerritory.getOwner());
-                attack.targetTerritory.setNumUnits(newUnits);
+                int newUnits = -attack.targetTerritory.getUnit();
+                attack.targetTerritory.changeOwner(newUnits, attack.sourceTerritory.getOwner());
                 // let player update its territory later
             }
             attack.attackTerritory();
@@ -59,11 +58,11 @@ public class Game {
     }
 
     public void checkStatus(){
-        for(ServerPlayer p : players){
-            if(p.getTerritories().isEmpty()){
+        for(Player p : players){
+            if(p.getMyTerritory().isEmpty()){
                 p.changeStatus(Status.playerStatus.LOSE);
             }
-            if(p.getTerritories().size() == myMap.getMapSize()){
+            if(p.getMyTerritory().size() == myMap.getMapSize()){
                 p.changeStatus(Status.playerStatus.WIN);
                 this.myStatus = Status.gameStatus.FINISHED;
             }
@@ -87,5 +86,7 @@ public class Game {
             playOneTurn();
         }
     }
+
+
 
 }
