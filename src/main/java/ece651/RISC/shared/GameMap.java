@@ -3,9 +3,9 @@ package ece651.RISC.shared;
 import java.util.*;
 
 public class GameMap {
-    private Set<Territory> Areas;
+    private ArrayList<Territory> Areas;
 
-    public GameMap(Set<Territory> areas) {
+    public GameMap(ArrayList<Territory> areas) {
         Areas = areas;
     }
 
@@ -57,6 +57,10 @@ public class GameMap {
     }
     public int getMapSize(){
         return Areas.size();
+    }
+
+    public ArrayList<Territory> getAllAreas(){
+        return this.Areas;
     }
 
 }

@@ -3,12 +3,13 @@ package ece651.RISC.Server;
 import ece651.RISC.shared.GameMap;
 import ece651.RISC.shared.Territory;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 public class MapFactory {
     public GameMap createMap(int numPlayers){
-        Set<Territory> myTerritories = new HashSet<>();
+        ArrayList<Territory> myTerritories = new ArrayList<>();
         Territory Narnia = new Territory(0, "Narnia", 0, null, null, null);
         Territory Midkemia = new Territory(1, "Midkemia", 0, null, null, null);
         Territory Oz = new Territory(2, "Oz", 0, null, null, null);
