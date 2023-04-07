@@ -1,7 +1,7 @@
 package ece651.RISC.Client;
 
 import ece651.RISC.shared.Action;
-import ece651.RISC.shared.Map;
+import ece651.RISC.shared.GameMap;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,9 +11,9 @@ import java.util.ArrayList;
 public class Player {
     private final String name;
 
-    private Map myMap;
+    private GameMap myMap;
 
-    public void setMyMap(Map myMap) {
+    public void setMyMap(GameMap myMap) {
         this.myMap = myMap;
     }
 
@@ -22,7 +22,7 @@ public class Player {
     final BufferedReader inputReader;
     final PrintStream out;
 
-    public Player(String name, Map myMap, BufferedReader inputReader, PrintStream out) {
+    public Player(String name, GameMap myMap, BufferedReader inputReader, PrintStream out) {
         this.name = name;
         this.myMap = myMap;
         this.inputReader = inputReader;
