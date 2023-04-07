@@ -2,23 +2,22 @@ package ece651.RISC;
 
 import ece651.RISC.Server.AttackAction;
 import ece651.RISC.Server.MoveAction;
-import ece651.RISC.Server.Player;
+import ece651.RISC.shared.Player;
 import ece651.RISC.shared.Territory;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class ActionCheckerTest {
     private ArrayList<Territory> createTestHelper(){
         Player p0 = new Player(0, "0", null);
         Player p1 = new Player(1, "1", null);
         ArrayList<Territory> t = new ArrayList<>();
-        Territory t0 = new Territory(0, "t0", p0, 5, new HashSet<>(), new HashSet<>());
-        Territory t1 = new Territory(1, "t1", p1, 4, new HashSet<>(), new HashSet<>());
-        Territory t2 = new Territory(2, "t2", p0, 3, new HashSet<>(), new HashSet<>());
+        Territory t0 = new Territory(0, "t0", 5, p0);
+        Territory t1 = new Territory(1, "t1", 4,p1);
+        Territory t2 = new Territory(2, "t2", 3, p0);
         t.add(t0);
         t.add(t1);
         t.add(t2);

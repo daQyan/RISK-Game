@@ -1,6 +1,6 @@
 package ece651.RISC.shared;
 
-import ece651.RISC.Server.Player;
+import ece651.RISC.shared.Player;
 
 import java.util.*;
 
@@ -14,15 +14,15 @@ public class GameMap {
     //only for 3 players
     private Set<Territory> createTerritory(){
         Set<Territory> myTerritories = new HashSet<>();
-        Territory Narnia = new Territory(0, "Narnia", null, 0, null, null);
-        Territory Midkemia = new Territory(1, "Midkemia", null, 0, null, null);
-        Territory Oz = new Territory(2, "Oz", null, 0, null, null);
-        Territory Gondor = new Territory(3, "Gondor", null, 0, null, null);
-        Territory Mordor = new Territory(4, "Mordor", null, 0, null, null);
-        Territory Hogwarts = new Territory(5, "Hogwarts", null, 0, null, null);
-        Territory Elantris = new Territory(6, "Elantris", null, 0, null, null);
-        Territory Scadrial = new Territory(7, "Scadrial", null, 0, null, null);
-        Territory Roshar = new Territory(8, "Roshar", null, 0, null, null);
+        Territory Narnia = new Territory(0, "Narnia", 0, null);
+        Territory Midkemia = new Territory(1, "Midkemia", 0, null);
+        Territory Oz = new Territory(2, "Oz", 0, null);
+        Territory Gondor = new Territory(3, "Gondor", 0, null);
+        Territory Mordor = new Territory(4, "Mordor", 0, null);
+        Territory Hogwarts = new Territory(5, "Hogwarts", 0, null);
+        Territory Elantris = new Territory(6, "Elantris", 0, null);
+        Territory Scadrial = new Territory(7, "Scadrial", 0, null);
+        Territory Roshar = new Territory(8, "Roshar", 0, null);
 
         Narnia.addAdjacent(Midkemia);
         Narnia.addAdjacent(Elantris);

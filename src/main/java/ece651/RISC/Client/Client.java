@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Client {
-    private Player player;
+    private ClientPlayer player;
 
-    Client(Player player){
+    Client(ClientPlayer player){
         this.player = player;
     }
 
