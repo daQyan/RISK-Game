@@ -55,7 +55,7 @@ public class MyWebSocketClient extends WebSocketClient {
 
     public static void main(String[] args) throws URISyntaxException {
         MyWebSocketClient c = new MyWebSocketClient(new URI(
-                "ws://10.200.75.125:8080/ws")); // more about drafts here: http://github.com/TooTallNate/Java-WebSocket/wiki/Drafts
+                "ws://127.0.0.1:8080/name")); // more about drafts here: http://github.com/TooTallNate/Java-WebSocket/wiki/Drafts
         c.connect();
         while(true){
             if(c.isOpen()) {

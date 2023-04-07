@@ -27,7 +27,6 @@ public abstract class Action {
         json.put("targetTerritory", targetTerritory.getId());
         json.put("hitUnits", hitUnits);
         json.put("type", type);
-        json.put("player", owner.getId());
         return json.toJSONString();
     }
 }

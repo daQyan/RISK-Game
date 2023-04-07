@@ -1,4 +1,4 @@
-package ece651.RISC;
+package ece651.RISC.Server;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.web.bind.annotation.GetMapping;
