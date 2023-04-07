@@ -9,6 +9,10 @@ public class GameMap {
         Areas = areas;
     }
 
+    public Set<Territory> getAreas() {
+        return Areas;
+    }
+
     //for every turn, update the accessible territories for all the territory
     public void updateAccessible(){
         for(Territory t : Areas){
