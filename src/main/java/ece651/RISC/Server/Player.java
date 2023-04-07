@@ -14,11 +14,7 @@ import static java.lang.System.out;
 
 public class Player {
     //should implement socket here
-    private final int id;
-
-    public int getId() {
-        return id;
-    }
+    private  int id;
 
     private String name;
     private Status.playerStatus myStatus;
@@ -29,6 +25,17 @@ public class Player {
     private BufferedReader inputReader;
     private PrintStream out;
 
+
+    public int getId() {
+        return id;
+    }
+
+    public Player(String name) {
+        this.id = -1;
+        this.name = name;
+        this.myTerritory = null;
+        this.myStatus = null;
+    }
 
     public Player(int id, String name, Set<Territory> myTerritory) {
         this.id = id;
@@ -75,12 +82,13 @@ public class Player {
     }
 
     // initialize the name and units for one player
-    public void makeUpName() throws IOException {
+    public void makeUpPlayer(int id) throws IOException {
         out.println("Please give yourself a name: ");
         String myName = inputReader.readLine();
         // TODO: check name valid
         // update name in Player ? or let server do this
         this.name = myName;
+        this.id = id;
     }
 
     public void initUnitPlacement() throws IOException{
