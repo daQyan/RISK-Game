@@ -2,15 +2,19 @@ package ece651.RISC.Server;
 
 import ece651.RISC.Status;
 import ece651.RISC.shared.GameMap;
+import ece651.RISC.shared.MapController;
 import ece651.RISC.shared.Player;
 import ece651.RISC.shared.Territory;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Game {
 
     private ArrayList<ServerPlayer> serverPlayers;
     private GameMap myMap;
+    private MapController myMapController;
+    private MapFactory myMapFactory;
     private ArrayList<MoveAction> moveActions;
     private ArrayList<AttackAction> attackActions;
     private Status.gameStatus myStatus;
@@ -21,6 +25,8 @@ public class Game {
         this.moveActions = moveActions;
         this.attackActions = attackActions;
         this.myStatus = Status.gameStatus.PLAYING;
+        this.myMapFactory = new MapFactory();
+        this.myMapController= new MapController(myMap);
     }
 
 
@@ -47,17 +53,19 @@ public class Game {
     }
 
     public void executeAttacks() {
-        for (AttackAction attack: attackActions) {
-            String result = attack.attackTerritory();
+        Random rand = new Random();
+        while(attackActions.size() > 0){
+            int order = rand.nextInt(attackActions.size());
+            String result = attackActions.get(order).attackTerritory();
             if (result == "Owner Changed") {
-                int newUnits = -attack.targetTerritory.getNumUnits();
-                attack.targetTerritory.setOwner(attack.sourceTerritory.getOwner());
-                attack.targetTerritory.setNumUnits(newUnits);
+                int newUnits = -attackActions.get(order).targetTerritory.getUnit();
+                attackActions.get(order).targetTerritory.changeOwner(newUnits, attackActions.get(order).sourceTerritory.getOwner());
                 // let player update its territory later
             }
-            attack.attackTerritory();
+            attackActions.remove(order);
         }
     }
+
 
     public void checkStatus(){
         for(ServerPlayer sp : serverPlayers){
@@ -75,9 +83,7 @@ public class Game {
         executeMoves();
         executeAttacks();
         checkStatus();
-        if(this.myStatus.equals(Status.gameStatus.FINISHED)){
-
-        }
+        //send information to players for networked game
     }
 
     public void playGame(){
@@ -87,7 +93,9 @@ public class Game {
         while(!this.myStatus.equals(Status.gameStatus.FINISHED)){
             playOneTurn();
         }
+        //server should monitor the game status and close sockets when the game is finished
     }
+
 
 
 
