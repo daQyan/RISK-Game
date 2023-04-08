@@ -1,6 +1,7 @@
 package ece651.RISC.Server;
 
 import ece651.RISC.Server.config.WebSocketEndpoint;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -20,9 +21,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 @WebSocketEndpoint("/ws")
 public class MyWebSocketHandler extends TextWebSocketHandler {
-    /**
-     * 保存连接的会话
-     */
+    @Autowired
+    public ServerGame serverGame;
     private final ConcurrentHashMap<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
     @Override
