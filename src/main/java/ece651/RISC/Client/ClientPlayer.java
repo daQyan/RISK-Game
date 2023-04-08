@@ -15,15 +15,21 @@ public class ClientPlayer extends Player {
     private PrintStream out;
 
     private GameMap map;
-    private int maxUnits;
+    private int initUnits;
+
+    public void setInitUnits(int initUnits) {
+        this.initUnits = initUnits;
+    }
 
     private Client2Server communicator;
 
-
-    public ClientPlayer(int id, String name, Set<Territory> myTerritory, GameMap map, Client2Server communicator, BufferedReader inputReader, PrintStream out) {
-        super(id, name, myTerritory);
-        this.map = map;
+    public void setCommunicator(Client2Server communicator) {
         this.communicator = communicator;
+    }
+// TODO: refresh moves and attacks
+
+    public ClientPlayer(String name, BufferedReader inputReader, PrintStream out){
+        super(name);
         this.inputReader = inputReader;
         this.out = out;
     }
@@ -122,7 +128,7 @@ public class ClientPlayer extends Player {
 //        this.id = i;
 //    }
 
-    public void initUnitPlacement() throws IOException{
+    public void initUnitPlacement(){
         String prompt = "Player, " + this.name + "you have in total 12 units and following territory, please specify the units for "
                 + getMyTerritoryName() + "with the format <unit1> <unit2> <unit3>";
         out.println(prompt);
@@ -144,7 +150,7 @@ public class ClientPlayer extends Player {
     }
 
     // parse the input from user and update its Territories
-    private void parseUnitsPlacement(String prompt, Set<Territory> myTerritory) {
+    private void parseUnitsPlacement(String prompt, Set<Territory> myTerritory) throws IOException {
         List numList = new ArrayList();
         String[] parts = prompt.split(" ");
         int sumUnits = 0;
@@ -154,11 +160,12 @@ public class ClientPlayer extends Player {
             sumUnits += num;
         }
         // check Unit Input is valid and update the territory units
-        if (sumUnits <= maxUnits) {
+        if (sumUnits == initUnits) {
             int index = 0;
             for (Territory t : myTerritory) {
                 t.updateUnits((Integer) numList.get(index));
             }
+            communicator.sendAllocation(new ArrayList<Territory>(myTerritory));
         }
         else {
             throw new IllegalArgumentException("Total input units beyond scope!\n");
@@ -189,7 +196,9 @@ public class ClientPlayer extends Player {
                     out.println("Invalid input, please input again");
             }
         }
-
     }
 
+    public void connectServer() throws IOException {
+        communicator.sendName(this);
+    }
 }

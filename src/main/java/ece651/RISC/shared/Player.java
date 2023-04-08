@@ -37,7 +37,9 @@ public class Player {
         this(id, name, new HashSet<>());
     }
 
-
+    public Player(String name) {
+        this(-1, name);
+    }
 
     public int getId() {
         return id;
