@@ -24,7 +24,6 @@ public class JSONConvertor {
                 } else {
                     selfTerritory.addAccessible(relatedTerritory);
                 }
-
             }
         }
     }
