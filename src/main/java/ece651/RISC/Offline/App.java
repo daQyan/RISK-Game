@@ -13,12 +13,6 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 
 public class App {
-
-
-    private Player p1;
-    private Player p2;
-    private Player p3;
-
     public void main(String[] args) throws IOException {
 
         System.out.println("GAME START");
@@ -37,7 +31,7 @@ public class App {
         clientGames.add(clientGame2);
         clientGames.add(clientGame3);
         OfflineServer2Client server2Client = new OfflineServer2Client(clientGames);
-        ServerGame serverGame = new ServerGame(3, 3, server2Client);
+        ServerGame serverGame = new ServerGame(playerSize, initialTerritorySize, 30, server2Client);
         OfflineClient2Server client2Server1 = new OfflineClient2Server(serverGame,clientPlayer1);
         clientPlayer1.setCommunicator(client2Server1);
         OfflineClient2Server client2Server2 = new OfflineClient2Server(serverGame,clientPlayer2);

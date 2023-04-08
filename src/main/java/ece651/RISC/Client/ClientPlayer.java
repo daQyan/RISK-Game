@@ -17,6 +17,13 @@ public class ClientPlayer extends Player {
     private GameMap map;
     private int initUnits;
 
+    private Status.playerStatus status;
+
+    @Override
+    public void setStatus(Status.playerStatus status) {
+        this.status = status;
+    }
+
     public void setInitUnits(int initUnits) {
         this.initUnits = initUnits;
     }
@@ -32,6 +39,7 @@ public class ClientPlayer extends Player {
         super(name);
         this.inputReader = inputReader;
         this.out = out;
+        this.status = Status.playerStatus.INIT;
     }
 
     Territory getTerritoryByName(String terName) {
@@ -174,27 +182,31 @@ public class ClientPlayer extends Player {
 
 
     // player play one turn with move and attack orders
-    public void playOneTurn() throws IOException {
+    public void playOneTurn()  {
         ArrayList<MoveAction> moveActions = new ArrayList<>();
         ArrayList<AttackAction> attackActions = new ArrayList<>();
         out.println("options: M for move, A for attack, D for Done");
         // keep receiving order input until (D)one
-        while (true) {
-            String s = inputReader.readLine();
-            if (s.equals("D")) {}
-            switch (s) {
-                case "D":
-                    communicator.sendActions(moveActions, attackActions);
-                    break;
-                case "M":
-                    move(moveActions);
-                    break;
-                case"A":
-                    attack(attackActions);
-                    break;
-                default:
-                    out.println("Invalid input, please input again");
+        try{
+            while (true) {
+                String s = inputReader.readLine();
+                if (s.equals("D")) {}
+                switch (s) {
+                    case "D":
+                        communicator.sendActions(moveActions, attackActions);
+                        break;
+                    case "M":
+                        move(moveActions);
+                        break;
+                    case"A":
+                        attack(attackActions);
+                        break;
+                    default:
+                        out.println("Invalid input, please input again");
+                }
             }
+        } catch(IOException error) {
+            System.out.println(error.getMessage());
         }
     }
 

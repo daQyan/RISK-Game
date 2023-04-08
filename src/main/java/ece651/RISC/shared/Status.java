@@ -2,6 +2,8 @@ package ece651.RISC.shared;
 
 public class Status {
     public enum playerStatus{
+        INIT,
+        ALLOCATING,
         WIN,
         PLAYING,
         LOSE

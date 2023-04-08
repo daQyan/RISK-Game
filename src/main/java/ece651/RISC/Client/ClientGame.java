@@ -27,7 +27,7 @@ public class ClientGame {
         return map.getArea(id);
     }
 
-    public void playOneTurn() throws IOException {
+    public void playOneTurn(){
         player.playOneTurn();
     }
 }
