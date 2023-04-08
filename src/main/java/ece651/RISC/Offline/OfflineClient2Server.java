@@ -1,39 +1,28 @@
 package ece651.RISC.Offline;
 
+import ece651.RISC.Client.ClientGame;
 import ece651.RISC.Server.ServerGame;
-import ece651.RISC.shared.AttackAction;
-import ece651.RISC.shared.MoveAction;
-import ece651.RISC.shared.Client2Server;
-import ece651.RISC.shared.Territory;
+import ece651.RISC.shared.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class OfflineClient2Server implements Client2Server {
-    private ServerGame game;
-    private int playerSize;
+    private ServerGame serverGame;
+    private ClientGame clientGame;
 
     private int curTimes = 0;
 
     ArrayList<MoveAction> moveActions;
     ArrayList<AttackAction> attackActions;
-    public OfflineClient2Server(ServerGame game, int playerSize) {
-        this.game = game;
-        this.playerSize = playerSize;
-        this.attackActions = new ArrayList<>();
-        this.moveActions = new ArrayList<>();
+    public OfflineClient2Server(ServerGame serverGame, ClientGame clientGame) {
+        this.serverGame = serverGame;
+        this.clientGame = clientGame;
     }
     @Override
     public void sendActions(ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) throws IOException {
-        curTimes++;
-        this.attackActions.addAll(attackActions);
-        this.moveActions.addAll(moveActions);
-        if(curTimes == playerSize) {
-            game.playOneTurn(this.moveActions, this.attackActions);
-            curTimes = 0;
-            this.attackActions.clear();
-            this.moveActions.clear();
-        }
+        Player player = clientGame.getPlayer();
+        serverGame.playerOneTurn(player, moveActions, attackActions);
     }
 
     @Override
