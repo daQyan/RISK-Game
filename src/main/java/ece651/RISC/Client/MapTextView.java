@@ -13,8 +13,8 @@ public class MapTextView {
         this.myMap = myMap;
     }
 
-    public HashMap<Player, ArrayList<Territory>> sortTerritory(){
-        HashMap<Player, ArrayList<Territory>> sorted = new HashMap<>();
+    public LinkedHashMap<Player, ArrayList<Territory>> sortTerritory(){
+        LinkedHashMap<Player, ArrayList<Territory>> sorted = new LinkedHashMap<>();
         for(Territory t: myMap.getAllAreas()){
             if(!sorted.containsKey(t.getOwner())){
                 sorted.put(t.getOwner(), new ArrayList<>());
@@ -25,7 +25,7 @@ public class MapTextView {
     }
 
     public void displayMap(){
-        HashMap<Player, ArrayList<Territory>> sorted = sortTerritory();
+        LinkedHashMap<Player, ArrayList<Territory>> sorted = sortTerritory();
         StringBuilder result = new StringBuilder();
         String delimiter = "-------------\n";
         for(Map.Entry<Player, ArrayList<Territory>> entry : sorted.entrySet() ){
