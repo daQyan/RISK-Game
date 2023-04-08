@@ -80,7 +80,7 @@ public class MapFactory {
             return new GameMap(myTerritories);
         }
         //10 territories
-        Territory Hamilton = new Territory(9, "Hamilton", 0, null, null, null);
+        Territory Hamilton = new Territory(9, "Hamilton");
 
         Hamilton.addAdjacent(Mordor);
         Hamilton.addAdjacent(Hogwarts);

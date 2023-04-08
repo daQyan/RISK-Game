@@ -42,8 +42,9 @@ public class Territory {
     }
 
     public Territory(int id, String name) {
-        this(id, name, 0, null);
+        this(id, name, 0, new Player("test"));
     }
+
 
     public int getId() {
         return id;
