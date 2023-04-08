@@ -3,6 +3,7 @@ package ece651.RISC.shared;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.annotation.JSONField;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,7 +13,7 @@ public class Player {
     @JSONField(name = "name")
     protected String name;
     @JSONField(serialize = false, deserialize = false)
-    protected Set<Territory> territories;
+    protected ArrayList<Territory> territories;
 
     protected Status.playerStatus status;
 
@@ -26,7 +27,7 @@ public class Player {
 
     protected GameMap map;
 
-    public Player(int id, String name, Set<Territory> territories) {
+    public Player(int id, String name, ArrayList<Territory> territories) {
         this.id = id;
         this.name = name;
         this.territories = territories;
@@ -34,7 +35,7 @@ public class Player {
     }
 
     public Player(int id, String name) {
-        this(id, name, new HashSet<>());
+        this(id, name, new ArrayList<>());
     }
 
     public Player(String name) {
@@ -49,7 +50,7 @@ public class Player {
         return name;
     }
 
-    public Set<Territory> getTerritories() {
+    public ArrayList<Territory> getTerritories() {
         return territories;
     }
 
@@ -61,7 +62,7 @@ public class Player {
         this.name = name;
     }
 
-    public void setTerritories(Set<Territory> territories) {
+    public void setTerritories(ArrayList<Territory> territories) {
         this.territories = territories;
     }
 
@@ -69,6 +70,7 @@ public class Player {
         territories.add(t);
     }
 
+    public ArrayList<Territory> getMyTerritory(){ return territories; }
 
     @Override
     public String toString() {

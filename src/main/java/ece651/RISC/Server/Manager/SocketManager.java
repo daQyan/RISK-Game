@@ -1,4 +1,4 @@
-package ece651.RISC.Server;
+package ece651.RISC.Server.Manager;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;

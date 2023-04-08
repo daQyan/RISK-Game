@@ -17,7 +17,7 @@ public class OfflineServer2Client implements Server2Client {
     @Override
     public void sendOneTurn(Player to, GameMap map, Status.playerStatus status) {
         for(ClientPlayer player: players) {
-            if(player.equals(2)) {
+            if(player.equals(to)) {
                 player.setStatus(status);
                 player.setMap(map);
                 player.playOneTurn();

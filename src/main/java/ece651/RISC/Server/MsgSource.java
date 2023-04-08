@@ -1,5 +1,6 @@
 package ece651.RISC.Server;
 
+import ece651.RISC.Server.Controller.MyWebSocketHandler;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;

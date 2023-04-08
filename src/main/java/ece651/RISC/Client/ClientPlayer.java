@@ -167,22 +167,21 @@ public class ClientPlayer extends Player {
     }
 
     // parse the input from user and update its Territories
-    private void parseUnitsPlacement(String prompt, Set<Territory> myTerritory) throws IOException {
-        List numList = new ArrayList();
+    private void parseUnitsPlacement(String prompt, ArrayList<Territory> myTerritory) throws IOException {
+        ArrayList<Integer> numList = new ArrayList();
         String[] parts = prompt.split(" ");
         int sumUnits = 0;
-        for (int i = 0; i <3; ++i) {
+        for (int i = 0; i <parts.length; ++i) {
             int num = Integer.parseInt(parts[i]);
-            numList.add(i);
+            numList.add(num);
             sumUnits += num;
         }
         // check Unit Input is valid and update the territory units
         if (sumUnits == initUnits) {
-            int index = 0;
-            for (Territory t : myTerritory) {
-                t.updateUnits((Integer) numList.get(index));
+            for (int i = 0; i < numList.size(); i++) {
+                myTerritory.get(i).updateUnits(numList.get(i));
             }
-            communicator.sendAllocation(new ArrayList<Territory>(myTerritory));
+            communicator.sendAllocation(myTerritory);
         }
         else {
             throw new IllegalArgumentException("Total input units beyond scope!\n");
