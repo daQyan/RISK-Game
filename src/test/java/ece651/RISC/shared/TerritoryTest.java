@@ -1,4 +1,4 @@
-package ece651.RISC;
+package ece651.RISC.shared;
 
 import ece651.RISC.shared.Player;
 import ece651.RISC.shared.Territory;
