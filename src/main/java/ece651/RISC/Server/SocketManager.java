@@ -8,7 +8,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public class SocketManager {
-    //should implement sockets here
     private static final ConcurrentHashMap<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
     public static void add(String key, WebSocketSession webSocketSession) {

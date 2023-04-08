@@ -15,7 +15,22 @@ public class ClientPlayer extends Player {
     private PrintStream out;
 
     private GameMap map;
+
+    public void setMap(GameMap map) {
+        this.map = map;
+        this.view = new MapTextView(map);
+    }
+
     private int initUnits;
+
+    private Status.playerStatus status;
+
+    private MapTextView view;
+
+    @Override
+    public void setStatus(Status.playerStatus status) {
+        this.status = status;
+    }
 
     public void setInitUnits(int initUnits) {
         this.initUnits = initUnits;
@@ -32,6 +47,7 @@ public class ClientPlayer extends Player {
         super(name);
         this.inputReader = inputReader;
         this.out = out;
+        this.status = Status.playerStatus.INIT;
     }
 
     Territory getTerritoryByName(String terName) {
@@ -129,7 +145,8 @@ public class ClientPlayer extends Player {
     }
 
     public void initUnitPlacement(){
-        String prompt = "Player, " + this.name + "you have in total 12 units and following territory, please specify the units for "
+        this.view.displayMap();
+        String prompt = "Player " + this.name + ", you have in total " + initUnits + " units and following territory, please specify the units for "
                 + getMyTerritoryName() + "with the format <unit1> <unit2> <unit3>";
         out.println(prompt);
 
@@ -154,7 +171,7 @@ public class ClientPlayer extends Player {
         List numList = new ArrayList();
         String[] parts = prompt.split(" ");
         int sumUnits = 0;
-        for (int i = 0; i <=3; ++i) {
+        for (int i = 0; i <3; ++i) {
             int num = Integer.parseInt(parts[i]);
             numList.add(i);
             sumUnits += num;
@@ -177,27 +194,32 @@ public class ClientPlayer extends Player {
         initUnitPlacement();
     }
     // player play one turn with move and attack orders
-    public void playOneTurn() throws IOException {
+    public void playOneTurn()  {
+        view.displayMap();
         ArrayList<MoveAction> moveActions = new ArrayList<>();
         ArrayList<AttackAction> attackActions = new ArrayList<>();
         out.println("options: M for move, A for attack, D for Done");
         // keep receiving order input until (D)one
-        while (true) {
-            String s = inputReader.readLine();
-            if (s.equals("D")) {}
-            switch (s) {
-                case "D":
-                    communicator.sendActions(moveActions, attackActions);
-                    break;
-                case "M":
-                    move(moveActions);
-                    break;
-                case"A":
-                    attack(attackActions);
-                    break;
-                default:
-                    out.println("Invalid input, please input again");
+        try{
+            while (true) {
+                String s = inputReader.readLine();
+                if (s.equals("D")) {}
+                switch (s) {
+                    case "D":
+                        communicator.sendActions(moveActions, attackActions);
+                        break;
+                    case "M":
+                        move(moveActions);
+                        break;
+                    case"A":
+                        attack(attackActions);
+                        break;
+                    default:
+                        out.println("Invalid input, please input again");
+                }
             }
+        } catch(IOException error) {
+            System.out.println(error.getMessage());
         }
     }
 

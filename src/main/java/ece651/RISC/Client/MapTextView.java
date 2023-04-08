@@ -9,6 +9,10 @@ import java.util.*;
 public class MapTextView {
     private GameMap myMap;
 
+    public MapTextView(GameMap myMap) {
+        this.myMap = myMap;
+    }
+
     public HashMap<Player, ArrayList<Territory>> sortTerritory(){
         HashMap<Player, ArrayList<Territory>> sorted = new HashMap<>();
         for(Territory t: myMap.getAllAreas()){
@@ -39,7 +43,7 @@ public class MapTextView {
                     }
                     result.append(entry.getValue().get(i).getAdjacents().get(j).getName());
                 }
-                result.append(")");
+                result.append(")\n");
             }
             result.append("\n");
         }

@@ -41,8 +41,8 @@ public class Territory {
         this(id, name, unit, owner, new ArrayList<>(), new ArrayList<>());
     }
 
-    public Territory(int id, String name, int unit) {
-        this(id, name, unit, null);
+    public Territory(int id, String name) {
+        this(id, name, 0, null);
     }
 
     public int getId() {

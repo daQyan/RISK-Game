@@ -8,28 +8,32 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class OfflineServer2Client implements Server2Client {
-    private ArrayList<ClientGame> games;
+    private ArrayList<ClientPlayer> players;
 
-    OfflineServer2Client(ArrayList<ClientGame> games){
-        this.games = games;
+    OfflineServer2Client(ArrayList<ClientPlayer> players){
+        this.players = players;
     }
 
     @Override
-    public void sendMap(Player player, GameMap map) throws IOException {
-        for(ClientGame game: games) {
-            if(game.getPlayer().equals(player)) {
-                game.setClientMap(map);
-                game.playOneTurn();
+    public void sendOneTurn(Player to, GameMap map, Status.playerStatus status) {
+        for(ClientPlayer player: players) {
+            if(player.equals(2)) {
+                player.setStatus(status);
+                player.setMap(map);
+                player.playOneTurn();
             }
         }
     }
 
     @Override
-    public void sendInitUnit(Player player, int initUnit) {
-        for(ClientGame game: games) {
-            if(game.getPlayer().equals(player)) {
-                game.getPlayer().setInitUnits(initUnit);
+    public void sendAllocation(Player to, ArrayList<Player> allPlayers, GameMap map, int initUnit){
+        for(ClientPlayer player: players) {
+            if(player.equals(to)) {
+                player.setInitUnits(initUnit);
+                player.setMap(map);
+                player.initUnitPlacement();
             }
         }
     }
+
 }
