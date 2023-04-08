@@ -1,4 +1,4 @@
-package ece651.RISC.Server;
+package ece651.RISC.Server.Manager;
 
 import ece651.RISC.shared.Player;
 import lombok.extern.slf4j.Slf4j;
