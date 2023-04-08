@@ -4,6 +4,9 @@ import java.util.Random;
 
 public class Combat {
     private Random Dice;
+    public Combat(){
+        this.Dice  = new Random();
+    }
     public boolean rollCombatDice(){
         int myDice = Dice.nextInt(19) + 1;
         int enemyDice = Dice.nextInt(19) + 1;

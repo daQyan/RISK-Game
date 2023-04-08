@@ -17,6 +17,8 @@ public class GameMap {
     //for every turn, update the accessible territories for all the territory
     public void updateAccessible(){
         for(Territory t : Areas){
+            //clear the old accessible areas
+            t.setAccessibles(new ArrayList<>());
             Player p = t.getOwner();
             ArrayList<Territory> visited = new ArrayList<>();
             visited.add(t);
