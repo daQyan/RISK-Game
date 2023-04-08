@@ -22,7 +22,7 @@ public class OfflineClient2Server implements Client2Server {
     }
 
     @Override
-    public int sendName(Player player){
+    public int sendName(Player player) throws IOException {
         int playerId = serverGame.addPlayer(player);
         return playerId;
     }

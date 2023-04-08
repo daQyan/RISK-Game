@@ -17,7 +17,7 @@ public class OfflineServer2Client implements Server2Client {
     @Override
     public void sendOneTurn(Player to, GameMap map, Status.playerStatus status) {
         for(ClientPlayer player: players) {
-            if(player.equals(2)) {
+            if(player.equals(to)) {
                 player.setStatus(status);
                 player.setMap(map);
                 player.playOneTurn();
@@ -26,7 +26,7 @@ public class OfflineServer2Client implements Server2Client {
     }
 
     @Override
-    public void sendAllocation(Player to, ArrayList<Player> allPlayers, GameMap map, int initUnit){
+    public void sendAllocation(Player to, ArrayList<Player> allPlayers, GameMap map, int initUnit) throws IOException {
         for(ClientPlayer player: players) {
             if(player.equals(to)) {
                 player.setInitUnits(initUnit);
@@ -35,5 +35,4 @@ public class OfflineServer2Client implements Server2Client {
             }
         }
     }
-
 }

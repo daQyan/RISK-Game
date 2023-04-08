@@ -24,6 +24,7 @@ public class ActionChecker {
         return null;
     }
     public String checkMoveRule(Player owner, Territory sourceTerritory, Territory targetTerritory, int Units) {
+        System.out.println("checkMoveRule");
         if(owner == null || !owner.equals(sourceTerritory.getOwner())){
             return ("The move action is not valid: " + owner.getName() +  " does not own " + sourceTerritory.getName() + "!");
         }

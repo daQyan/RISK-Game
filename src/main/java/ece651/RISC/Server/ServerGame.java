@@ -63,7 +63,7 @@ public class ServerGame {
         this.myMapController= new MapController(myMap);
     }
 
-    public int addPlayer(Player player) {
+    public int addPlayer(Player player) throws IOException {
         int playerIndex = players.size();
         if(playerIndex >= playerSize - 1) {
             return -1; // TODO: HANDLE HTTP ERRORs
@@ -71,7 +71,7 @@ public class ServerGame {
         player.setId(playerIndex);
         for(int i = playerIndex * initialTerritorySize; i < (playerIndex + 1 ) * initialTerritorySize; i++) {
             Territory t = myMap.getArea(i);
-            player.addTerriories(t);
+            player.addTerritories(t);
             t.setOwner(player);
         }
         players.add(player);
@@ -82,7 +82,7 @@ public class ServerGame {
         return playerIndex;
     }
 
-    public void letPlayerAllocate() {
+    public void letPlayerAllocate() throws IOException {
         for(Player player: players){
             server2Client.sendAllocation(player, players, myMap, playerInitUnits);
         }
@@ -93,19 +93,22 @@ public class ServerGame {
             Territory serverSideTerritory = myMap.getArea(territory.getId());
             if(serverSideTerritory.getOwner().equals(player)){
                 serverSideTerritory.setNumUnits(territory.getNumUnits());
+                System.out.println(serverSideTerritory.getName() + ":" + serverSideTerritory.getNumUnits() + "," + territory.getNumUnits());
             }
         }
         allocatedPlayer.add(player);
         if(allocatedPlayer.size() == playerSize) {
             myStatus = Status.gameStatus.PLAYING;
+            myMap.updateAccessible();
             letPlayerPlay();
         }
     }
 
     public void letPlayerPlay() {
+        System.out.println("letPlayerPlay");
+        this.round = new Round(players, myMap, server2Client);
         for(Player player: players){
             server2Client.sendOneTurn(player, myMap, player.getStatus());
-            this.round = new Round(players, myMap, server2Client);
         }
     }
 
@@ -118,6 +121,7 @@ public class ServerGame {
     //play one turn of the game
     public void playOneTurn() {
         myStatus  = round.playOneTurn();
+        myMap.updateAccessible();
         if(myStatus == Status.gameStatus.FINISHED) {
             // 通知所有player
             return;
