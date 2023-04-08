@@ -120,13 +120,13 @@ public class ClientPlayer extends Player {
 
     // initialize the name and units for one player
     // player_id = i
-//    public void makeUpPlayer(int i) throws IOException {
-//        out.println("Please give yourself a name: ");
-//        String myName = inputReader.readLine();
-//        // TODO: check name valid
-//        this.name = myName;
-//        this.id = i;
-//    }
+    public void initializePlayer(int i) throws IOException {
+        out.println("Please give yourself a name: ");
+        String myName = inputReader.readLine();
+        // TODO: check name valid
+        this.name = myName;
+        this.id = i;
+    }
 
     public void initUnitPlacement(){
         String prompt = "Player, " + this.name + "you have in total 12 units and following territory, please specify the units for "
@@ -172,7 +172,10 @@ public class ClientPlayer extends Player {
         }
     }
 
-
+    public void playFirstTurn(int playerID) throws IOException{
+        initializePlayer(playerID);
+        initUnitPlacement();
+    }
     // player play one turn with move and attack orders
     public void playOneTurn() throws IOException {
         ArrayList<MoveAction> moveActions = new ArrayList<>();
