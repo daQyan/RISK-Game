@@ -49,7 +49,7 @@ public class ServerGame {
         player.setId(playerIndex);
         for(int i = playerIndex * initialTerritorySize; i <  (playerIndex + 1 ) * initialTerritorySize; i++) {
             Territory t = myMap.getArea(i);
-            player.addTerriories(t);
+            player.addTerritories(t);
             t.setOwner(player);
         }
         players.add(player);
@@ -100,11 +100,6 @@ public class ServerGame {
         while(attackActions.size() > 0){
             int order = rand.nextInt(attackActions.size());
             String result = attackActions.get(order).attackTerritory();
-            if (result == "Owner Changed") {
-                int newUnits = -attackActions.get(order).targetTerritory.getUnit();
-                attackActions.get(order).targetTerritory.changeOwner(newUnits, attackActions.get(order).sourceTerritory.getOwner());
-                // let player update its territory later
-            }
             attackActions.remove(order);
         }
     }

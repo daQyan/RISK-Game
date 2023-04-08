@@ -1,4 +1,4 @@
-package ece651.RISC.Server;
+package ece651.RISC.Client;
 
 import ece651.RISC.shared.GameMap;
 import ece651.RISC.shared.Player;
@@ -20,7 +20,7 @@ public class MapTextView {
         return sorted;
     }
 
-    public String displayMap(){
+    public void displayMap(){
         HashMap<Player, ArrayList<Territory>> sorted = sortTerritory();
         StringBuilder result = new StringBuilder();
         String delimiter = "-------------\n";
@@ -43,6 +43,6 @@ public class MapTextView {
             }
             result.append("\n");
         }
-        return result.toString();
+        System.out.print(result.toString());
     }
 }
