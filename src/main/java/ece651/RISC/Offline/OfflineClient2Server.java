@@ -6,6 +6,7 @@ import ece651.RISC.shared.MoveAction;
 import ece651.RISC.shared.Client2Server;
 import ece651.RISC.shared.Territory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class OfflineClient2Server implements Client2Server {
@@ -23,7 +24,7 @@ public class OfflineClient2Server implements Client2Server {
         this.moveActions = new ArrayList<>();
     }
     @Override
-    public void sendActions(ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
+    public void sendActions(ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) throws IOException {
         curTimes++;
         this.attackActions.addAll(attackActions);
         this.moveActions.addAll(moveActions);

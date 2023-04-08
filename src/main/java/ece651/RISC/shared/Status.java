@@ -11,6 +11,8 @@ public class Status {
         ATTACK
     }
     public enum gameStatus{
+        WAITINGPLAYER,
+        WAITINGPLAYERALLOCATE,
         PLAYING,
         FINISHED
     }

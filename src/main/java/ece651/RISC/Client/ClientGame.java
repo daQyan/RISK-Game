@@ -10,11 +10,15 @@ import java.util.HashMap;
 public class ClientGame {
     private GameMap map;
 
-    private ArrayList<ClientPlayer> players;
+    private ClientPlayer player;
 
-    public void Game(GameMap map, ArrayList<ClientPlayer> players){
+    public ClientPlayer getPlayer() {
+        return player;
+    }
+
+    public void Game(GameMap map, ClientPlayer player){
         this.map = map;
-        this.players = players;
+        this.player = player;
     }
     public void setClientMap(GameMap map) {
         this.map = map;
@@ -25,8 +29,6 @@ public class ClientGame {
     }
 
     public void playOneTurn() throws IOException {
-        for(ClientPlayer player: players) {
-            player.playOneTurn();
-        }
+        player.playOneTurn();
     }
 }

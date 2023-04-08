@@ -2,26 +2,44 @@ package ece651.RISC.Server;
 
 import ece651.RISC.shared.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class ServerGame {
-
+    private int playerSize;
     private ArrayList<Player> players;
     private GameMap myMap;
     private MapController myMapController;
-    private MapFactory myMapFactory;
+
     private Status.gameStatus myStatus;
 
     private Server2Client server2Client;
 
-    public ServerGame(ArrayList<Player> players, GameMap myMap, Server2Client server2Client) {
-        this.players = players;
-        this.myMap = myMap;
-        this.myStatus = Status.gameStatus.PLAYING;
-        this.myMapFactory = new MapFactory();
+//    public ServerGame(ArrayList<Player> players, GameMap myMap, Server2Client server2Client) {
+//        this.players = players;
+//        this.myMap = myMap;
+//        this.myStatus = Status.gameStatus.WAITINGPLAYER;
+//        this.myMapController= new MapController(myMap);
+//        this.server2Client = server2Client;
+//    }
+
+    public ServerGame(int playerSize, Server2Client server2Client){
+        this.playerSize = playerSize;
+        this.players = new ArrayList<>();
+        MapFactory mf = new MapFactory();
+        this.myMap = mf.createMap(3);
         this.myMapController= new MapController(myMap);
         this.server2Client = server2Client;
+        this.myStatus = Status.gameStatus.WAITINGPLAYER;
+    }
+
+    public void addPlayer(Player player) throws IOException {
+        players.add(player);
+        server2Client.sendMap(player, myMap);
+        if(players.size() == playerSize) {
+            myStatus = Status.gameStatus.WAITINGPLAYERALLOCATE;
+        }
     }
 
 
@@ -74,12 +92,14 @@ public class ServerGame {
         }
     }
     //play one turn of the game
-    public void playOneTurn(ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions){
+    public void playOneTurn(ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) throws IOException {
         executeMoves(moveActions);
         executeAttacks(attackActions);
         checkStatus();
         //send information to players for networked game
-        server2Client.sendMap(myMap);
+        for(Player player: players) {
+            server2Client.sendMap(player, myMap);
+        }
     }
 
 
