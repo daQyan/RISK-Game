@@ -1,4 +1,4 @@
-package ece651.RISC.Server;
+package ece651.RISC.Server.Controller;
 
 import ece651.RISC.Server.config.WebSocketEndpoint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +21,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 @WebSocketEndpoint("/ws")
 public class MyWebSocketHandler extends TextWebSocketHandler {
-    @Autowired
-    public ServerGame serverGame;
     private final ConcurrentHashMap<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
     @Override

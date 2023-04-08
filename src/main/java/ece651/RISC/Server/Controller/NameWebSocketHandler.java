@@ -1,6 +1,9 @@
-package ece651.RISC.Server;
+package ece651.RISC.Server.Controller;
 import com.alibaba.fastjson2.JSON;
 
+import ece651.RISC.Server.Manager.ClientManager;
+import ece651.RISC.Server.Manager.SocketManager;
+import ece651.RISC.Server.ServerGame;
 import ece651.RISC.Server.config.WebSocketEndpoint;
 import ece651.RISC.shared.Player;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +47,11 @@ public class NameWebSocketHandler extends TextWebSocketHandler {
         // get clients' name, adding to the storage, respond the territory
         if(MsgType.equals("player_name")) {
             playerName = jsonObject.getString("name");
-            serverGame.addPlayer(new Player(playerName));
+            if(ClientManager.getSize() >= 3) {
+                pushMsg(session, "The room is full, please join another game!");
+                return;
+            }
+            ClientManager.addPlayer(session.getId(), new Player(1, playerName));
         }
 
         if(ClientManager.getSize() < 3) {

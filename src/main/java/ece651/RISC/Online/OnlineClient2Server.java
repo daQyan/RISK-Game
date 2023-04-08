@@ -16,7 +16,7 @@ public class OnlineClient2Server implements Client2Server {
         this.clientPlayer = clientPlayer;
     }
     @Override
-    public void sendActions(ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) throws IOException {
+    public void sendActions(ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
         serverGame.playerOneTurn(clientPlayer, moveActions, attackActions);
     }
 
