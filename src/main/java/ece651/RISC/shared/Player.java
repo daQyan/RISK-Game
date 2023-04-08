@@ -14,7 +14,7 @@ public class Player {
     protected String name;
     @JSONField(serialize = false, deserialize = false)
     protected ArrayList<Territory> territories;
-
+    @JSONField(name = "status")
     protected Status.playerStatus status;
 
     public void setStatus(Status.playerStatus status) {

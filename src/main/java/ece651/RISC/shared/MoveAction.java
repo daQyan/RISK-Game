@@ -9,6 +9,9 @@ public class MoveAction extends Action {
     public MoveAction(Territory sourceTerritory, Territory targetTerritory, int hitUnits, Status.actionStatus type, Player owner) {
         super(sourceTerritory, targetTerritory, hitUnits, type, owner);
     }
+    public void moveOut(){
+        sourceTerritory.updateUnits(-hitUnits);
+    }
 
     /**
      * move the units from one territory to the target one

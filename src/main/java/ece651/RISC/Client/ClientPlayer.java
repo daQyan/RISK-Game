@@ -81,7 +81,7 @@ public class ClientPlayer extends Player {
         if (checkResult == null) moveActions.add(move);
         else throw new IllegalArgumentException(checkResult);
         // modify the map
-        move.moveTerritory();
+        move.moveOut();
     }
 
     public void attack(ArrayList<AttackAction> attackActions) throws  IOException {
@@ -117,7 +117,7 @@ public class ClientPlayer extends Player {
         AttackAction attack = new AttackAction(source, target, unitAttack, Status.actionStatus.ATTACK, this);
         attackActions.add(attack);
         // modify the map
-        attack.attackTerritory();
+        attack.moveOut();
     }
 
 
@@ -136,12 +136,19 @@ public class ClientPlayer extends Player {
 
     // initialize the name and units for one player
     // player_id = i
+<<<<<<< HEAD
     public void initializePlayer(int i) throws IOException {
+=======
+    public void makeUpPlayer() throws IOException {
+>>>>>>> 5339a41 (fix: fix Combat bug)
         out.println("Please give yourself a name: ");
         String myName = inputReader.readLine();
         // TODO: check name valid
         this.name = myName;
+<<<<<<< HEAD
         this.id = i;
+=======
+>>>>>>> 5339a41 (fix: fix Combat bug)
     }
 
     public void initUnitPlacement(){
@@ -194,19 +201,23 @@ public class ClientPlayer extends Player {
     }
     // player play one turn with move and attack orders
     public void playOneTurn()  {
+<<<<<<< HEAD
         view.displayMap();
+=======
+>>>>>>> 5339a41 (fix: fix Combat bug)
         ArrayList<MoveAction> moveActions = new ArrayList<>();
         ArrayList<AttackAction> attackActions = new ArrayList<>();
-        out.println("options: M for move, A for attack, D for Done");
         // keep receiving order input until (D)one
         try{
             while (true) {
+                out.println(view.displayMap());
+                out.println(name + ", your options: M for move, A for attack, D for Done");
                 String s = inputReader.readLine();
-                if (s.equals("D")) {}
+                if (s.equals("D")) {
+                    communicator.sendActions(moveActions, attackActions);
+                    break;
+                }
                 switch (s) {
-                    case "D":
-                        communicator.sendActions(moveActions, attackActions);
-                        break;
                     case "M":
                         move(moveActions);
                         break;

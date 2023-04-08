@@ -35,5 +35,4 @@ public class OfflineServer2Client implements Server2Client {
             }
         }
     }
-
 }

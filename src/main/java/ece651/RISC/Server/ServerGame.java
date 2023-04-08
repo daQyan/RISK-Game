@@ -97,6 +97,7 @@ public class ServerGame {
         allocatedPlayer.add(player);
         if(allocatedPlayer.size() == playerSize) {
             myStatus = Status.gameStatus.PLAYING;
+            myMap.updateAccessible();
             letPlayerPlay();
         }
     }
@@ -118,6 +119,7 @@ public class ServerGame {
     //play one turn of the game
     public void playOneTurn() {
         myStatus  = round.playOneTurn();
+        myMap.updateAccessible();
         if(myStatus == Status.gameStatus.FINISHED) {
             // 通知所有player
             return;
