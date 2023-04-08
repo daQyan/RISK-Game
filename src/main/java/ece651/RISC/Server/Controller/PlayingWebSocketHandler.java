@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.JSON;
 import ece651.RISC.Server.Manager.ClientManager;
 import ece651.RISC.Server.Manager.SocketManager;
 import ece651.RISC.Server.Model.Game;
-import ece651.RISC.Server.ServerGame;
 import ece651.RISC.Server.config.WebSocketEndpoint;
 import ece651.RISC.shared.Player;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
  * @since 2023/4/3 20:44
  */
 @Component
-@WebSocketEndpoint("/name")
+@WebSocketEndpoint("/playing")
 @Slf4j
 public class PlayingWebSocketHandler extends TextWebSocketHandler {
     @Autowired

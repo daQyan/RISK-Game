@@ -32,7 +32,7 @@ public class Game {
 
     private ArrayList<MoveAction> moveActions = new ArrayList<>();
     private ArrayList<AttackAction> attackActions = new ArrayList<>();
-    private Set<Player> operatedPlayers = new HashSet<>();
+    private Set<Integer> operatedPlayerId = new HashSet<>();
 
     public Game() {
         this(3, 3, 30, null);
@@ -114,12 +114,25 @@ public class Game {
         }
     }
 
+    public void OperateFromPlayer() {
+
+    }
+
+    public int getOperatedPlayerSize() {
+        return operatedPlayerId.size();
+    }
+
+    public void resetOperatedPlayerId() {
+        operatedPlayerId.clear();
+    }
     public void playerOneTurn(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
         int operatedPlayerNum = round.playerOneTurn(player, moveActions, attackActions);
         if(operatedPlayerNum == playerSize){
             playOneTurn();
         }
     }
+
+
     //play one turn of the game
     public void playOneTurn() {
         myStatus  = round.playOneTurn();
