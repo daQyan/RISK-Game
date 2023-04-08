@@ -206,6 +206,9 @@ public class ClientPlayer extends Player {
 
     // player play one turn with move and attack orders
     public void playOneTurn()  {
+        if (checkWin()) return;
+        if (checkLose()) return;
+
         ArrayList<MoveAction> moveActions = new ArrayList<>();
         ArrayList<AttackAction> attackActions = new ArrayList<>();
         // keep receiving order input until (D)one
@@ -236,5 +239,21 @@ public class ClientPlayer extends Player {
 
     public void connectServer() throws IOException {
         communicator.sendName(this);
+    }
+
+    private boolean checkLose() {
+        if (status == Status.playerStatus.LOSE) {
+            out.println("Sorry, you have lost all your territories, you lose the game !");
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkWin() {
+        if (status == Status.playerStatus.WIN) {
+            out.println("Hooray! You win the game !");
+            return true;
+        }
+        return false;
     }
 }

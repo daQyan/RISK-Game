@@ -3,8 +3,8 @@ package ece651.RISC.shared;
 import com.alibaba.fastjson2.JSONObject;
 
 public abstract class Action {
-    public Territory sourceTerritory;
-    public Territory targetTerritory;
+    protected Territory sourceTerritory;
+    protected Territory targetTerritory;
     protected int hitUnits;
     protected ActionChecker myAC;
     protected Status.actionStatus type;
@@ -26,5 +26,24 @@ public abstract class Action {
         json.put("hitUnits", hitUnits);
         json.put("type", type);
         return json.toJSONString();
+    }
+
+    public Territory getSourceTerritory() {
+        return sourceTerritory;
+    }
+
+    public Territory getTargetTerritory() {
+        return targetTerritory;
+    }
+    public int getHitUnits(){
+        return hitUnits;
+    }
+
+    public Player getOwner() {
+        return owner;
+    }
+
+    public ActionChecker getMyAC() {
+        return myAC;
     }
 }

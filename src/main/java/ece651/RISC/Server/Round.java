@@ -38,6 +38,16 @@ public class Round {
 
     public void executeAttacks(ArrayList<AttackAction> attackActions) {
         Random rand = new Random();
+        for(AttackAction a: attackActions){
+            String checkAttack = a.getMyAC().checkAttackRule(a.getOwner(), a.getSourceTerritory(), a.getTargetTerritory(), a.getHitUnits());
+            if(checkAttack == null){
+                a.getSourceTerritory().updateUnits(-a.getHitUnits());
+            }
+            else{
+                System.out.println(checkAttack);
+                return;
+            }
+        }
         while(attackActions.size() > 0){
             int order = rand.nextInt(attackActions.size());
             String result = attackActions.get(order).attackTerritory();

@@ -17,10 +17,10 @@ public class ActionChecker {
         else if(sourceTerritory.getOwner().equals(targetTerritory.getOwner())){
             return("The attack action is invalid: cannot attack your own territory!");
         }
-        // if the owner of the territory is changed
-        else if(! sourceTerritory.getOwner().equals(owner)) {
-            return ("The attack action is invalid: attack failed because owner of the source territory has changed!");
-        }
+//        // if the owner of the territory is changed
+//        else if(!sourceTerritory.getOwner().equals(owner)) {
+//            return ("The attack action is invalid: attack failed because owner of the source territory has changed!");
+//        }
         return null;
     }
     public String checkMoveRule(Player owner, Territory sourceTerritory, Territory targetTerritory, int Units) {
