@@ -1,11 +1,5 @@
 package ece651.RISC.shared;
 
-import ece651.RISC.Combat;
-import ece651.RISC.shared.Status;
-import ece651.RISC.shared.Action;
-import ece651.RISC.shared.Territory;
-import ece651.RISC.shared.Player;
-
 public class AttackAction extends Action {
     private Combat myCombat;
     public AttackAction(Territory sourceTerritory, Territory targetTerritory, int hitUnits, Status.actionStatus type, Player owner) {
