@@ -70,8 +70,6 @@ public class Player {
         territories.add(t);
     }
 
-    public ArrayList<Territory> getMyTerritory(){ return territories; }
-
     @Override
     public String toString() {
         String res = name + ":" + System.lineSeparator() +
@@ -89,5 +87,9 @@ public class Player {
     public String toJSON(){
         String json = JSON.toJSONString(this);
         return json;
+    }
+
+    public static void main(String[] args) {
+
     }
 }

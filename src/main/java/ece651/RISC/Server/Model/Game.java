@@ -1,15 +1,24 @@
-package ece651.RISC.Server;
+package ece651.RISC.Server.Model;
 
 import ece651.RISC.Online.OnlineServer2Client;
-import ece651.RISC.shared.*;
+import ece651.RISC.Server.MapFactory;
+import ece651.RISC.Server.Round;
+import ece651.RISC.shared.AttackAction;
+import ece651.RISC.shared.GameMap;
+import ece651.RISC.shared.MapController;
+import ece651.RISC.shared.MoveAction;
+import ece651.RISC.shared.Player;
+import ece651.RISC.shared.Server2Client;
+import ece651.RISC.shared.Status;
+import ece651.RISC.shared.Territory;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ServerGame {
+@Component
+public class Game {
     private int playerSize;
     private int initialTerritorySize;
     private ArrayList<Player> players;
@@ -17,7 +26,7 @@ public class ServerGame {
     private MapController myMapController;
     private Status.gameStatus myStatus;
     private Server2Client server2Client;
-    private Set<Player> allocatedPlayer = new HashSet<>();
+    private Set<Integer> allocatedPlayerId = new HashSet<>();
     private int playerInitUnits;
     private Round round;
 
@@ -25,7 +34,7 @@ public class ServerGame {
     private ArrayList<AttackAction> attackActions = new ArrayList<>();
     private Set<Player> operatedPlayers = new HashSet<>();
 
-    public ServerGame() {
+    public Game() {
         this(3, 3, 30, null);
         this.myStatus = Status.gameStatus.WAITINGPLAYER;
         MapFactory mf = new MapFactory();
@@ -36,7 +45,7 @@ public class ServerGame {
         System.out.println("ServerGame Constructor");
     }
 
-    public ServerGame(int playerSize, int initialTerritorySize, int playerInitUnits, Server2Client server2Client){
+    public Game(int playerSize, int initialTerritorySize, int playerInitUnits, Server2Client server2Client){
         this.initialTerritorySize = initialTerritorySize;
         this.playerSize = playerSize;
         this.playerInitUnits = playerInitUnits;
@@ -63,52 +72,45 @@ public class ServerGame {
         this.myMapController= new MapController(myMap);
     }
 
-    public int addPlayer(Player player) throws IOException {
+    public int addPlayer(Player player) {
         int playerIndex = players.size();
-        if(playerIndex >= playerSize - 1) {
+        if(playerIndex > playerSize - 1) {
             return -1; // TODO: HANDLE HTTP ERRORs
         }
         player.setId(playerIndex);
         for(int i = playerIndex * initialTerritorySize; i < (playerIndex + 1 ) * initialTerritorySize; i++) {
             Territory t = myMap.getArea(i);
-            player.addTerritories(t);
+            player.addTerriories(t);
             t.setOwner(player);
         }
         players.add(player);
         if(players.size() == playerSize) {
             myStatus = Status.gameStatus.WAITINGPLAYERALLOCATE;
-            letPlayerAllocate();
         }
         return playerIndex;
     }
 
-    public void letPlayerAllocate() throws IOException {
-        for(Player player: players){
-            server2Client.sendAllocation(player, players, myMap, playerInitUnits);
-        }
+    public Player getPlayer(int playerId) {
+        return players.get(playerId);
     }
 
-    public void playerAllocate(Player player, ArrayList<Territory> territories) {
-        for(Territory territory: territories) {
-            Territory serverSideTerritory = myMap.getArea(territory.getId());
-            if(serverSideTerritory.getOwner().equals(player)){
-                serverSideTerritory.setNumUnits(territory.getNumUnits());
-                System.out.println(serverSideTerritory.getName() + ":" + serverSideTerritory.getNumUnits() + "," + territory.getNumUnits());
+    public void AllocateUnitFromPlayer(int playerId, Set<Integer> territoriesId, int numUnits) {
+        for(Integer territoryId: territoriesId) {
+            Territory serverSideTerritory = myMap.getArea(territoryId);
+            if(serverSideTerritory.getOwner().getId() == playerId){
+                serverSideTerritory.setNumUnits(numUnits);
             }
         }
-        allocatedPlayer.add(player);
-        if(allocatedPlayer.size() == playerSize) {
+        allocatedPlayerId.add(playerId);
+        if(allocatedPlayerId.size() == playerSize) {
             myStatus = Status.gameStatus.PLAYING;
-            myMap.updateAccessible();
-            letPlayerPlay();
         }
     }
 
     public void letPlayerPlay() {
-        System.out.println("letPlayerPlay");
-        this.round = new Round(players, myMap, server2Client);
         for(Player player: players){
             server2Client.sendOneTurn(player, myMap, player.getStatus());
+            this.round = new Round(players, myMap, server2Client);
         }
     }
 
@@ -121,7 +123,6 @@ public class ServerGame {
     //play one turn of the game
     public void playOneTurn() {
         myStatus  = round.playOneTurn();
-        myMap.updateAccessible();
         if(myStatus == Status.gameStatus.FINISHED) {
             // 通知所有player
             return;
@@ -131,5 +132,9 @@ public class ServerGame {
         for(Player player: players) {
             server2Client.sendOneTurn(player, myMap, player.getStatus());
         }
+    }
+
+    public Status.gameStatus getStatus() {
+        return myStatus;
     }
 }
