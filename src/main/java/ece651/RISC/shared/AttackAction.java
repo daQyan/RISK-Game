@@ -4,6 +4,7 @@ public class AttackAction extends Action {
     private Combat myCombat;
     public AttackAction(Territory sourceTerritory, Territory targetTerritory, int hitUnits, Status.actionStatus type, Player owner) {
         super(sourceTerritory, targetTerritory, hitUnits, type, owner);
+        myCombat = new Combat();
     }
 
     /**

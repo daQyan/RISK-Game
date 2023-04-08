@@ -66,7 +66,7 @@ public class Player {
         this.territories = territories;
     }
 
-    public void addTerriories(Territory t){
+    public void addTerritories(Territory t){
         territories.add(t);
     }
 

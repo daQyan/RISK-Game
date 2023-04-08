@@ -136,16 +136,16 @@ public class ClientPlayer extends Player {
 
     // initialize the name and units for one player
     // player_id = i
-//    public void makeUpPlayer(int i) throws IOException {
-//        out.println("Please give yourself a name: ");
-//        String myName = inputReader.readLine();
-//        // TODO: check name valid
-//        this.name = myName;
-//        this.id = i;
-//    }
+    public void initializePlayer(int i) throws IOException {
+        out.println("Please give yourself a name: ");
+        String myName = inputReader.readLine();
+        // TODO: check name valid
+        this.name = myName;
+        this.id = i;
+    }
 
     public void initUnitPlacement(){
-        out.println(view.displayMap());
+        this.view.displayMap();
         String prompt = "Player " + this.name + ", you have in total " + initUnits + " units and following territory, please specify the units for "
                 + getMyTerritoryName() + "with the format <unit1> <unit2> <unit3>";
         out.println(prompt);
@@ -188,10 +188,13 @@ public class ClientPlayer extends Player {
         }
     }
 
-
+    public void playFirstTurn(int playerID) throws IOException{
+        initializePlayer(playerID);
+        initUnitPlacement();
+    }
     // player play one turn with move and attack orders
     public void playOneTurn()  {
-        out.println(view.displayMap());
+        view.displayMap();
         ArrayList<MoveAction> moveActions = new ArrayList<>();
         ArrayList<AttackAction> attackActions = new ArrayList<>();
         out.println("options: M for move, A for attack, D for Done");

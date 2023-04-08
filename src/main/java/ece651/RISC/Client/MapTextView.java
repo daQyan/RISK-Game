@@ -24,7 +24,7 @@ public class MapTextView {
         return sorted;
     }
 
-    public String displayMap(){
+    public void displayMap(){
         HashMap<Player, ArrayList<Territory>> sorted = sortTerritory();
         StringBuilder result = new StringBuilder();
         String delimiter = "-------------\n";
@@ -47,6 +47,6 @@ public class MapTextView {
             }
             result.append("\n");
         }
-        return result.toString();
+        System.out.print(result.toString());
     }
 }

@@ -69,7 +69,7 @@ public class ServerGame {
         player.setId(playerIndex);
         for(int i = playerIndex * initialTerritorySize; i <  (playerIndex + 1 ) * initialTerritorySize; i++) {
             Territory t = myMap.getArea(i);
-            player.addTerriories(t);
+            player.addTerritories(t);
             t.setOwner(player);
         }
         players.add(player);
