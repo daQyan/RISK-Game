@@ -44,51 +44,66 @@ public class ClientPlayer extends Player {
     }
 
     public void move(ArrayList<MoveAction> moveActions) throws IOException {
-        String welcome = "Player, " + this.name + "you can move units within your adjacent territories:" + getMyTerritoryName();
+        String welcome = "Player " + this.name + ", you can move units within your adjacent territories:" + getMyTerritoryName();
         out.println(welcome);
-        String sourceTer = "Please specify the source territory with the territory name: ";
-        out.println(sourceTer);
+        String sourceTerMesg = "Please specify the source territory with the territory name: ";
+        out.println(sourceTerMesg);
         String sourceName = inputReader.readLine();
-        String targetTer = "Please specify the target territory with the territory name: ";
-        out.println(targetTer);
+        String targetTerMesg = "Please specify the target territory with the territory name: ";
+        out.println(targetTerMesg);
         String targetName = inputReader.readLine();
         String unitNum = "Please specify the number of units to move";
         out.println(unitNum);
         int unitMove = Integer.parseInt(inputReader.readLine());
+        Territory source = getTerritoryByName(sourceName);
+        Territory target = getTerritoryByName(targetName);
 
-        MoveAction move = new MoveAction(getTerritoryByName(sourceName), getTerritoryByName(targetName), unitMove, Status.actionStatus.MOVE, this);
-        // TODO
-        // Add check
-        // check if available
-        // if available, move out
-        moveActions.add(move);
+        MoveAction move = new MoveAction(source, target, unitMove, Status.actionStatus.MOVE, this);
+        ActionChecker checker = new ActionChecker();
+        String checkResult = checker.checkMoveRule(this, source, target, unitMove);
+
+        if (checkResult == null) moveActions.add(move);
+        else throw new IllegalArgumentException(checkResult);
+        // modify the map
+        move.moveTerritory();
     }
 
     public void attack(ArrayList<AttackAction> attackActions) throws  IOException {
-        String welcome = "Player, " + this.name + "Which territory would you want to attack? " + getMyTerritoryName();
-        String sourceTer = "Please specify the source territory with the territory name: ";
-        String targetTer = "Please specify the target territory with the territory name: ";
-        String unitNum = "Please specify the number of units to move";
+        String welcome = "Player " + this.name + ", which territory would you want to attack? " + getMyTerritoryName();
+        String sourceTerMesg = "Please specify the source territory with the territory name: ";
+        String targetTerMesg = "Please specify the target territory with the territory name: ";
+        String unitNumMesg = "Please specify the number of units to move";
         out.println(welcome);
-        String sourceName, targetName;
-        int unitMove;
+        String sourceTer, targetTer;
+        Territory source = null;
+        Territory target = null;
+        int unitAttack = 0;
         while (true) {
             try {
-                sourceName = inputReader.readLine();
-                //checkSource(sourceName);
-                targetName = inputReader.readLine();
-                //checkAccess(targetName);
-                unitMove = Integer.parseInt(inputReader.readLine());
-                //checkUnits(unitMove);
+                out.println(sourceTerMesg);
+                sourceTer = inputReader.readLine();
+                out.println(targetTerMesg);
+                targetTer = inputReader.readLine();
+                out.println(unitNumMesg);
+                unitAttack = Integer.parseInt(inputReader.readLine());
+
+                source = getTerritoryByName(sourceTer);
+                target = getTerritoryByName(targetTer);
+
+                ActionChecker checker = new ActionChecker();
+                String checkResult = checker.checkAttackRule(this, source, target, unitAttack);
+                if (checkResult != null) throw new IllegalArgumentException(checkResult);
                 break;
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
         }
-
-        AttackAction attack = new AttackAction(getTerritoryByName(sourceName), getTerritoryByName(targetName), unitMove, Status.actionStatus.MOVE, this);
+        AttackAction attack = new AttackAction(source, target, unitAttack, Status.actionStatus.ATTACK, this);
         attackActions.add(attack);
+        // modify the map
+        attack.attackTerritory();
     }
+
 
     // must init myTerritory first before call this
     private String getMyTerritoryName() {
