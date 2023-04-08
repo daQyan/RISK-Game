@@ -3,6 +3,7 @@ import com.alibaba.fastjson2.JSON;
 
 import ece651.RISC.Server.config.WebSocketEndpoint;
 import ece651.RISC.shared.Player;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -23,6 +24,9 @@ import lombok.extern.slf4j.Slf4j;
 @WebSocketEndpoint("/name")
 @Slf4j
 public class NameWebSocketHandler extends TextWebSocketHandler {
+    @Autowired
+    public ServerGame serverGame;
+
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         LOGGER.info("连接已建立，会话ID：" + session.getId() + "，客户端地址：" + session.getRemoteAddress());
@@ -35,7 +39,7 @@ public class NameWebSocketHandler extends TextWebSocketHandler {
         LOGGER.info("receive the message" + jsonString);
         JSONObject jsonObject = JSON.parseObject(jsonString);
         String MsgType = jsonObject.getString("msg_type");
-        String playerName = "";
+        String playerName;
         // state1
         // get clients' name, adding to the storage, respond the territory
         if(MsgType.equals("player_name")) {
@@ -66,10 +70,6 @@ public class NameWebSocketHandler extends TextWebSocketHandler {
 
 
         // begin game
-        while (true) {
-
-        }
-
     }
 
     @Override

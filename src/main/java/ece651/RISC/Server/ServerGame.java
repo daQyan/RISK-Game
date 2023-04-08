@@ -1,6 +1,7 @@
 package ece651.RISC.Server;
 
 import ece651.RISC.shared.*;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+@Component
 public class ServerGame {
     private int playerSize;
     private int initialTerritorySize;
@@ -26,13 +28,10 @@ public class ServerGame {
 
     private Set<Player> operatedPlayers = new HashSet<>();
 
-//    public ServerGame(ArrayList<Player> players, GameMap myMap, Server2Client server2Client) {
-//        this.players = players;
-//        this.myMap = myMap;
-//        this.myStatus = Status.gameStatus.WAITINGPLAYER;
-//        this.myMapController= new MapController(myMap);
-//        this.server2Client = server2Client;
-//    }
+    public ServerGame() {
+        this.myStatus = Status.gameStatus.WAITINGPLAYER;
+        this.myMapController= new MapController(myMap);
+    }
 
     public ServerGame(int playerSize, int initialTerritorySize, Server2Client server2Client){
         this.initialTerritorySize = initialTerritorySize;
