@@ -134,21 +134,11 @@ public class ClientPlayer extends Player {
         return s.toString();
     }
 
-    // initialize the name and units for one player
-    // player_id = i
-<<<<<<< HEAD
-    public void initializePlayer(int i) throws IOException {
-=======
     public void makeUpPlayer() throws IOException {
->>>>>>> 5339a41 (fix: fix Combat bug)
         out.println("Please give yourself a name: ");
         String myName = inputReader.readLine();
         // TODO: check name valid
         this.name = myName;
-<<<<<<< HEAD
-        this.id = i;
-=======
->>>>>>> 5339a41 (fix: fix Combat bug)
     }
 
     public void initUnitPlacement(){
@@ -195,22 +185,14 @@ public class ClientPlayer extends Player {
         }
     }
 
-    public void playFirstTurn(int playerID) throws IOException{
-        initializePlayer(playerID);
-        initUnitPlacement();
-    }
     // player play one turn with move and attack orders
     public void playOneTurn()  {
-<<<<<<< HEAD
-        view.displayMap();
-=======
->>>>>>> 5339a41 (fix: fix Combat bug)
         ArrayList<MoveAction> moveActions = new ArrayList<>();
         ArrayList<AttackAction> attackActions = new ArrayList<>();
         // keep receiving order input until (D)one
         try{
             while (true) {
-                out.println(view.displayMap());
+                view.displayMap();
                 out.println(name + ", your options: M for move, A for attack, D for Done");
                 String s = inputReader.readLine();
                 if (s.equals("D")) {
