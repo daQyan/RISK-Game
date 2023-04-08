@@ -27,7 +27,7 @@ public class AttackActionTest {
         AttackAction aa0 = new AttackAction(mp.getArea(0), mp.getArea(1),2, Status.actionStatus.ATTACK, p0);
         System.out.println(aa0.attackTerritory());
         mp.getArea(2).setNumUnits(10);
-        AttackAction aa1 = new AttackAction(mp.getArea(2), mp.getArea(3), 6, Status.actionStatus.ATTACK, p0);
+        AttackAction aa1 = new AttackAction(mp.getArea(2), mp.getArea(4), 6, Status.actionStatus.ATTACK, p0);
         System.out.println(aa1.attackTerritory());
         System.out.println(mp.getArea(2).getNumUnits());
         System.out.println(mp.getArea(2).getOwner());

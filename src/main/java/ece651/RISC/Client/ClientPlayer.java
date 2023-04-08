@@ -243,7 +243,7 @@ public class ClientPlayer extends Player {
 
     private boolean checkLose() {
         if (status == Status.playerStatus.LOSE) {
-            out.println("Sorry~ You lost all your territories, you lose the game !");
+            out.println("Sorry, you have lost all your territories, you lose the game !");
             return true;
         }
         return false;
