@@ -28,7 +28,8 @@ public class OfflineClient2Server implements Client2Server {
     }
 
     @Override
-    public void sendAllocation(ArrayList<Territory> moveActions) {
-
+    public void sendAllocation(ArrayList<Territory> territories) throws IOException {
+        Player player = clientGame.getPlayer();
+        serverGame.playerAllocate(player, territories);
     }
 }

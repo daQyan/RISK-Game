@@ -16,8 +16,7 @@ public class ClientGame {
         return player;
     }
 
-    public void Game(GameMap map, ClientPlayer player){
-        this.map = map;
+    public ClientGame( ClientPlayer player) {
         this.player = player;
     }
     public void setClientMap(GameMap map) {

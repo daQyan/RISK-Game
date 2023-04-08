@@ -25,11 +25,11 @@ public class OfflineServer2Client implements Server2Client {
     }
 
     @Override
-    public void sendInitUnit() {
-
-    }
-    @Override
-    public void sendId(int id) {
-
+    public void sendInitUnit(Player player, int initUnit) {
+        for(ClientGame game: games) {
+            if(game.getPlayer().equals(player)) {
+                game.getPlayer().setInitUnits(initUnit);
+            }
+        }
     }
 }

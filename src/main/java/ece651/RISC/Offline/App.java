@@ -1,8 +1,16 @@
 package ece651.RISC.Offline;
 
+import ece651.RISC.Client.ClientGame;
+import ece651.RISC.Client.ClientPlayer;
+import ece651.RISC.Server.ServerGame;
 import ece651.RISC.shared.Player;
+import ece651.RISC.shared.Server2Client;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.util.ArrayList;
 
 public class App {
 
@@ -14,37 +22,32 @@ public class App {
     public void main(String[] args) throws IOException {
 
         System.out.println("GAME START");
-        // 初始化territories
-        // 初始化Client Players
-        // 初始化OfflineClient2Server
-        // 初始化OffineServer2Client
-        // 初始化ServerGame
-        // 初始化ClientGame
+        int playerSize = 3;
+        int initialTerritorySize = 3;
+        BufferedReader inputReader = new BufferedReader(new InputStreamReader((System.in)));
+        PrintStream out = System.out;
+        ClientPlayer clientPlayer1 = new ClientPlayer("player1", inputReader, out);
+        ClientPlayer clientPlayer2 = new ClientPlayer("player2", inputReader, out);
+        ClientPlayer clientPlayer3 = new ClientPlayer("player3", inputReader, out);
+        ClientGame clientGame1 = new ClientGame(clientPlayer1);
+        ClientGame clientGame2 = new ClientGame(clientPlayer2);
+        ClientGame clientGame3 = new ClientGame(clientPlayer3);
+        ArrayList<ClientGame> clientGames = new ArrayList<>();
+        clientGames.add(clientGame1);
+        clientGames.add(clientGame2);
+        clientGames.add(clientGame3);
+        OfflineServer2Client server2Client = new OfflineServer2Client(clientGames);
+        ServerGame serverGame = new ServerGame(3, 3, server2Client);
+        OfflineClient2Server client2Server1 = new OfflineClient2Server(serverGame,clientGame1);
+        clientPlayer1.setCommunicator(client2Server1);
+        OfflineClient2Server client2Server2 = new OfflineClient2Server(serverGame,clientGame2);
+        clientPlayer2.setCommunicator(client2Server2);
+        OfflineClient2Server client2Server3 = new OfflineClient2Server(serverGame,clientGame3);
+        clientPlayer3.setCommunicator(client2Server3);
 
-        // initPlayers(p1, p2, p3);
-        // initMap
-        // sendTerritory to 3 p
-        // each player placeUNit()
-        // let server update map
-
-        // play one turn until   Game.playOneTurn()
-        // ....
-        // one player win
-
-
+        clientPlayer1.connectServer();
+        clientPlayer2.connectServer();
+        clientPlayer3.connectServer();
     }
-
-//    public void initPlayers(Player p1, Player p2, Player p3) throws IOException {
-//        List<Player> playerList = new ArrayList<>();
-//        playerList.add(p1);
-//        playerList.add(p2);
-//        playerList.add(p3);
-//        for (int i = 0; i < 3; ++i) {
-//            playerList.get(i).makeUpPlayer(i);
-//
-//        }
-//
-//
-//    }
 
 }

@@ -8,5 +8,5 @@ public interface Client2Server {
     // return player_id
     int sendName(Player player) throws IOException;
     //
-    void sendAllocation(ArrayList<Territory> moveActions);
+    void sendAllocation(ArrayList<Territory> territories) throws IOException;
 }

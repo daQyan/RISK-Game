@@ -67,11 +67,11 @@ public class ServerGame {
         }
     }
 
-    public void playerAllocate(Player player, ArrayList<Territory> territories, int unit) throws IOException {
+    public void playerAllocate(Player player, ArrayList<Territory> territories) throws IOException {
         for(Territory territory: territories) {
             Territory serverSideTerritory = myMap.getArea(territory.getId());
             if(serverSideTerritory.getOwner().equals(player)){
-                serverSideTerritory.setNumUnits(unit);
+                serverSideTerritory.setNumUnits(territory.getNumUnits());
             }
         }
         allocatedPlayer.add(player);
