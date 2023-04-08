@@ -26,7 +26,7 @@ public class OfflineServer2Client implements Server2Client {
     }
 
     @Override
-    public void sendAllocation(Player to, ArrayList<Player> allPlayers, GameMap map, int initUnit){
+    public void sendAllocation(Player to, ArrayList<Player> allPlayers, GameMap map, int initUnit) throws IOException {
         for(ClientPlayer player: players) {
             if(player.equals(to)) {
                 player.setInitUnits(initUnit);

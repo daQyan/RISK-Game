@@ -64,7 +64,7 @@ public class ServerGame {
         this.myMapController= new MapController(myMap);
     }
 
-    public int addPlayer(Player player) {
+    public int addPlayer(Player player) throws IOException {
         int playerIndex = players.size();
         player.setId(playerIndex);
         for(int i = playerIndex * initialTerritorySize; i <  (playerIndex + 1 ) * initialTerritorySize; i++) {
@@ -80,7 +80,7 @@ public class ServerGame {
         return playerIndex;
     }
 
-    public void letPlayerAllocate() {
+    public void letPlayerAllocate() throws IOException {
         for(Player player: players){
             server2Client.sendAllocation(player, players, myMap, playerInitUnits);
         }
