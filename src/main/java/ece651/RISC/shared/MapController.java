@@ -6,4 +6,6 @@ public class MapController {
         this.myMap = myMap;
     }
 
+
+    //TODO move map functions here laterrrr
 }
