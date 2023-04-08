@@ -93,6 +93,8 @@ public class ClientPlayer extends Player {
         moveActions.add(move);
         move.moveTerritory();
         out.println("Move Successful ~");
+        System.out.println("**-------------------------------------------------------------------------------------**");
+
 
     }
 
@@ -131,6 +133,8 @@ public class ClientPlayer extends Player {
         // modify
         attack.attackTerritory();
         out.println("Attack Successful ~");
+        System.out.println("**-------------------------------------------------------------------------------------**");
+
     }
 
 
@@ -148,15 +152,16 @@ public class ClientPlayer extends Player {
     }
 
     public void makeUpPlayer() throws IOException {
-        out.println("Please give yourself a name: ");
+        System.out.println("**-------------------------------------------------------------------------------------**");
+        out.println("WELCOME TO THE GAME. Please give yourself a name: ");
         String myName = inputReader.readLine();
-        // TODO: check name valid
         this.name = myName;
     }
 
     public void initUnitPlacement() throws IOException {
+        makeUpPlayer();
         this.view.displayMap();
-        String prompt = "Player " + this.name + ", you have in total " + initUnits + " units and following territory, please specify the units for "
+        String prompt = "Hi~ Player " + this.name + ", you have in total " + initUnits + " units and following territory, please specify the units for "
                 + getMyTerritoryName() + "with the format <unit1> <unit2> <unit3>";
         String unitsInput;
         while (true) {
@@ -174,6 +179,7 @@ public class ClientPlayer extends Player {
             }
         }
         out.println("Unit Placement Success!");
+        System.out.println("**-------------------------------------------------------------------------------------**");
     }
 
     // parse the input from user and update its Territories
