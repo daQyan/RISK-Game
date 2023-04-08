@@ -44,11 +44,7 @@ public class NameWebSocketHandler extends TextWebSocketHandler {
         // get clients' name, adding to the storage, respond the territory
         if(MsgType.equals("player_name")) {
             playerName = jsonObject.getString("name");
-            if(ClientManager.getSize() >= 3) {
-                pushMsg(session, "The room is full, please join another game!");
-                return;
-            }
-            ClientManager.addPlayer(session.getId(), new Player(1, playerName));
+            serverGame.addPlayer(new Player(playerName));
         }
 
         if(ClientManager.getSize() < 3) {

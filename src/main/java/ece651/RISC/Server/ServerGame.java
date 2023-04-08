@@ -1,12 +1,12 @@
 package ece651.RISC.Server;
 
+import ece651.RISC.Online.OnlineServer2Client;
 import ece651.RISC.shared.*;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 @Component
@@ -22,10 +22,40 @@ public class ServerGame {
     private int playerInitUnits;
     private Round round;
 
+    private ArrayList<MoveAction> moveActions = new ArrayList<>();
+    private ArrayList<AttackAction> attackActions = new ArrayList<>();
+    private Set<Player> operatedPlayers = new HashSet<>();
+
+    public ServerGame() {
+        this(3, 3, 30, null);
+        this.myStatus = Status.gameStatus.WAITINGPLAYER;
+        MapFactory mf = new MapFactory();
+        this.myMap = mf.createMap(3);
+        this.myMapController = new MapController(myMap);
+        this.server2Client = new OnlineServer2Client();;
+
+        System.out.println("ServerGame Constructor");
+    }
+
     public ServerGame(int playerSize, int initialTerritorySize, int playerInitUnits, Server2Client server2Client){
+        this.initialTerritorySize = initialTerritorySize;
+        this.playerSize = playerSize;
+        this.playerInitUnits = playerInitUnits;
+
+        this.players = new ArrayList<>();
+        MapFactory mf = new MapFactory();
+        this.myMap = mf.createMap(3);
+        this.myMapController = new MapController(myMap);
+        this.server2Client = server2Client;
+        this.myStatus = Status.gameStatus.WAITINGPLAYER;
+    }
+
+    // TODO: handle different player numbers
+    public void init(int playerSize, int initialTerritorySize, int playerInitUnits, Server2Client server2Client){
         this.initialTerritorySize = initialTerritorySize;
         this.playerInitUnits = playerInitUnits;
         this.playerSize = playerSize;
+
         this.players = new ArrayList<>();
         MapFactory mf = new MapFactory();
         this.myMap = mf.createMap(3);
@@ -34,14 +64,11 @@ public class ServerGame {
         this.myMapController= new MapController(myMap);
     }
 
-    public ServerGame() {
-        this(3, 3, 30, null);
-    }
-
     public int addPlayer(Player player) throws IOException {
-        int playerIndex = players.size();
+        // allocating id and name
+        int playerIndex = players.size() - 1;
         player.setId(playerIndex);
-        for(int i = playerIndex * initialTerritorySize; i <  (playerIndex + 1 ) * initialTerritorySize; i++) {
+        for(int i = playerIndex * initialTerritorySize; i < (playerIndex + 1) * initialTerritorySize; i++) {
             Territory t = myMap.getArea(i);
             player.addTerriories(t);
             t.setOwner(player);
