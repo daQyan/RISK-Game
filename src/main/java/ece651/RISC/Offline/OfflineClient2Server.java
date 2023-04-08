@@ -1,6 +1,7 @@
 package ece651.RISC.Offline;
 
 import ece651.RISC.Client.ClientGame;
+import ece651.RISC.Client.ClientPlayer;
 import ece651.RISC.Server.ServerGame;
 import ece651.RISC.shared.*;
 
@@ -9,16 +10,15 @@ import java.util.ArrayList;
 
 public class OfflineClient2Server implements Client2Server {
     private ServerGame serverGame;
-    private ClientGame clientGame;
+    private ClientPlayer clientPlayer;
 
-    public OfflineClient2Server(ServerGame serverGame, ClientGame clientGame) {
+    public OfflineClient2Server(ServerGame serverGame, ClientPlayer clientPlayer) {
         this.serverGame = serverGame;
-        this.clientGame = clientGame;
+        this.clientPlayer = clientPlayer;
     }
     @Override
     public void sendActions(ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) throws IOException {
-        Player player = clientGame.getPlayer();
-        serverGame.playerOneTurn(player, moveActions, attackActions);
+        serverGame.playerOneTurn(clientPlayer, moveActions, attackActions);
     }
 
     @Override
@@ -29,7 +29,6 @@ public class OfflineClient2Server implements Client2Server {
 
     @Override
     public void sendAllocation(ArrayList<Territory> territories) throws IOException {
-        Player player = clientGame.getPlayer();
-        serverGame.playerAllocate(player, territories);
+        serverGame.playerAllocate(clientPlayer, territories);
     }
 }

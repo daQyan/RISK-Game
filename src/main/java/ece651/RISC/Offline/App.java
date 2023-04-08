@@ -38,11 +38,11 @@ public class App {
         clientGames.add(clientGame3);
         OfflineServer2Client server2Client = new OfflineServer2Client(clientGames);
         ServerGame serverGame = new ServerGame(3, 3, server2Client);
-        OfflineClient2Server client2Server1 = new OfflineClient2Server(serverGame,clientGame1);
+        OfflineClient2Server client2Server1 = new OfflineClient2Server(serverGame,clientPlayer1);
         clientPlayer1.setCommunicator(client2Server1);
-        OfflineClient2Server client2Server2 = new OfflineClient2Server(serverGame,clientGame2);
+        OfflineClient2Server client2Server2 = new OfflineClient2Server(serverGame,clientPlayer2);
         clientPlayer2.setCommunicator(client2Server2);
-        OfflineClient2Server client2Server3 = new OfflineClient2Server(serverGame,clientGame3);
+        OfflineClient2Server client2Server3 = new OfflineClient2Server(serverGame,clientPlayer3);
         clientPlayer3.setCommunicator(client2Server3);
 
         clientPlayer1.connectServer();
