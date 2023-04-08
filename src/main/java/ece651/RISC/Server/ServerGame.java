@@ -91,6 +91,7 @@ public class ServerGame {
             Territory serverSideTerritory = myMap.getArea(territory.getId());
             if(serverSideTerritory.getOwner().equals(player)){
                 serverSideTerritory.setNumUnits(territory.getNumUnits());
+                System.out.println(serverSideTerritory.getName() + ":" + serverSideTerritory.getNumUnits() + "," + territory.getNumUnits());
             }
         }
         allocatedPlayer.add(player);
@@ -101,9 +102,10 @@ public class ServerGame {
     }
 
     public void letPlayerPlay() {
+        System.out.println("letPlayerPlay");
+        this.round = new Round(players, myMap, server2Client);
         for(Player player: players){
             server2Client.sendOneTurn(player, myMap, player.getStatus());
-            this.round = new Round(players, myMap, server2Client);
         }
     }
 
