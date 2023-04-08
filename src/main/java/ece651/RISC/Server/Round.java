@@ -41,11 +41,6 @@ public class Round {
         while(attackActions.size() > 0){
             int order = rand.nextInt(attackActions.size());
             String result = attackActions.get(order).attackTerritory();
-            if (result == "Owner Changed") {
-                int newUnits = -attackActions.get(order).targetTerritory.getUnit();
-                attackActions.get(order).targetTerritory.changeOwner(newUnits, attackActions.get(order).sourceTerritory.getOwner());
-                // let player update its territory later
-            }
             attackActions.remove(order);
         }
     }
