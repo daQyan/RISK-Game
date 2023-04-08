@@ -5,5 +5,5 @@ import java.util.ArrayList;
 
 public interface Server2Client {
     void sendOneTurn(Player player, GameMap map, Status.playerStatus status);
-    void sendAllocation(Player player, ArrayList<Player> players, GameMap map, int initUnit);
+    void sendAllocation(Player player, ArrayList<Player> players, GameMap map, int initUnit) throws IOException;
 }
