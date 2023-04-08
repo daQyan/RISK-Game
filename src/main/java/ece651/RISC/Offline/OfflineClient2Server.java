@@ -11,10 +11,6 @@ public class OfflineClient2Server implements Client2Server {
     private ServerGame serverGame;
     private ClientGame clientGame;
 
-    private int curTimes = 0;
-
-    ArrayList<MoveAction> moveActions;
-    ArrayList<AttackAction> attackActions;
     public OfflineClient2Server(ServerGame serverGame, ClientGame clientGame) {
         this.serverGame = serverGame;
         this.clientGame = clientGame;
@@ -26,8 +22,9 @@ public class OfflineClient2Server implements Client2Server {
     }
 
     @Override
-    public int sendName(String name) {
-        return 0;
+    public int sendName(Player player) throws IOException {
+        int playerId = serverGame.addPlayer(player);
+        return playerId;
     }
 
     @Override

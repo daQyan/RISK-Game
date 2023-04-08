@@ -28,4 +28,8 @@ public class OfflineServer2Client implements Server2Client {
     public void sendInitUnit() {
 
     }
+    @Override
+    public void sendId(int id) {
+
+    }
 }

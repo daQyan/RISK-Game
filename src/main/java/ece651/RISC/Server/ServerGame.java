@@ -45,8 +45,9 @@ public class ServerGame {
         this.myStatus = Status.gameStatus.WAITINGPLAYER;
     }
 
-    public void addPlayer(Player player) throws IOException {
+    public int addPlayer(Player player) throws IOException {
         int playerIndex = players.size();
+        player.setId(playerIndex);
         for(int i = playerIndex * initialTerritorySize; i <  (playerIndex + 1 ) * initialTerritorySize; i++) {
             Territory t = myMap.getArea(i);
             player.addTerriories(t);
@@ -57,6 +58,7 @@ public class ServerGame {
             myStatus = Status.gameStatus.WAITINGPLAYERALLOCATE;
             letPlayerAllocate();
         }
+        return playerIndex;
     }
 
     public void letPlayerAllocate() throws IOException {
