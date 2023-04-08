@@ -6,7 +6,8 @@ public class GameMap {
     private ArrayList<Territory> Areas;
 
     public GameMap(ArrayList<Territory> areas) {
-        Areas = areas;
+        System.out.println("Game map:" +  areas.size());
+        this.Areas = areas;
     }
 
     public ArrayList<Territory> getAreas() {
@@ -65,5 +66,4 @@ public class GameMap {
     public Territory getArea(int id) {
         return Areas.get(id);
     }
-
 }

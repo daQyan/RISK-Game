@@ -17,18 +17,18 @@ public class OfflineClient2Server implements Client2Server {
         this.clientPlayer = clientPlayer;
     }
     @Override
-    public void sendActions(ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) throws IOException {
+    public void sendActions(ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
         serverGame.playerOneTurn(clientPlayer, moveActions, attackActions);
     }
 
     @Override
-    public int sendName(Player player) throws IOException {
+    public int sendName(Player player){
         int playerId = serverGame.addPlayer(player);
         return playerId;
     }
 
     @Override
-    public void sendAllocation(ArrayList<Territory> territories) throws IOException {
+    public void sendAllocation(ArrayList<Territory> territories) {
         serverGame.playerAllocate(clientPlayer, territories);
     }
 }

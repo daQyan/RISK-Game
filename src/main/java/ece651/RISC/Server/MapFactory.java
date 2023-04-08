@@ -10,14 +10,22 @@ import java.util.Set;
 public class MapFactory {
     public GameMap createMap(int numPlayers){
         ArrayList<Territory> myTerritories = new ArrayList<>();
-        Territory Narnia = new Territory(0, "Narnia", 0, null, null, null);
-        Territory Midkemia = new Territory(1, "Midkemia", 0, null, null, null);
-        Territory Oz = new Territory(2, "Oz", 0, null, null, null);
-        Territory Gondor = new Territory(3, "Gondor", 0, null, null, null);
-        Territory Mordor = new Territory(4, "Mordor", 0, null, null, null);
-        Territory Hogwarts = new Territory(5, "Hogwarts", 0, null, null, null);
-        Territory Elantris = new Territory(6, "Elantris", 0, null, null, null);
-        Territory Scadrial = new Territory(7, "Scadrial", 0, null, null, null);
+        Territory Narnia = new Territory(0, "Narnia");
+        myTerritories.add(Narnia);
+        Territory Midkemia = new Territory(1, "Midkemia");
+        myTerritories.add(Midkemia);
+        Territory Oz = new Territory(2, "Oz");
+        myTerritories.add(Oz);
+        Territory Gondor = new Territory(3, "Gondor");
+        myTerritories.add(Gondor);
+        Territory Mordor = new Territory(4, "Mordor");
+        myTerritories.add(Mordor);
+        Territory Hogwarts = new Territory(5, "Hogwarts");
+        myTerritories.add(Hogwarts);
+        Territory Elantris = new Territory(6, "Elantris");
+        myTerritories.add(Elantris);
+        Territory Scadrial = new Territory(7, "Scadrial");
+        myTerritories.add(Scadrial);
 
         Narnia.addAdjacent(Midkemia);
         Narnia.addAdjacent(Elantris);
@@ -58,7 +66,8 @@ public class MapFactory {
         }
         //9 territories
         if(numPlayers == 3){
-            Territory Roshar = new Territory(8, "Roshar", 0, null, null, null);
+            Territory Roshar = new Territory(8, "Roshar");
+            myTerritories.add(Roshar);
 
             Roshar.addAdjacent(Elantris);
             Roshar.addAdjacent(Scadrial);

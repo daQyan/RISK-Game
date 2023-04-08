@@ -1,4 +1,4 @@
-package ece651.RISC.Server;
+package ece651.RISC.Client;
 
 import ece651.RISC.shared.GameMap;
 import ece651.RISC.shared.Player;
@@ -8,6 +8,10 @@ import java.util.*;
 
 public class MapTextView {
     private GameMap myMap;
+
+    public MapTextView(GameMap myMap) {
+        this.myMap = myMap;
+    }
 
     public HashMap<Player, ArrayList<Territory>> sortTerritory(){
         HashMap<Player, ArrayList<Territory>> sorted = new HashMap<>();
@@ -39,7 +43,7 @@ public class MapTextView {
                     }
                     result.append(entry.getValue().get(i).getAdjacents().get(j).getName());
                 }
-                result.append(")");
+                result.append(")\n");
             }
             result.append("\n");
         }

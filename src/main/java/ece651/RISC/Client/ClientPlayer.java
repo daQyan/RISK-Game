@@ -15,9 +15,17 @@ public class ClientPlayer extends Player {
     private PrintStream out;
 
     private GameMap map;
+
+    public void setMap(GameMap map) {
+        this.map = map;
+        this.view = new MapTextView(map);
+    }
+
     private int initUnits;
 
     private Status.playerStatus status;
+
+    private MapTextView view;
 
     @Override
     public void setStatus(Status.playerStatus status) {
@@ -137,7 +145,8 @@ public class ClientPlayer extends Player {
 //    }
 
     public void initUnitPlacement(){
-        String prompt = "Player, " + this.name + "you have in total 12 units and following territory, please specify the units for "
+        out.println(view.displayMap());
+        String prompt = "Player " + this.name + ", you have in total " + initUnits + " units and following territory, please specify the units for "
                 + getMyTerritoryName() + "with the format <unit1> <unit2> <unit3>";
         out.println(prompt);
 
@@ -162,7 +171,7 @@ public class ClientPlayer extends Player {
         List numList = new ArrayList();
         String[] parts = prompt.split(" ");
         int sumUnits = 0;
-        for (int i = 0; i <=3; ++i) {
+        for (int i = 0; i <3; ++i) {
             int num = Integer.parseInt(parts[i]);
             numList.add(i);
             sumUnits += num;
@@ -183,6 +192,7 @@ public class ClientPlayer extends Player {
 
     // player play one turn with move and attack orders
     public void playOneTurn()  {
+        out.println(view.displayMap());
         ArrayList<MoveAction> moveActions = new ArrayList<>();
         ArrayList<AttackAction> attackActions = new ArrayList<>();
         out.println("options: M for move, A for attack, D for Done");
