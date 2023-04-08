@@ -46,6 +46,10 @@ public class RoundTest {
 
         System.out.println("---------------------------------------------");
         mp.updateAccessible();
+        System.out.println(mp.getArea(0).getNumUnits());
+        System.out.println(mp.getArea(0).getOwner());
+        System.out.println(mp.getArea(6).getNumUnits());
+        System.out.println(mp.getArea(6).getOwner());
         AttackAction aa2 = new AttackAction(mp.getArea(0), mp.getArea(6),5, Status.actionStatus.ATTACK, p0);
         AttackAction aa3 = new AttackAction(mp.getArea(6), mp.getArea(0), 5, Status.actionStatus.ATTACK, p2);
         ArrayList<AttackAction> tests2 = new ArrayList<>();
