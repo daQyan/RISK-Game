@@ -125,6 +125,11 @@ public class Game {
             System.out.println("Game can begin");
         }
     }
+    public int getAllocatedPlayerSize() {
+        return allocatedPlayer.size();
+    }
+
+
 
 //    public void letPlayerPlay() {
 //        for(Player player: players){
