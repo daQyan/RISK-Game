@@ -3,21 +3,21 @@ package ece651.RISC.shared;
 import java.util.*;
 
 public class GameMap {
-    private ArrayList<Territory> Areas;
+    private ArrayList<Territory> territories;
 
-    public GameMap(ArrayList<Territory> areas) {
-        System.out.println("Game map:" +  areas.size());
-        this.Areas = areas;
+    public GameMap(ArrayList<Territory> territories) {
+        System.out.println("Game map:" +  territories.size());
+        this.territories = territories;
     }
 
-    public ArrayList<Territory> getAreas() {
-        return Areas;
+    public ArrayList<Territory> getTerritories() {
+        return territories;
     }
 
     //for every turn, update the accessible territories for all the territory
     public void updateAccessible(){
-        for(Territory t : Areas){
-            //clear the old accessible areas
+        for(Territory t : territories){
+            //clear the old accessible territories
             t.setAccessibles(new ArrayList<>());
             Player p = t.getOwner();
             ArrayList<Territory> visited = new ArrayList<>();
@@ -54,18 +54,14 @@ public class GameMap {
         }
     }
     public int getMapSize(){
-        return Areas.size();
+        return territories.size();
     }
 
-    public ArrayList<Territory> getAllAreas(){
-        return this.Areas;
+    public void setTerritory(int id, Territory t){
+        territories.set(id, t);
     }
 
-    public void setArea(int id, Territory t){
-        Areas.set(id, t);
-    }
-
-    public Territory getArea(int id) {
-        return Areas.get(id);
+    public Territory getTerritory(int id) {
+        return territories.get(id);
     }
 }

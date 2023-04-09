@@ -14,11 +14,21 @@ public class ClientPlayer extends Player {
     private BufferedReader inputReader;
     private PrintStream out;
 
+    public GameMap getMap() {
+        return map;
+    }
+
     private GameMap map;
 
     public void setMap(GameMap map) {
         this.map = map;
         this.view = new MapTextView(map);
+        setTerritories(new ArrayList<>());
+        for(Territory t: map.getTerritories()){
+            if(this.equals(t.getOwner())) {
+                addTerritories(t);
+            }
+        }
     }
 
     private int initUnits;
@@ -49,8 +59,16 @@ public class ClientPlayer extends Player {
         this.status = Status.playerStatus.INIT;
     }
 
+    public ClientPlayer(BufferedReader inputReader, PrintStream out){
+        super();
+        this.inputReader = inputReader;
+        this.out = out;
+        this.status = Status.playerStatus.INIT;
+        this.makeUpPlayer();
+    }
+
     Territory getTerritoryByName(String terName) {
-        for (Territory t : map.getAreas()) {
+        for (Territory t : map.getTerritories()) {
             if (terName.equals(t.getName())) {
                 return t;
             }
@@ -91,7 +109,7 @@ public class ClientPlayer extends Player {
         }
         MoveAction move = new MoveAction(source, target, unitMove, Status.actionStatus.MOVE, this);
         moveActions.add(move);
-        move.moveTerritory();
+        move.moveOut();
         out.println("Move Successful ~");
         System.out.println("**-------------------------------------------------------------------------------------**");
 
@@ -131,7 +149,7 @@ public class ClientPlayer extends Player {
         AttackAction attack = new AttackAction(source, target, unitAttack, Status.actionStatus.ATTACK, this);
         attackActions.add(attack);
         // modify
-        attack.attackTerritory();
+        attack.moveOut();
         out.println("Attack Successful ~");
         System.out.println("**-------------------------------------------------------------------------------------**");
 
@@ -151,15 +169,19 @@ public class ClientPlayer extends Player {
         return s.toString();
     }
 
-    public void makeUpPlayer() throws IOException {
-        System.out.println("**-------------------------------------------------------------------------------------**");
-        out.println("WELCOME TO THE GAME. Please give yourself a name: ");
-        String myName = inputReader.readLine();
-        this.name = myName;
+    public String makeUpPlayer() {
+        try{
+            out.println("**-------------------------------------------------------------------------------------**");
+            out.println("WELCOME TO THE GAME. Please give yourself a name: ");
+            String myName = inputReader.readLine();
+            return myName;
+        } catch (IOException e){
+            out.println(e.getMessage());
+            return "player";
+        }
     }
 
-    public void initUnitPlacement() throws IOException {
-        makeUpPlayer();
+    public void initUnitPlacement() {
         this.view.displayMap();
         String prompt = "Hi~ Player " + this.name + ", you have in total " + initUnits + " units and following territory, please specify the units for "
                 + getMyTerritoryName() + "with the format <unit1> <unit2> <unit3>";
@@ -172,10 +194,11 @@ public class ClientPlayer extends Player {
                 if (! unitsInput.matches("^\\d+\\s+\\d+\\s+\\d+$")) {
                     throw new IllegalArgumentException("Invalid input format! format: <unit1> <unit2> <unit3>\n");
                 }
+                System.out.println("initUnitPlacement" + getTerritories().size());
                 parseUnitsPlacement(unitsInput, getTerritories());
                 break;
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
+            } catch (IllegalArgumentException | IOException e) {
+                System.out.println("initUnitPlacement" + e.getStackTrace());
             }
         }
         out.println("Unit Placement Success!");
@@ -218,6 +241,7 @@ public class ClientPlayer extends Player {
                 out.println(name + ", your options: M for move, A for attack, D for Done");
                 String s = inputReader.readLine();
                 if (s.equals("D")) {
+                    System.out.println("D" + moveActions.size());
                     communicator.sendActions(moveActions, attackActions);
                     break;
                 }
@@ -238,7 +262,7 @@ public class ClientPlayer extends Player {
     }
 
     public void connectServer() throws IOException {
-        communicator.sendName(this);
+       communicator.sendName();
     }
 
     private boolean checkLose() {

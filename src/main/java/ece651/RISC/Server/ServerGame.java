@@ -14,6 +14,11 @@ public class ServerGame {
     private int initialTerritorySize;
     private ArrayList<Player> players;
     private GameMap myMap;
+
+    public GameMap getMyMap() {
+        return myMap;
+    }
+
     private MapController myMapController;
     private Status.gameStatus myStatus;
     private Server2Client server2Client;
@@ -57,32 +62,32 @@ public class ServerGame {
         this.players = new ArrayList<>();
         MapFactory mf = new MapFactory();
         this.myMap = mf.createMap(3);
-        System.out.println("size:" + myMap.getMapSize());
         this.server2Client = server2Client;
         this.myStatus = Status.gameStatus.WAITINGPLAYER;
         this.myMapController= new MapController(myMap);
     }
 
-    public int addPlayer(Player player) throws IOException {
+    public void addPlayer(Player player) {
         int playerIndex = players.size();
-        if(playerIndex >= playerSize - 1) {
-            return -1; // TODO: HANDLE HTTP ERRORs
+        if(playerIndex > playerSize - 1) {
+            return; // TODO: HANDLE HTTP ERRORs
         }
         player.setId(playerIndex);
         for(int i = playerIndex * initialTerritorySize; i < (playerIndex + 1 ) * initialTerritorySize; i++) {
-            Territory t = myMap.getArea(i);
+            Territory t = myMap.getTerritory(i);
             player.addTerritories(t);
             t.setOwner(player);
         }
         players.add(player);
+        server2Client.sendId(player, playerIndex);
         if(players.size() == playerSize) {
             myStatus = Status.gameStatus.WAITINGPLAYERALLOCATE;
             letPlayerAllocate();
         }
-        return playerIndex;
     }
 
-    public void letPlayerAllocate() throws IOException {
+    public void letPlayerAllocate() {
+        System.out.println("letPlayerAllocate");
         for(Player player: players){
             server2Client.sendAllocation(player, players, myMap, playerInitUnits);
         }
@@ -90,7 +95,7 @@ public class ServerGame {
 
     public void playerAllocate(Player player, ArrayList<Territory> territories) {
         for(Territory territory: territories) {
-            Territory serverSideTerritory = myMap.getArea(territory.getId());
+            Territory serverSideTerritory = myMap.getTerritory(territory.getId());
             if(serverSideTerritory.getOwner().equals(player)){
                 serverSideTerritory.setNumUnits(territory.getNumUnits());
                 System.out.println(serverSideTerritory.getName() + ":" + serverSideTerritory.getNumUnits() + "," + territory.getNumUnits());
@@ -105,7 +110,6 @@ public class ServerGame {
     }
 
     public void letPlayerPlay() {
-        System.out.println("letPlayerPlay");
         this.round = new Round(players, myMap, server2Client);
         for(Player player: players){
             server2Client.sendOneTurn(player, myMap, player.getStatus());
@@ -113,6 +117,7 @@ public class ServerGame {
     }
 
     public void playerOneTurn(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
+        System.out.println("playerOneTurn" + moveActions.size() +","+ attackActions.size());
         int operatedPlayerNum = round.playerOneTurn(player, moveActions, attackActions);
         if(operatedPlayerNum == playerSize){
             playOneTurn();

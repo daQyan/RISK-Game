@@ -22,10 +22,10 @@ public class Territory {
     private Player owner;
 
     @JSONField(serialize = false, deserialize = false)
-    private ArrayList<Territory> adjacents;
+    private ArrayList<Territory> adjacents = new ArrayList<>();
 
     @JSONField(serialize = false, deserialize = false)
-    private ArrayList<Territory> accessibles;
+    private ArrayList<Territory> accessibles = new ArrayList<>();
 
     public Territory() {}
     public Territory(int id, String name, int unit, Player owner, ArrayList<Territory> adjacents, ArrayList<Territory> accessibles) {
@@ -42,7 +42,7 @@ public class Territory {
     }
 
     public Territory(int id, String name) {
-        this(id, name, 0, new Player("test"));
+        this(id, name, 0, null);
     }
 
 

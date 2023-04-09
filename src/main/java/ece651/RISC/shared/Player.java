@@ -37,9 +37,11 @@ public class Player {
     public Player(int id, String name) {
         this(id, name, new ArrayList<>());
     }
-
     public Player(String name) {
         this(-1, name);
+    }
+    public Player() {
+        this(-1, "");
     }
 
     public int getId() {
@@ -81,7 +83,7 @@ public class Player {
     }
 
     public boolean equals(Player p) {
-        return id == p.getId() && name == p.getName();
+        return id == p.getId();
     }
 
     public String toJSON(){

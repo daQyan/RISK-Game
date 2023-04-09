@@ -44,7 +44,6 @@ public class PlayerNameController {
 //        NameObject nameRequest = JSON.parseObject(request, NameObject.class);
         String playerName = request.getString("name");
         int playerId = serverGame.addPlayer(new Player(playerName));
-
         return toJSON(playerId);
     }
 }

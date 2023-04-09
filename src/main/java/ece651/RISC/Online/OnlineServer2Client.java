@@ -15,4 +15,10 @@ public class OnlineServer2Client implements Server2Client {
     public void sendAllocation(Player player, ArrayList<Player> players, GameMap map, int initUnit) {
 
     }
+
+    @Override
+    public void sendId(Player to, int id) {
+
+    }
+
 }

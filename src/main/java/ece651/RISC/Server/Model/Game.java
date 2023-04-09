@@ -79,7 +79,7 @@ public class Game {
         }
         player.setId(playerIndex);
         for(int i = playerIndex * initialTerritorySize; i < (playerIndex + 1 ) * initialTerritorySize; i++) {
-            Territory t = myMap.getArea(i);
+            Territory t = myMap.getTerritory(i);
             player.addTerritories(t);
             t.setOwner(player);
         }
@@ -96,7 +96,7 @@ public class Game {
 
     public void AllocateUnitFromPlayer(int playerId, Set<Integer> territoriesId, int numUnits) {
         for(Integer territoryId: territoriesId) {
-            Territory serverSideTerritory = myMap.getArea(territoryId);
+            Territory serverSideTerritory = myMap.getTerritory(territoryId);
             if(serverSideTerritory.getOwner().getId() == playerId){
                 serverSideTerritory.setNumUnits(numUnits);
             }

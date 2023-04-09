@@ -1,37 +1,55 @@
 package ece651.RISC.Offline;
 
-import ece651.RISC.Client.ClientGame;
+import com.alibaba.fastjson2.JSONObject;
 import ece651.RISC.Client.ClientPlayer;
+import ece651.RISC.Client.ClientReceiver;
 import ece651.RISC.shared.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class OfflineServer2Client implements Server2Client {
-    private ArrayList<ClientPlayer> players;
+    private ArrayList<ClientReceiver> receivers;
 
-    OfflineServer2Client(ArrayList<ClientPlayer> players){
-        this.players = players;
+    OfflineServer2Client(ArrayList<ClientReceiver> receivers){
+        this.receivers = receivers;
     }
 
     @Override
     public void sendOneTurn(Player to, GameMap map, Status.playerStatus status) {
-        for(ClientPlayer player: players) {
-            if(player.equals(to)) {
-                player.setStatus(status);
-                player.setMap(map);
-                player.playOneTurn();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("status", status);
+        jsonObject.put("map", JSONConvertor.map2JSON(map));
+        for(ClientReceiver receiver: receivers) {
+            if(receiver.getPlayer().equals(to)){
+                receiver.receiveOneTurn(jsonObject.toJSONString());
+                break;
             }
         }
     }
 
     @Override
-    public void sendAllocation(Player to, ArrayList<Player> allPlayers, GameMap map, int initUnit) throws IOException {
-        for(ClientPlayer player: players) {
-            if(player.equals(to)) {
-                player.setInitUnits(initUnit);
-                player.setMap(map);
-                player.initUnitPlacement();
+    public void sendAllocation(Player to, ArrayList<Player> allPlayers, GameMap map, int initUnit) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("initUnits", initUnit);
+        jsonObject.put("map", JSONConvertor.map2JSON(map));
+        String jsonString = jsonObject.toJSONString();
+        System.out.println("sendAllocation"+jsonString);
+        for(ClientReceiver receiver: receivers) {
+            System.out.println(receiver.getPlayer().getId() +"," + to.getId());
+            if(receiver.getPlayer().equals(to)){
+                receiver.receiveAllocation(jsonString);
+                break;
+            }
+        }
+    }
+
+    // TODO to fix
+    @Override
+    public void sendId(Player to, int id) {
+        for(ClientReceiver receiver: receivers) {
+            if(receiver.getPlayer().getName().equals(to.getName()) ){
+                receiver.receiveId(id);
+                break;
             }
         }
     }

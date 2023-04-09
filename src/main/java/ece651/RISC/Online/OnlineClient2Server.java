@@ -21,9 +21,8 @@ public class OnlineClient2Server implements Client2Server {
     }
 
     @Override
-    public int sendName(Player player) throws IOException {
-        int playerId = serverGame.addPlayer(player);
-        return playerId;
+    public void sendName() throws IOException {
+        serverGame.addPlayer(clientPlayer);
     }
 
     @Override

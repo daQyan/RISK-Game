@@ -20,7 +20,7 @@ public class ClientGame {
     }
 
     public Territory getTerritoryById(int id) {
-        return map.getArea(id);
+        return map.getTerritory(id);
     }
 
     public void playOneTurn(){

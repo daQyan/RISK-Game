@@ -8,7 +8,7 @@ public class TerritoryRelation {
     @JSONField(name = "id")
     private int selfId;
     @JSONField(name = "relates")
-    private ArrayList<Integer> relatedIds;
+    private ArrayList<Integer> relatedIds = new ArrayList<>();
 
     public int getSelfId() {
         return selfId;
@@ -28,6 +28,7 @@ public class TerritoryRelation {
 
     public TerritoryRelation(int selfId) {
         this.selfId = selfId;
+        this.relatedIds = new ArrayList<>();
     }
 
     public void addRelated(int relatedId) {
