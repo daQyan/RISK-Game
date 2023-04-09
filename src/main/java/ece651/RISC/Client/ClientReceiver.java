@@ -71,4 +71,17 @@ public class ClientReceiver {
     public void receiveId(int id){
         player.setId(id);
     }
+
+    public void receiveInitialization(String initializationJSON) {
+        System.out.println("receiveInitialization");
+        JSONObject jsonObj = JSON.parseObject(initializationJSON);
+        int initUnits = jsonObj.getInteger("initUnits");
+        player.setInitUnits(initUnits);
+        String map = jsonObj.getString("map");
+        int playerId = jsonObj.getInteger("playerId");
+
+        receiveMap(map);
+        player.initUnitPlacement();
+        player.setId(playerId);
+    }
 }

@@ -44,9 +44,11 @@ public class PlayingController {
         if (serverGame.getOperatedPlayerSize() < 3) {
             latch.await();
         } else {
+
             latch.countDown();
         }
 
+        System.out.println("after latch *******");
 
         // server2Client
         // TODO: return updated player info and map info

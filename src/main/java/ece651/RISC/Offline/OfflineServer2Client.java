@@ -1,7 +1,6 @@
 package ece651.RISC.Offline;
 
 import com.alibaba.fastjson2.JSONObject;
-import ece651.RISC.Client.ClientPlayer;
 import ece651.RISC.Client.ClientReceiver;
 import ece651.RISC.shared.*;
 
@@ -49,6 +48,21 @@ public class OfflineServer2Client implements Server2Client {
         for(ClientReceiver receiver: receivers) {
             if(receiver.getPlayer().getName().equals(to.getName()) ){
                 receiver.receiveId(id);
+                break;
+            }
+        }
+    }
+
+    public void sendInitialization(Player to, ArrayList<Player> allPlayers, GameMap map, int initUnit, int id) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("initUnits", initUnit);
+        jsonObject.put("map", JSONConvertor.map2JSON(map));
+        String jsonString = jsonObject.toJSONString();
+        System.out.println("sendAllocation"+jsonString);
+        for(ClientReceiver receiver: receivers) {
+            System.out.println(receiver.getPlayer().getId() +"," + to.getId());
+            if(receiver.getPlayer().equals(to)){
+                receiver.receiveAllocation(jsonString);
                 break;
             }
         }

@@ -1,6 +1,5 @@
 package ece651.RISC.Server.Model;
 
-import ece651.RISC.Online.OnlineServer2Client;
 import ece651.RISC.Server.MapFactory;
 import ece651.RISC.Server.Round;
 import ece651.RISC.shared.AttackAction;
@@ -8,7 +7,6 @@ import ece651.RISC.shared.GameMap;
 import ece651.RISC.shared.MapController;
 import ece651.RISC.shared.MoveAction;
 import ece651.RISC.shared.Player;
-import ece651.RISC.shared.Server2Client;
 import ece651.RISC.shared.Status;
 import ece651.RISC.shared.Territory;
 import org.springframework.stereotype.Component;
@@ -25,8 +23,10 @@ public class Game {
     private GameMap myMap;
     private MapController myMapController;
     private Status.gameStatus myStatus;
-    private Server2Client server2Client;
+    private OnlineServer2Client server2Client = new OnlineServer2Client();
     private Set<Integer> allocatedPlayerId = new HashSet<>();
+    private Set<Player> allocatedPlayer = new HashSet<>();
+
     private int playerInitUnits;
     private Round round;
 
@@ -35,17 +35,16 @@ public class Game {
     private Set<Integer> operatedPlayerId = new HashSet<>();
 
     public Game() {
-        this(3, 3, 30, null);
+        this(3, 3, 30);
         this.myStatus = Status.gameStatus.WAITINGPLAYER;
         MapFactory mf = new MapFactory();
         this.myMap = mf.createMap(3);
         this.myMapController = new MapController(myMap);
-        this.server2Client = new OnlineServer2Client();;
 
         System.out.println("ServerGame Constructor");
     }
 
-    public Game(int playerSize, int initialTerritorySize, int playerInitUnits, Server2Client server2Client){
+    public Game(int playerSize, int initialTerritorySize, int playerInitUnits){
         this.initialTerritorySize = initialTerritorySize;
         this.playerSize = playerSize;
         this.playerInitUnits = playerInitUnits;
@@ -54,12 +53,11 @@ public class Game {
         MapFactory mf = new MapFactory();
         this.myMap = mf.createMap(3);
         this.myMapController = new MapController(myMap);
-        this.server2Client = server2Client;
         this.myStatus = Status.gameStatus.WAITINGPLAYER;
     }
 
     // TODO: handle different player numbers
-    public void init(int playerSize, int initialTerritorySize, int playerInitUnits, Server2Client server2Client){
+    public void init(int playerSize, int initialTerritorySize, int playerInitUnits){
         this.initialTerritorySize = initialTerritorySize;
         this.playerInitUnits = playerInitUnits;
         this.playerSize = playerSize;
@@ -67,9 +65,12 @@ public class Game {
         MapFactory mf = new MapFactory();
         this.myMap = mf.createMap(3);
         System.out.println("size:" + myMap.getMapSize());
-        this.server2Client = server2Client;
         this.myStatus = Status.gameStatus.WAITINGPLAYER;
         this.myMapController= new MapController(myMap);
+    }
+
+    public GameMap getMyMap() {
+        return myMap;
     }
 
     public int addPlayer(Player player) {
@@ -107,12 +108,30 @@ public class Game {
         }
     }
 
-    public void letPlayerPlay() {
-        for(Player player: players){
-            server2Client.sendOneTurn(player, myMap, player.getStatus());
-            this.round = new Round(players, myMap, server2Client);
+
+
+    public void playerAllocate(Player player, ArrayList<Territory> territories) {
+        for(Territory territory: territories) {
+            Territory serverSideTerritory = myMap.getTerritory(territory.getId());
+            if(serverSideTerritory.getOwner().equals(player)){
+                serverSideTerritory.setNumUnits(territory.getNumUnits());
+                System.out.println(serverSideTerritory.getName() + ":" + serverSideTerritory.getNumUnits() + "," + territory.getNumUnits());
+            }
+        }
+        allocatedPlayer.add(player);
+        if(allocatedPlayer.size() == playerSize) {
+            myStatus = Status.gameStatus.PLAYING;
+            myMap.updateAccessible();
+            System.out.println("Game can begin");
         }
     }
+
+//    public void letPlayerPlay() {
+//        for(Player player: players){
+//            server2Client.sendOneTurn(player, myMap, player.getStatus());
+//            this.round = new Round(players, myMap, server2Client);
+//        }
+//    }
 
     public void OperateFromPlayer() {
 
@@ -140,11 +159,11 @@ public class Game {
             // 通知所有player
             return;
         }
-        this.round = new Round(players, myMap, server2Client);
-        //send information to players for networked game
-        for(Player player: players) {
-            server2Client.sendOneTurn(player, myMap, player.getStatus());
-        }
+//        this.round = new Round(players, myMap);
+//        //send information to players for networked game
+//        for(Player player: players) {
+//            server2Client.sendOneTurn(player, myMap, player.getStatus());
+//        }
     }
 
     public Status.gameStatus getStatus() {

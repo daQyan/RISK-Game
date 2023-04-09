@@ -1,10 +1,7 @@
 package ece651.RISC.Server;
 
-import ece651.RISC.Online.OnlineServer2Client;
 import ece651.RISC.shared.*;
-import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,7 +33,6 @@ public class ServerGame {
         MapFactory mf = new MapFactory();
         this.myMap = mf.createMap(3);
         this.myMapController = new MapController(myMap);
-        this.server2Client = new OnlineServer2Client();;
 
         System.out.println("ServerGame Constructor");
     }
