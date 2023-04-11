@@ -44,7 +44,7 @@ public class ServerGame {
 
         this.players = new ArrayList<>();
         MapFactory mf = new MapFactory();
-        this.myMap = mf.createMap(3);
+        this.myMap = mf.createMap(playerSize);
         this.myMapController = new MapController(myMap);
         this.server2Client = server2Client;
         this.myStatus = Status.gameStatus.WAITINGPLAYER;
