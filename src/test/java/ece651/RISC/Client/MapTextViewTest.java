@@ -9,9 +9,9 @@ public class MapTextViewTest {
     @Test
     public void testMapTextView(){
         GameMap mp = new MapFactory().createMap(3);
-        Player p0 = new Player("0");
-        Player p1 = new Player("1");
-        Player p2 = new Player("2");
+        Player p0 = new Player(0,"0");
+        Player p1 = new Player(1,"1");
+        Player p2 = new Player(2,"2");
         mp.getTerritory(0).setOwner(p0);
         mp.getTerritory(1).setOwner(p0);
         mp.getTerritory(2).setOwner(p0);
