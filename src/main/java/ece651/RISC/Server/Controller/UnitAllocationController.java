@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import ece651.RISC.Server.Model.Game;
 import ece651.RISC.Server.Model.OnlineServer2Client;
+import ece651.RISC.Server.Round;
 import ece651.RISC.shared.Player;
 import ece651.RISC.shared.Status;
 import ece651.RISC.shared.Territory;
@@ -15,8 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 @Slf4j
@@ -26,9 +28,8 @@ public class UnitAllocationController {
     public Game serverGame;
     @Autowired
     public OnlineServer2Client msgMaker;
-
-    private final CountDownLatch latch = new CountDownLatch(3);
-
+    private final Lock lock = new ReentrantLock();
+    private final Condition allocationComplete = lock.newCondition();
     @GetMapping("/allocation")
     public String greeting(@RequestBody String allocationJSON) throws InterruptedException {
         // check status first
@@ -36,8 +37,6 @@ public class UnitAllocationController {
             // return HTTP.serverError;
             return "error";
         }
-        System.out.println(latch.getCount());
-        latch.countDown(); // 每有一个用户访问页面，就减 1
         JSONObject jsonObject = JSON.parseObject(allocationJSON);
         System.out.println("allocationJSON " + allocationJSON);
 
@@ -47,14 +46,18 @@ public class UnitAllocationController {
         List<Territory> territories = JSON.parseArray(territoriesJSON, Territory.class);
         serverGame.playerAllocate(player, (ArrayList<Territory>) territories);
 
-        System.out.println(serverGame.getAllocatedPlayerSize() + " serverGame.getAllocatedPlayerSize() ");
 
+        lock.lock();
+        try {
+            if (serverGame.getAllocatedPlayerSize() < 3) {
+                allocationComplete.await();
+            } else {
+                allocationComplete.signalAll();
+            }
+        } finally {
+            lock.unlock();
+        }
 
-
-
-
-        System.out.println("after latch *******");
-        latch.await();     // 等待计数器为 0
         return msgMaker.allocationMsg(serverGame.getMyMap());
     }
 }

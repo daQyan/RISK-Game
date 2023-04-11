@@ -1,7 +1,6 @@
 package ece651.RISC.Server.Model;
 
 import ece651.RISC.Server.MapFactory;
-import ece651.RISC.Server.Round;
 import ece651.RISC.shared.AttackAction;
 import ece651.RISC.shared.GameMap;
 import ece651.RISC.shared.MapController;
@@ -123,6 +122,7 @@ public class Game {
             myStatus = Status.gameStatus.PLAYING;
             myMap.updateAccessible();
             System.out.println("Game can begin");
+            this.round = new Round(players, myMap);
         }
     }
     public int getAllocatedPlayerSize() {
@@ -138,9 +138,6 @@ public class Game {
 //        }
 //    }
 
-    public void OperateFromPlayer() {
-
-    }
 
     public int getOperatedPlayerSize() {
         return operatedPlayerId.size();
@@ -149,26 +146,24 @@ public class Game {
     public void resetOperatedPlayerId() {
         operatedPlayerId.clear();
     }
-    public void playerOneTurn(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
+    public void recieveAction(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
+        System.out.println("playerOneTurn" + moveActions.size() +","+ attackActions.size());
         int operatedPlayerNum = round.playerOneTurn(player, moveActions, attackActions);
         if(operatedPlayerNum == playerSize){
             playOneTurn();
         }
+        // TODO: what kinds of information should return
     }
 
-
     //play one turn of the game
-    public void playOneTurn() {
+    public Status.gameStatus playOneTurn() {
         myStatus  = round.playOneTurn();
+        myMap.updateAccessible();
         if(myStatus == Status.gameStatus.FINISHED) {
-            // 通知所有player
-            return;
+            return Status.gameStatus.FINISHED;
         }
-//        this.round = new Round(players, myMap);
-//        //send information to players for networked game
-//        for(Player player: players) {
-//            server2Client.sendOneTurn(player, myMap, player.getStatus());
-//        }
+        this.round = new Round(players, myMap);
+        return Status.gameStatus.PLAYING;
     }
 
     public Status.gameStatus getStatus() {
