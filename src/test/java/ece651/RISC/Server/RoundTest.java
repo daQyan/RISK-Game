@@ -9,9 +9,9 @@ public class RoundTest {
     @Test
     public void testAttackExecution(){
         GameMap mp = new MapFactory().createMap(3);
-        Player p0 = new Player("0");
-        Player p1 = new Player("1");
-        Player p2 = new Player("2");
+        Player p0 = new Player(0,"0");
+        Player p1 = new Player(1,"1");
+        Player p2 = new Player(2,"2");
         ArrayList<Player> players = new ArrayList<>();
         players.add(p0);
         players.add(p1);
@@ -30,36 +30,42 @@ public class RoundTest {
         }
         mp.updateAccessible();
         Round r = new Round(players, mp, null);
-        AttackAction aa0 = new AttackAction(mp.getTerritory(1), mp.getTerritory(7),3, Status.actionStatus.ATTACK, p0);
+        //AttackAction aa0 = new AttackAction(mp.getTerritory(1), mp.getTerritory(7),3, Status.actionStatus.ATTACK, p0);
         AttackAction aa1 = new AttackAction(mp.getTerritory(4), mp.getTerritory(7), 3, Status.actionStatus.ATTACK, p1);
         ArrayList<AttackAction> tests1 = new ArrayList<>();
-        tests1.add(aa0);
+        //tests1.add(aa0);
         tests1.add(aa1);
         r.executeAttacks(tests1);
 
-        System.out.println(mp.getTerritory(1).getNumUnits());
-        System.out.println(mp.getTerritory(1).getOwner());
-        System.out.println(mp.getTerritory(4).getNumUnits());
-        System.out.println(mp.getTerritory(4).getOwner());
-        System.out.println(mp.getTerritory(7).getNumUnits());
-        System.out.println(mp.getTerritory(7).getOwner());
+        //System.out.println(mp.getTerritory(1).getOwner().getName() + " " +  mp.getTerritory(1).getNumUnits());
+        System.out.println(mp.getTerritory(4).getOwner().getName() + " " +  mp.getTerritory(4).getNumUnits());
+        System.out.println(mp.getTerritory(7).getOwner().getName() + " " +  mp.getTerritory(7).getNumUnits());
+
 
         System.out.println("---------------------------------------------");
         mp.updateAccessible();
-        System.out.println(mp.getTerritory(0).getNumUnits());
-        System.out.println(mp.getTerritory(0).getOwner());
-        System.out.println(mp.getTerritory(6).getNumUnits());
-        System.out.println(mp.getTerritory(6).getOwner());
+        System.out.println(mp.getTerritory(0).getOwner().getName() + " " +  mp.getTerritory(0).getNumUnits());
+        System.out.println(mp.getTerritory(6).getOwner().getName() + " " +  mp.getTerritory(6).getNumUnits());
         AttackAction aa2 = new AttackAction(mp.getTerritory(0), mp.getTerritory(6),5, Status.actionStatus.ATTACK, p0);
         AttackAction aa3 = new AttackAction(mp.getTerritory(6), mp.getTerritory(0), 5, Status.actionStatus.ATTACK, p2);
         ArrayList<AttackAction> tests2 = new ArrayList<>();
         tests2.add(aa2);
         tests2.add(aa3);
         r.executeAttacks(tests2);
-        //System.out.println(aa2.attackTerritory());
-        System.out.println(mp.getTerritory(0).getNumUnits());
-        System.out.println(mp.getTerritory(0).getOwner());
-        System.out.println(mp.getTerritory(6).getNumUnits());
-        System.out.println(mp.getTerritory(6).getOwner());
+        System.out.println(mp.getTerritory(0).getOwner().getName() + " " +  mp.getTerritory(0).getNumUnits());
+        System.out.println(mp.getTerritory(6).getOwner().getName() + " " +  mp.getTerritory(6).getNumUnits());
+
+        //multiple territories from one player attack the same target territory
+        System.out.println("---------------------------------------------");
+        mp.updateAccessible();
+        ArrayList<AttackAction> tests3 = new ArrayList<>();
+        AttackAction aa4 = new AttackAction(mp.getTerritory(1), mp.getTerritory(7),2, Status.actionStatus.ATTACK, p0);
+        AttackAction aa5 = new AttackAction(mp.getTerritory(2), mp.getTerritory(7), 2, Status.actionStatus.ATTACK, p0);
+        tests3.add(aa4);
+        tests3.add(aa5);
+        r.executeAttacks(tests3);
+        System.out.println(mp.getTerritory(1).getOwner().getName() + " " +  mp.getTerritory(1).getNumUnits());
+        System.out.println(mp.getTerritory(2).getOwner().getName() + " " +  mp.getTerritory(2).getNumUnits());
+        System.out.println(mp.getTerritory(7).getOwner().getName() + " " +  mp.getTerritory(7).getNumUnits());
     }
 }

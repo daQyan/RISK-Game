@@ -79,6 +79,12 @@ public class Round {
             attackActions.remove(order);
         }
     }
+
+    public void naturalUnitIncrease(){
+        for(Territory t: myMap.getTerritories()){
+            t.updateUnits(1);
+        }
+    }
     public Status.gameStatus checkStatus(){
         for(Player sp : players){
             if(sp.getTerritories().isEmpty()){
@@ -95,6 +101,7 @@ public class Round {
     public Status.gameStatus playOneTurn() {
         executeMoves(moveActions);
         executeAttacks(attackActions);
+        naturalUnitIncrease();
         return checkStatus();
     }
 }
