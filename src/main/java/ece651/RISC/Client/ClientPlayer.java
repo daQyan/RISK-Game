@@ -5,6 +5,7 @@ import ece651.RISC.shared.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -68,6 +69,7 @@ public class ClientPlayer extends Player {
     }
 
     Territory getTerritoryByName(String terName) {
+        if (terName == null) return null;
         for (Territory t : map.getTerritories()) {
             if (terName.equals(t.getName())) {
                 return t;
@@ -75,45 +77,107 @@ public class ClientPlayer extends Player {
         }
         return null;
     }
+// 5 5 10 10
 
-    public void move(ArrayList<MoveAction> moveActions) throws IOException {
-        String welcome = "Player " + this.name + ", you can move units within your adjacent territories:" + getMyTerritoryName();
-        String sourceTerMesg = "Please specify the source territory with the territory name: ";
-        String targetTerMesg = "Please specify the target territory with the territory name: ";
-        String unitNumMesg = "Please specify the number of units to move";
-
-        out.println(welcome);
-        String sourceTer, targetTer;
+    private Territory checkSource(ActionChecker checker, String sourceTerMesg) throws IOException {
         Territory source = null;
-        Territory target = null;
-        int unitMove = 0;
         while (true) {
             try {
                 out.println(sourceTerMesg);
-                sourceTer = inputReader.readLine();
-                out.println(targetTerMesg);
-                targetTer = inputReader.readLine();
-                out.println(unitNumMesg);
-                unitMove = Integer.parseInt(inputReader.readLine());
-
+                String sourceTer = inputReader.readLine();
                 source = getTerritoryByName(sourceTer);
-                target = getTerritoryByName(targetTer);
-
-                ActionChecker checker = new ActionChecker();
-                String checkResult = checker.checkMoveRule(this, source, target, unitMove);
-                if (checkResult != null) throw new IllegalArgumentException(checkResult);
+                String result = checker.checkSource(this, source, "move");
+                if (result != null) {
+                    throw new IllegalArgumentException(result);
+                }
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
         }
+        return source;
+    }
+
+    private Territory checkTarget(ActionChecker checker, String targetTerMesg, Territory source, Status.actionStatus status) throws IOException {
+        Territory target = null;
+        while (true) {
+            try {
+                out.println(targetTerMesg);
+                String targetTer = inputReader.readLine();
+                target = getTerritoryByName(targetTer);
+                String result = null;
+                if (status == Status.actionStatus.MOVE) {
+                    result = checker.checkAccess(source, target);
+                }
+                else result = checker.checkAtkTarget(source, target);
+                if (result != null) {
+                    throw new IllegalArgumentException(result);
+                }
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return target;
+    }
+
+
+    private int checkUnits(ActionChecker checker, String unitNumMesg, Territory sourceTerritory, String type) throws IOException {
+        int units = 0;
+        while (true) {
+            try {
+                out.println(unitNumMesg);
+                units = Integer.parseInt(inputReader.readLine());
+                String result = checker.checkUnits(sourceTerritory, units, type);
+                if (result != null) {
+                    throw new IllegalArgumentException(result);
+                }
+                break;
+            }
+            catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return units;
+    }
+
+
+    public void move(ArrayList<MoveAction> moveActions) throws IOException {
+        String welcome = "Player " + this.name + ", you can move units within your accessible territories: " + getMyTerritoryName();
+        String sourceTerMesg = "Please specify the source territory with the territory name: ";
+        String targetTerMesg = "Please specify the target territory with the territory name: ";
+        String unitNumMesg = "Please specify the number of units to move";
+        out.println(welcome);
+
+        Territory source = null;
+        Territory target = null;
+        int unitMove = 0;
+
+        ActionChecker checker = new ActionChecker();
+        source = checkSource(checker, sourceTerMesg);
+        target = checkTarget(checker, targetTerMesg, source, Status.actionStatus.MOVE);
+        unitMove = checkUnits(checker, unitNumMesg, source, "move");
+//                out.println(sourceTerMesg);
+//                sourceTer = inputReader.readLine();
+//                checker.checkSource(this, source, "move");
+
+//                out.println(targetTerMesg);
+//                targetTer = inputReader.readLine();
+//
+//                out.println(unitNumMesg);
+//                unitMove = Integer.parseInt(inputReader.readLine());
+
+//                source = getTerritoryByName(sourceTer);
+//                target = getTerritoryByName(targetTer);
+//                ActionChecker checker = new ActionChecker();
+//                String checkResult = checker.checkMoveRule(this, source, target, unitMove);
+//                if (checkResult != null) throw new IllegalArgumentException(checkResult);
         MoveAction move = new MoveAction(source, target, unitMove, Status.actionStatus.MOVE, this);
+        move.moveOut(); // check done here
         moveActions.add(move);
-        move.moveOut();
+
         out.println("Move Successful ~");
         System.out.println("**-------------------------------------------------------------------------------------**");
-
-
     }
 
     public void attack(ArrayList<AttackAction> attackActions) throws  IOException {
@@ -122,37 +186,34 @@ public class ClientPlayer extends Player {
         String targetTerMesg = "Please specify the target territory with the territory name: ";
         String unitNumMesg = "Please specify the number of units use to attack";
         out.println(welcome);
-        String sourceTer, targetTer;
         Territory source = null;
         Territory target = null;
         int unitAttack = 0;
-        while (true) {
-            try {
-                out.println(sourceTerMesg);
-                sourceTer = inputReader.readLine();
-                out.println(targetTerMesg);
-                targetTer = inputReader.readLine();
-                out.println(unitNumMesg);
-                unitAttack = Integer.parseInt(inputReader.readLine());
 
-                source = getTerritoryByName(sourceTer);
-                target = getTerritoryByName(targetTer);
+        ActionChecker checker = new ActionChecker();
+        source = checkSource(checker, sourceTerMesg);
+        target = checkTarget(checker, targetTerMesg, source, Status.actionStatus.ATTACK);
+        unitAttack = checkUnits(checker, unitNumMesg, source, "attack");
 
-                ActionChecker checker = new ActionChecker();
-                String checkResult = checker.checkAttackRule(this, source, target, unitAttack);
-                if (checkResult != null) throw new IllegalArgumentException(checkResult);
-                break;
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-            }
-        }
         AttackAction attack = new AttackAction(source, target, unitAttack, Status.actionStatus.ATTACK, this);
+        attack.moveOut(); // check done here
         attackActions.add(attack);
-        // modify
-        attack.moveOut();
+//                out.println(sourceTerMesg);
+//                sourceTer = inputReader.readLine();
+//                out.println(targetTerMesg);
+//                targetTer = inputReader.readLine();
+//                out.println(unitNumMesg);
+//                unitAttack = Integer.parseInt(inputReader.readLine());
+//
+//                source = getTerritoryByName(sourceTer);
+//                target = getTerritoryByName(targetTer);
+
+//                ActionChecker checker = new ActionChecker();
+//                String checkResult = checker.checkAttackRule(this, source, target, unitAttack);
+//                if (checkResult != null) throw new IllegalArgumentException(checkResult);
+
         out.println("Attack Successful ~");
         System.out.println("**-------------------------------------------------------------------------------------**");
-
     }
 
 
@@ -182,23 +243,39 @@ public class ClientPlayer extends Player {
     }
 
     public void initUnitPlacement() {
+
         this.view.displayMap();
-        String prompt = "Hi~ Player " + this.name + ", you have in total " + initUnits + " units and following territory, please specify the units for "
-                + getMyTerritoryName() + "with the format <unit1> <unit2> <unit3>";
+        int numTer = this.territories.size();
+        String prompt = "Hi~ Player " + this.name + ", you have in total " + initUnits + " units and " + numTer + " territory, please specify the units for "
+                + getMyTerritoryName() + "with the format: <unit1> <unit2> ... <unitN>, where N is the number of your territory. ";
         String unitsInput;
+        out.println(prompt);
         while (true) {
             try {
-                out.println(prompt);
                 unitsInput = inputReader.readLine();
-                // follow the format <int><space><int><space><int><space>
-                if (! unitsInput.matches("^\\d+\\s+\\d+\\s+\\d+$")) {
-                    throw new IllegalArgumentException("Invalid input format! format: <unit1> <unit2> <unit3>\n");
+                switch (numTer) {
+                    case 2:
+                        if (! unitsInput.matches("^\\d+\\s+\\d+$")) {
+                            throw new IllegalArgumentException("Invalid input format! format: <unit1> <unit2> \n");
+                        }
+                        break;
+                    case 3:
+                        if (! unitsInput.matches("^\\d+\\s+\\d+\\s+\\d+$")) {
+                            throw new IllegalArgumentException("Invalid input format! format: <unit1> <unit2> <unit3>\n");
+                        }
+                        break;
+                    case 4:
+                        if (! unitsInput.matches("^\\d+\\s+\\d+\\s+\\d+\\s+\\d+$")) {
+                            throw new IllegalArgumentException("Invalid input format! format: <unit1> <unit2> <unit3> <unit4> <unit5>\n");
+                        }
+                        break;
                 }
                 System.out.println("initUnitPlacement" + getTerritories().size());
                 parseUnitsPlacement(unitsInput, getTerritories());
                 break;
             } catch (IllegalArgumentException | IOException e) {
                 System.out.println("initUnitPlacement" + e.getStackTrace());
+                System.out.println(e.getMessage());
             }
         }
         out.println("Unit Placement Success!");
@@ -210,7 +287,7 @@ public class ClientPlayer extends Player {
         ArrayList<Integer> numList = new ArrayList();
         String[] parts = prompt.split(" ");
         int sumUnits = 0;
-        for (int i = 0; i <parts.length; ++i) {
+        for (int i = 0; i < parts.length; ++i) {
             int num = Integer.parseInt(parts[i]);
             numList.add(num);
             sumUnits += num;
@@ -239,7 +316,7 @@ public class ClientPlayer extends Player {
             while (true) {
                 view.displayMap();
                 out.println(name + ", your options: M for move, A for attack, D for Done");
-                String s = inputReader.readLine();
+                String s = inputReader.readLine().toUpperCase();
                 if (s.equals("D")) {
                     System.out.println("D" + moveActions.size());
                     communicator.sendActions(moveActions, attackActions);
@@ -249,7 +326,7 @@ public class ClientPlayer extends Player {
                     case "M":
                         move(moveActions);
                         break;
-                    case"A":
+                    case "A":
                         attack(attackActions);
                         break;
                     default:

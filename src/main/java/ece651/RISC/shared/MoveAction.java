@@ -11,6 +11,7 @@ public class MoveAction extends Action {
     }
     public void moveOut(){
         sourceTerritory.updateUnits(-hitUnits);
+        targetTerritory.updateUnits(hitUnits);
     }
 
     /**
