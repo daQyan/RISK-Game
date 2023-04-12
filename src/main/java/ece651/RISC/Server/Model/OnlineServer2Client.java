@@ -28,10 +28,10 @@ public class OnlineServer2Client  {
     public String oneTurnMsg(GameMap map, Status.playerStatus playerStatus, Status.gameStatus gameStatus) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("playerStatus", playerStatus);
-        jsonObject.put("playerStatus", gameStatus);
+        jsonObject.put("gameStatus", gameStatus);
         jsonObject.put("map", JSONConvertor.map2JSON(map));
         String jsonString = jsonObject.toJSONString();
-        System.out.println("allocationMsg"+jsonString);
+        System.out.println("playingMsg"+jsonString);
         return jsonObject.toJSONString();
     }
 }
