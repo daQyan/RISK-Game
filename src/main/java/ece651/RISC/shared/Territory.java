@@ -126,6 +126,12 @@ public class Territory {
         Territory t2 = JSON.parseObject(json, Territory.class);
         System.out.println(t2.toJSON());
     }
+
+    @Override
+    public String toString() {
+
+        return name;
+    }
 }
 
 
