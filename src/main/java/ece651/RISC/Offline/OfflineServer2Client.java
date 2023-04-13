@@ -19,7 +19,7 @@ public class OfflineServer2Client implements Server2Client {
         jsonObject.put("status", status);
         jsonObject.put("map", JSONConvertor.map2JSON(map));
         for(ClientReceiver receiver: receivers) {
-            if(receiver.getPlayer().equals(to)){
+            if(receiver.getPlayer().getId() == (to.getId())){
                 receiver.receiveOneTurn(jsonObject.toJSONString());
                 break;
             }

@@ -2,6 +2,7 @@ package ece651.RISC.shared;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.annotation.JSONField;
+import ece651.RISC.Client.MapTextView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,11 +28,22 @@ public class Player {
 
     protected GameMap map;
 
+    protected MapTextView view = new MapTextView(map);
+
     public Player(int id, String name, ArrayList<Territory> territories) {
         this.id = id;
         this.name = name;
         this.territories = territories;
         this.status = Status.playerStatus.PLAYING;
+    }
+
+    public Player(int id, String name, ArrayList<Territory> territories, GameMap map) {
+        this.id = id;
+        this.name = name;
+        this.territories = territories;
+        this.status = Status.playerStatus.PLAYING;
+        this.map = map;
+        this.view = new MapTextView(this.map);
     }
 
     public Player(int id, String name) {
@@ -71,6 +83,7 @@ public class Player {
     public void addTerritories(Territory t){
         territories.add(t);
     }
+
 
     @Override
     public String toString() {

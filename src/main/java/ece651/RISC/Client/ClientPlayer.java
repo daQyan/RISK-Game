@@ -36,7 +36,7 @@ public class ClientPlayer extends Player {
 
     private Status.playerStatus status;
 
-    private MapTextView view;
+    //private MapTextView view;
 
     @Override
     public void setStatus(Status.playerStatus status) {
