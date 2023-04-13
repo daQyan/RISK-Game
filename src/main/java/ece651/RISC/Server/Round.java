@@ -18,6 +18,23 @@ public class Round {
     }
 
     public int playerOneTurn(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
+        //change player to server's player
+        for(Player myPlayer: players){
+            if(myPlayer.getId() == player.getId()){
+                player = myPlayer;
+                break;
+            }
+        }
+        //change all the territories to territories from server side's own map
+        for(MoveAction m: moveActions){
+            m.setSourceTerritory(myMap.getTerritory(m.getSourceTerritory().getId()));
+            m.setTargetTerritory(myMap.getTerritory(m.getTargetTerritory().getId()));
+        }
+        for(AttackAction a: attackActions){
+            a.setSourceTerritory(myMap.getTerritory(a.getSourceTerritory().getId()));
+            a.setTargetTerritory(myMap.getTerritory(a.getTargetTerritory().getId()));
+        }
+
         this.moveActions.addAll(moveActions);
         this.attackActions.addAll(attackActions);
         this.operatedPlayers.add(player);
