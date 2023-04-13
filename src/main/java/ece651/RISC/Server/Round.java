@@ -34,6 +34,7 @@ public class Round {
             a.setSourceTerritory(myMap.getTerritory(a.getSourceTerritory().getId()));
             a.setTargetTerritory(myMap.getTerritory(a.getTargetTerritory().getId()));
         }
+
         this.moveActions.addAll(moveActions);
         this.attackActions.addAll(attackActions);
         this.operatedPlayers.add(player);
