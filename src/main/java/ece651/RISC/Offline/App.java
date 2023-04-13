@@ -22,13 +22,19 @@ public class App {
         ClientPlayer clientPlayer1 = new ClientPlayer("player1", inputReader, out);
         ClientPlayer clientPlayer2 = new ClientPlayer("player2", inputReader, out);
 //        ClientPlayer clientPlayer3 = new ClientPlayer("player3", inputReader, out);
+//        ClientPlayer clientPlayer4 = new ClientPlayer("player4", inputReader, out);
+
         ClientReceiver clientReceiver1 = new ClientReceiver(clientPlayer1);
         ClientReceiver clientReceiver2 = new ClientReceiver(clientPlayer2);
 //        ClientReceiver clientReceiver3 = new ClientReceiver(clientPlayer3);
+//        ClientReceiver clientReceiver4 = new ClientReceiver(clientPlayer4);
+
         ArrayList<ClientReceiver> clientReceivers = new ArrayList<>();
         clientReceivers.add(clientReceiver1);
         clientReceivers.add(clientReceiver2);
 //        clientReceivers.add(clientReceiver3);
+//        clientReceivers.add(clientReceiver4);
+
         // here size fixed
         OfflineServer2Client server2Client = new OfflineServer2Client(clientReceivers);
         // num
@@ -39,9 +45,14 @@ public class App {
         OfflineClient2Server client2Server2 = new OfflineClient2Server(clientPlayer2, serverReceiver);
         clientPlayer2.setCommunicator(client2Server2);
 //        OfflineClient2Server client2Server3 = new OfflineClient2Server(clientPlayer3, serverReceiver);
+//        OfflineClient2Server client2Server4 = new OfflineClient2Server(clientPlayer4, serverReceiver);
+//
 //        clientPlayer3.setCommunicator(client2Server3);
+//        clientPlayer4.setCommunicator(client2Server4);
+
         clientPlayer1.connectServer();
         clientPlayer2.connectServer();
 //        clientPlayer3.connectServer();
+//        clientPlayer4.connectServer();
     }
 }
