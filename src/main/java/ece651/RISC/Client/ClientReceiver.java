@@ -72,6 +72,8 @@ public class ClientReceiver {
         player.setId(id);
     }
 
+
+
     public void receiveInitialization(String initializationJSON) {
         System.out.println("receiveInitialization");
         JSONObject jsonObj = JSON.parseObject(initializationJSON);

@@ -3,7 +3,6 @@ package ece651.RISC.Offline;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import ece651.RISC.Client.ClientPlayer;
-import ece651.RISC.Server.ServerGame;
 import ece651.RISC.Server.ServerReceiver;
 import ece651.RISC.shared.*;
 
@@ -19,7 +18,7 @@ public class OfflineClient2Server implements Client2Server {
         this.serverReceiver = serverReceiver;
     }
 
-//    private void setActionTerritories(Action receivedAction) {
+    //    private void setActionTerritories(Action receivedAction) {
 //        Territory serverSourceTerritory = serverGame.getMyMap().getTerritory(receivedAction.getSourceTerritory().getId());
 //        receivedAction.setSourceTerritory(serverSourceTerritory);
 //        Territory serverTargetTerritory = serverGame.getMyMap().getTerritory(receivedAction.getTargetTerritory().getId());

@@ -94,6 +94,7 @@ public class Game {
         return players.get(playerId);
     }
 
+
     public void AllocateUnitFromPlayer(int playerId, Set<Integer> territoriesId, int numUnits) {
         for(Integer territoryId: territoriesId) {
             Territory serverSideTerritory = myMap.getTerritory(territoryId);
@@ -106,8 +107,6 @@ public class Game {
             myStatus = Status.gameStatus.PLAYING;
         }
     }
-
-
 
     public void playerAllocate(Player player, ArrayList<Territory> territories) {
         for(Territory territory: territories) {
@@ -146,7 +145,7 @@ public class Game {
     public void resetOperatedPlayerId() {
         operatedPlayerId.clear();
     }
-    public void recieveAction(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
+    public void receiveAction(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
         System.out.println("playerOneTurn" + moveActions.size() +","+ attackActions.size());
         int operatedPlayerNum = round.playerOneTurn(player, moveActions, attackActions);
         if(operatedPlayerNum == playerSize){

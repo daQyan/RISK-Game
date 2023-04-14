@@ -83,6 +83,8 @@ public class Round {
     public void executeAttacks(ArrayList<AttackAction> attackActions) {
         Random rand = new Random();
         attackActions = parseAttacks(attackActions);
+        // attackActions 为null 就不能.size()了
+        if(attackActions == null) return;
         while(attackActions.size() > 0){
             int order = rand.nextInt(attackActions.size());
             String result = attackActions.get(order).attackTerritory();

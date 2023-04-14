@@ -4,12 +4,10 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import ece651.RISC.Server.Model.Game;
 import ece651.RISC.Server.Model.OnlineServer2Client;
-import ece651.RISC.Server.Model.Round;
 import ece651.RISC.shared.AttackAction;
 import ece651.RISC.shared.MoveAction;
 import ece651.RISC.shared.Player;
 import ece651.RISC.shared.Status;
-import ece651.RISC.shared.Territory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,11 +46,11 @@ public class PlayingController {
         String attackActionsJSON = jsonObject.getString("attackActions");
         List<MoveAction> moveActions = JSON.parseArray(moveActionsJSON, MoveAction.class);
         List<AttackAction> attackActions = JSON.parseArray(attackActionsJSON, AttackAction.class);
-        serverGame.recieveAction(player, (ArrayList<MoveAction>) moveActions, (ArrayList<AttackAction>) attackActions);
+        serverGame.receiveAction(player, (ArrayList<MoveAction>) moveActions, (ArrayList<AttackAction>) attackActions);
 
         lock.lock();
         try {
-            if (serverGame.getAllocatedPlayerSize() < 3) {
+            if (serverGame.getOperatedPlayerSize() < 3) {
                 actionComplete.await();
             } else {
                 actionComplete.signalAll();

@@ -1,32 +1,35 @@
 package ece651.RISC.Online;
 
-import ece651.RISC.Client.ClientPlayer;
-import ece651.RISC.Server.ServerGame;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import ece651.RISC.shared.*;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
-public class OnlineClient2Server implements Client2Server {
-    private ServerGame serverGame;
-    private ClientPlayer clientPlayer;
+public class OnlineClient2Server {
 
-    public OnlineClient2Server(ServerGame serverGame, ClientPlayer clientPlayer) {
-        this.serverGame = serverGame;
-        this.clientPlayer = clientPlayer;
-    }
-    @Override
-    public void sendActions(ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
-        serverGame.playerOneTurn(clientPlayer, moveActions, attackActions);
-    }
-
-    @Override
-    public void sendName() throws IOException {
-        serverGame.addPlayer(clientPlayer);
+    public void actionsMsg(Player clientPlayer, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
+        System.out.println("sendActions:" + moveActions.size());
+        String playerJSON = JSON.toJSONString(clientPlayer);
+        String moveActionsJSON = JSON.toJSONString(moveActions);
+        String attackActionsJSON = JSON.toJSONString(attackActions);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("player", playerJSON);
+        jsonObject.put("moveActions", moveActionsJSON);
+        jsonObject.put("attackActions", attackActionsJSON);
+        //serverGame.playerOneTurn(clientPlayer, moveActions, attackActions);
     }
 
-    @Override
-    public void sendAllocation(ArrayList<Territory> territories) {
-        serverGame.playerAllocate(clientPlayer, territories);
+    public String nameMsg(Player clientPlayer) {
+        String playerJSON = JSON.toJSONString(clientPlayer);
+        return playerJSON;
     }
+
+    public void allocationMsg(Player clientPlayer,ArrayList<Territory> territories) {
+        String playerJSON = JSON.toJSONString(clientPlayer);
+        String territoriesJSON = JSON.toJSONString(territories);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("player", playerJSON);
+        jsonObject.put("territories", territoriesJSON);
+    }
+
 }

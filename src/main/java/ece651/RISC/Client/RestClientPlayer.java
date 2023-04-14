@@ -1,13 +1,20 @@
 package ece651.RISC.Client;
 
-import ece651.RISC.shared.*;
+import ece651.RISC.shared.ActionChecker;
+import ece651.RISC.shared.AttackAction;
+import ece651.RISC.shared.Client2Server;
+import ece651.RISC.shared.GameMap;
+import ece651.RISC.shared.MoveAction;
+import ece651.RISC.shared.Player;
+import ece651.RISC.shared.Status;
+import ece651.RISC.shared.Territory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
-public class ClientPlayer extends Player {
+public class RestClientPlayer extends Player {
 
     private BufferedReader inputReader;
     private PrintStream out;
@@ -50,14 +57,14 @@ public class ClientPlayer extends Player {
         this.communicator = communicator;
     }
 
-    public ClientPlayer(String name, BufferedReader inputReader, PrintStream out){
+    public RestClientPlayer(String name, BufferedReader inputReader, PrintStream out){
         super(name);
         this.inputReader = inputReader;
         this.out = out;
         this.status = Status.playerStatus.INIT;
     }
 
-    public ClientPlayer(BufferedReader inputReader, PrintStream out){
+    public RestClientPlayer(BufferedReader inputReader, PrintStream out){
         super();
         this.inputReader = inputReader;
         this.out = out;
@@ -108,13 +115,12 @@ public class ClientPlayer extends Player {
         return source;
     }
 
-    private Territory checkTarget(ActionChecker checker, String targetTerMesg, String sourceTerMesg, Territory source, Status.actionStatus status) throws IOException {
+    private Territory checkTarget(ActionChecker checker, String targetTerMesg, Territory source, Status.actionStatus status) throws IOException {
         Territory target = null;
         while (true) {
             try {
                 out.println(targetTerMesg);
                 String targetTer = inputReader.readLine();
-                if (targetTer.equals("cancel")) checkSource(checker, sourceTerMesg);
                 target = getTerritoryByName(targetTer);
                 String result = null;
                 if (status == Status.actionStatus.MOVE) {
@@ -155,7 +161,7 @@ public class ClientPlayer extends Player {
 
     public void move(ArrayList<MoveAction> moveActions) throws IOException {
         String welcome = "Player " + this.name + ", you can move units within your accessible territories: " + getMyTerritoryName();
-        String sourceTerMesg = "Please specify the source territory with the territory name: " + "you have the following choices: " + this.getMyTerritoryName();
+        String sourceTerMesg = "Please specify the source territory with the territory name: ";
         String targetTerMesg = "Please specify the target territory with the territory name: ";
         String unitNumMesg = "Please specify the number of units to move";
         out.println(welcome);
@@ -166,10 +172,23 @@ public class ClientPlayer extends Player {
 
         ActionChecker checker = new ActionChecker();
         source = checkSource(checker, sourceTerMesg);
-        targetTerMesg +=  "Your Accessibles: " + source.getAccessibles().toString() + "input 'cancel' to choose new source territory";
-        target = checkTarget(checker, targetTerMesg, sourceTerMesg, source, Status.actionStatus.MOVE);
+        target = checkTarget(checker, targetTerMesg, source, Status.actionStatus.MOVE);
         unitMove = checkUnits(checker, unitNumMesg, source, "move");
+//                out.println(sourceTerMesg);
+//                sourceTer = inputReader.readLine();
+//                checker.checkSource(this, source, "move");
 
+//                out.println(targetTerMesg);
+//                targetTer = inputReader.readLine();
+//
+//                out.println(unitNumMesg);
+//                unitMove = Integer.parseInt(inputReader.readLine());
+
+//                source = getTerritoryByName(sourceTer);
+//                target = getTerritoryByName(targetTer);
+//                ActionChecker checker = new ActionChecker();
+//                String checkResult = checker.checkMoveRule(this, source, target, unitMove);
+//                if (checkResult != null) throw new IllegalArgumentException(checkResult);
         MoveAction move = new MoveAction(source, target, unitMove, Status.actionStatus.MOVE, this);
         move.moveOut(); // check done here
         moveActions.add(move);
@@ -180,7 +199,7 @@ public class ClientPlayer extends Player {
 
     public void attack(ArrayList<AttackAction> attackActions) throws  IOException {
         String welcome = "Player " + this.name + ", which territory would you want to attack? " + getMyTerritoryName();
-        String sourceTerMesg = "Please specify the source territory with the territory name: " + " you have the following choices: " + this.getMyTerritoryName();
+        String sourceTerMesg = "Please specify the source territory with the territory name: ";
         String targetTerMesg = "Please specify the target territory with the territory name: ";
         String unitNumMesg = "Please specify the number of units use to attack";
         out.println(welcome);
@@ -190,13 +209,25 @@ public class ClientPlayer extends Player {
 
         ActionChecker checker = new ActionChecker();
         source = checkSource(checker, sourceTerMesg);
-        targetTerMesg += "Your Adjacent: " + source.getAdjacents().toString() + " input 'cancel' to choose new source territory";
-        target = checkTarget(checker, targetTerMesg, sourceTerMesg, source, Status.actionStatus.ATTACK);
+        target = checkTarget(checker, targetTerMesg, source, Status.actionStatus.ATTACK);
         unitAttack = checkUnits(checker, unitNumMesg, source, "attack");
 
         AttackAction attack = new AttackAction(source, target, unitAttack, Status.actionStatus.ATTACK, this);
         attack.moveOut(); // check done here
         attackActions.add(attack);
+//                out.println(sourceTerMesg);
+//                sourceTer = inputReader.readLine();
+//                out.println(targetTerMesg);
+//                targetTer = inputReader.readLine();
+//                out.println(unitNumMesg);
+//                unitAttack = Integer.parseInt(inputReader.readLine());
+//
+//                source = getTerritoryByName(sourceTer);
+//                target = getTerritoryByName(targetTer);
+
+//                ActionChecker checker = new ActionChecker();
+//                String checkResult = checker.checkAttackRule(this, source, target, unitAttack);
+//                if (checkResult != null) throw new IllegalArgumentException(checkResult);
 
         out.println("Attack Successful ~");
         System.out.println("**-------------------------------------------------------------------------------------**");
