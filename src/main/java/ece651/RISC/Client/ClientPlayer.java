@@ -243,7 +243,7 @@ public class ClientPlayer extends Player {
     }
 
     public void initUnitPlacement() {
-
+        this.view = new MapTextView(this.map);
         this.view.displayMap();
         int numTer = this.territories.size();
         String prompt = "Hi~ Player " + this.name + ", you have in total " + initUnits + " units and " + numTer + " territory, please specify the units for "

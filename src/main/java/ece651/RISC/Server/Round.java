@@ -118,6 +118,7 @@ public class Round {
         executeMoves(moveActions);
         executeAttacks(attackActions);
         naturalUnitIncrease();
+        myMap.updateAccessible();
         return checkStatus();
     }
 }

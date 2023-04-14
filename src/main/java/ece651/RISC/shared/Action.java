@@ -6,6 +6,7 @@ import com.alibaba.fastjson2.annotation.JSONField;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class Action {
@@ -14,6 +15,8 @@ public class Action {
     @JSONField(serializeUsing = Territory.class)
     protected Territory targetTerritory;
     protected int hitUnits;
+    //For EVO 2
+    protected LinkedHashMap<Unit, Integer> actionUnits;
 
     public void setSourceTerritory(Territory sourceTerritory) {
         this.sourceTerritory = sourceTerritory;

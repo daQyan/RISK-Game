@@ -133,4 +133,12 @@ public class ServerGame {
             server2Client.sendOneTurn(player, myMap, player.getStatus());
         }
     }
+    public Player getPlayerByID(int PlayerID){
+        for(Player p: players){
+            if(p.getId() == PlayerID){
+                return p;
+            }
+        }
+        return null;
+    }
 }
