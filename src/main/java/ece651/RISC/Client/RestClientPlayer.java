@@ -1,13 +1,20 @@
 package ece651.RISC.Client;
 
-import ece651.RISC.shared.*;
+import ece651.RISC.shared.ActionChecker;
+import ece651.RISC.shared.AttackAction;
+import ece651.RISC.shared.Client2Server;
+import ece651.RISC.shared.GameMap;
+import ece651.RISC.shared.MoveAction;
+import ece651.RISC.shared.Player;
+import ece651.RISC.shared.Status;
+import ece651.RISC.shared.Territory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
-public class ClientPlayer extends Player {
+public class RestClientPlayer extends Player {
 
     private BufferedReader inputReader;
     private PrintStream out;
@@ -50,14 +57,14 @@ public class ClientPlayer extends Player {
         this.communicator = communicator;
     }
 
-    public ClientPlayer(String name, BufferedReader inputReader, PrintStream out){
+    public RestClientPlayer(String name, BufferedReader inputReader, PrintStream out){
         super(name);
         this.inputReader = inputReader;
         this.out = out;
         this.status = Status.playerStatus.INIT;
     }
 
-    public ClientPlayer(BufferedReader inputReader, PrintStream out){
+    public RestClientPlayer(BufferedReader inputReader, PrintStream out){
         super();
         this.inputReader = inputReader;
         this.out = out;

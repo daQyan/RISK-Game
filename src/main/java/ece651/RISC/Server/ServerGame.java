@@ -125,7 +125,7 @@ public class ServerGame {
         myMap.updateAccessible();
         if(myStatus == Status.gameStatus.FINISHED) {
             // 通知所有player
-            return;
+            return ;
         }
         this.round = new Round(players, myMap, server2Client);
         //send information to players for networked game

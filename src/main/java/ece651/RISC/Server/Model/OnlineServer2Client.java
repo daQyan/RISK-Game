@@ -7,13 +7,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class OnlineServer2Client  {
 
-    public String initializationMsg(GameMap map, int initUnit, int playerId) {
+    public String playerIdMsg(int playerId) {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("initUnits", initUnit);
-        jsonObject.put("map", JSONConvertor.map2JSON(map));
-        jsonObject.put("playerId", playerId);
+        jsonObject.put("player_id", playerId);
         String jsonString = jsonObject.toJSONString();
-        System.out.println("initializationMsg"+jsonString);
+        System.out.println("playerIdMsg "+jsonString);
+        return jsonString;
+    }
+
+    public String gameMapMsg(GameMap map) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("map", JSONConvertor.map2JSON(map));
+        String jsonString = jsonObject.toJSONString();
+        System.out.println("gameMapMsg "+jsonString);
+        return jsonString;
+    }
+
+    public String unitNumMsg(int initUnit) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("init_units", initUnit);
+        String jsonString = jsonObject.toJSONString();
         return jsonString;
     }
 
@@ -27,8 +40,8 @@ public class OnlineServer2Client  {
 
     public String oneTurnMsg(GameMap map, Status.playerStatus playerStatus, Status.gameStatus gameStatus) {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("playerStatus", playerStatus);
-        jsonObject.put("gameStatus", gameStatus);
+        jsonObject.put("player_status", playerStatus);
+        jsonObject.put("game_status", gameStatus);
         jsonObject.put("map", JSONConvertor.map2JSON(map));
         String jsonString = jsonObject.toJSONString();
         System.out.println("playingMsg"+jsonString);

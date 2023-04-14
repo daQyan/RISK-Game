@@ -46,7 +46,7 @@ public class PlayingController {
         String attackActionsJSON = jsonObject.getString("attackActions");
         List<MoveAction> moveActions = JSON.parseArray(moveActionsJSON, MoveAction.class);
         List<AttackAction> attackActions = JSON.parseArray(attackActionsJSON, AttackAction.class);
-        serverGame.recieveAction(player, (ArrayList<MoveAction>) moveActions, (ArrayList<AttackAction>) attackActions);
+        serverGame.receiveAction(player, (ArrayList<MoveAction>) moveActions, (ArrayList<AttackAction>) attackActions);
 
         lock.lock();
         try {
