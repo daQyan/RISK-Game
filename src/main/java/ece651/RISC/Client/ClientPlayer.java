@@ -5,6 +5,7 @@ import ece651.RISC.shared.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +78,6 @@ public class ClientPlayer extends Player {
         }
         return null;
     }
-// 5 5 10 10
 
     private Territory checkSource(ActionChecker checker, String sourceTerMesg) throws IOException {
         Territory source = null;
@@ -157,21 +157,6 @@ public class ClientPlayer extends Player {
         source = checkSource(checker, sourceTerMesg);
         target = checkTarget(checker, targetTerMesg, source, Status.actionStatus.MOVE);
         unitMove = checkUnits(checker, unitNumMesg, source, "move");
-//                out.println(sourceTerMesg);
-//                sourceTer = inputReader.readLine();
-//                checker.checkSource(this, source, "move");
-
-//                out.println(targetTerMesg);
-//                targetTer = inputReader.readLine();
-//
-//                out.println(unitNumMesg);
-//                unitMove = Integer.parseInt(inputReader.readLine());
-
-//                source = getTerritoryByName(sourceTer);
-//                target = getTerritoryByName(targetTer);
-//                ActionChecker checker = new ActionChecker();
-//                String checkResult = checker.checkMoveRule(this, source, target, unitMove);
-//                if (checkResult != null) throw new IllegalArgumentException(checkResult);
         MoveAction move = new MoveAction(source, target, unitMove, Status.actionStatus.MOVE, this);
         move.moveOut(); // check done here
         moveActions.add(move);
@@ -198,20 +183,6 @@ public class ClientPlayer extends Player {
         AttackAction attack = new AttackAction(source, target, unitAttack, Status.actionStatus.ATTACK, this);
         attack.moveOut(); // check done here
         attackActions.add(attack);
-//                out.println(sourceTerMesg);
-//                sourceTer = inputReader.readLine();
-//                out.println(targetTerMesg);
-//                targetTer = inputReader.readLine();
-//                out.println(unitNumMesg);
-//                unitAttack = Integer.parseInt(inputReader.readLine());
-//
-//                source = getTerritoryByName(sourceTer);
-//                target = getTerritoryByName(targetTer);
-
-//                ActionChecker checker = new ActionChecker();
-//                String checkResult = checker.checkAttackRule(this, source, target, unitAttack);
-//                if (checkResult != null) throw new IllegalArgumentException(checkResult);
-
         out.println("Attack Successful ~");
         System.out.println("**-------------------------------------------------------------------------------------**");
     }
@@ -357,4 +328,6 @@ public class ClientPlayer extends Player {
         }
         return false;
     }
+
+
 }

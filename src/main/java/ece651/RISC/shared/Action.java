@@ -76,7 +76,7 @@ public class Action {
         ArrayList<Territory> territories = new ArrayList<>();
         territories.add(t1);
         territories.add(t2);
-        Player p = new Player(0, "player1", territories);
+        Player p = new Player(0, "player1", territories, 999, 999);
         Action action = new Action(t1, t2, 3, Status.actionStatus.MOVE, p);
         ArrayList<Action> actions = new ArrayList<>();
         actions.add(action);
