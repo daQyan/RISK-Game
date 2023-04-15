@@ -3,6 +3,7 @@ package ece651.RISC.shared;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 import com.alibaba.fastjson2.JSON;
@@ -28,22 +29,28 @@ public class Territory {
     private ArrayList<Territory> adjacents = new ArrayList<>();
 
     @JSONField(serialize = false, deserialize = false)
-    private ArrayList<Territory> accessibles = new ArrayList<>();
+    //private ArrayList<Territory> accessibles = new ArrayList<>();
+    //for evo 2: change to linkedHashmap
+    private LinkedHashMap<Territory, Integer> accessibles = new LinkedHashMap<>();
+
+    @JSONField(name = "size")
+    private int size;
 
 
     public Territory() {}
-    public Territory(int id, String name, int unit, Player owner, ArrayList<Territory> adjacents, ArrayList<Territory> accessibles, int fee) {
+    public Territory(int id, String name, int unit, Player owner, ArrayList<Territory> adjacents, LinkedHashMap<Territory, Integer> accessibles) {
         this.id = id;
         this.name = name;
         this.numUnits = unit;
         this.owner = owner;
         this.accessibles = accessibles;
         this.adjacents = adjacents;
-        this.fee = fee;
+        //fixed size of cost
+        this.size = 2;
     }
 
-    public Territory(int id, String name, int unit, Player owner, int fee) {
-        this(id, name, unit, owner, new ArrayList<>(), new ArrayList<>(), fee);
+    public Territory(int id, String name, int unit, Player owner) {
+        this(id, name, unit, owner, new ArrayList<>(), new LinkedHashMap<>());
     }
 
     public Territory(int id, String name) {
@@ -93,7 +100,9 @@ public class Territory {
     public void setOwner(Player ownerPlayer) {
         this.owner = ownerPlayer;
     }
-
+    public Boolean equals(Territory rhs){
+        return this.getId() == rhs.getId();
+    }
     public ArrayList<Territory> getAdjacents() {
         return adjacents;
     }
@@ -106,16 +115,17 @@ public class Territory {
         this.adjacents.add(adjacent);
     }
 
-    public ArrayList<Territory> getAccessibles() {
+    public LinkedHashMap<Territory, Integer> getAccessibles() {
         return accessibles;
     }
 
-    public void setAccessibles(ArrayList<Territory> accessibles) {
+    public void setAccessibles(LinkedHashMap<Territory, Integer> accessibles) {
         this.accessibles = accessibles;
     }
 
-    public void addAccessible(Territory accessible) {
-        this.accessibles.add(accessible);
+    public void addAccessible(Territory accessible, int cost) {
+        this.accessibles.put(accessible, cost);
+        //need to call updateAccessible() in the GameMap after using this function
     }
 
     public int getUnit(){ return this.numUnits;}

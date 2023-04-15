@@ -129,7 +129,7 @@ public class Player {
     }
 
     public boolean equals(Player p) {
-        return id == p.getId();
+        return this.id == p.getId();
     }
 
     public String toJSON(){
