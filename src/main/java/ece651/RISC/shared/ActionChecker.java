@@ -77,7 +77,7 @@ public class ActionChecker {
         if (targetTerritory == null) {
             return ("This is not a valid Territory name !");
         }
-        if(! sourceTerritory.getAccessibles().contains(targetTerritory)){
+        if(! sourceTerritory.getAccessibles().containsKey(targetTerritory)){
             return("The move action is not valid: there's no valid path from " + sourceTerritory.getName() + " to " +  targetTerritory.getName() + "!");
         }
         return null;
