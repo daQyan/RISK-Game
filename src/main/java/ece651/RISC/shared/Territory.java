@@ -21,30 +21,42 @@ public class Territory {
     @JSONField(name = "owner")
     private Player owner;
 
+    @JSONField(name = "fee")
+    private int fee;
+
     @JSONField(serialize = false, deserialize = false)
     private ArrayList<Territory> adjacents = new ArrayList<>();
 
     @JSONField(serialize = false, deserialize = false)
     private ArrayList<Territory> accessibles = new ArrayList<>();
 
+
     public Territory() {}
-    public Territory(int id, String name, int unit, Player owner, ArrayList<Territory> adjacents, ArrayList<Territory> accessibles) {
+    public Territory(int id, String name, int unit, Player owner, ArrayList<Territory> adjacents, ArrayList<Territory> accessibles, int fee) {
         this.id = id;
         this.name = name;
         this.numUnits = unit;
         this.owner = owner;
         this.accessibles = accessibles;
         this.adjacents = adjacents;
+        this.fee = fee;
     }
 
-    public Territory(int id, String name, int unit, Player owner) {
-        this(id, name, unit, owner, new ArrayList<>(), new ArrayList<>());
+    public Territory(int id, String name, int unit, Player owner, int fee) {
+        this(id, name, unit, owner, new ArrayList<>(), new ArrayList<>(), fee);
     }
 
     public Territory(int id, String name) {
-        this(id, name, 0, new Player());
+        this(id, name, 0, new Player(), 0);
     }
 
+    public void setFee(int fee) {
+        this.fee = fee;
+    }
+
+    public int getFee() {
+        return fee;
+    }
 
     public int getId() {
         return id;
@@ -119,8 +131,8 @@ public class Territory {
     }
 
     public static void main(String[] args) throws URISyntaxException {
-        Player cp = new Player(1, "cp");
-        Territory t = new Territory(1, "test", 10, cp);
+        Player cp = new Player();
+        Territory t = new Territory(1, "test", 10, cp, 5);
         String json = t.toJSON();
         System.out.println(json);
         Territory t2 = JSON.parseObject(json, Territory.class);
