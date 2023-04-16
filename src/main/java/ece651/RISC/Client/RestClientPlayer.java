@@ -1,5 +1,8 @@
 package ece651.RISC.Client;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.annotation.JSONField;
 import ece651.RISC.shared.ActionChecker;
 import ece651.RISC.shared.AttackAction;
 import ece651.RISC.shared.Client2Server;
@@ -51,11 +54,11 @@ public class RestClientPlayer extends Player {
         this.initUnits = initUnits;
     }
 
-    private Client2Server communicator;
+    @JSONField(serialize = false, deserialize = false)
+    public ArrayList<MoveAction> moveActions = new ArrayList<>();
 
-    public void setCommunicator(Client2Server communicator) {
-        this.communicator = communicator;
-    }
+    @JSONField(serialize = false, deserialize = false)
+    public ArrayList<AttackAction> attackActions = new ArrayList<>();
 
     public RestClientPlayer(String name, BufferedReader inputReader, PrintStream out){
         super(name);
@@ -159,7 +162,7 @@ public class RestClientPlayer extends Player {
     }
 
 
-    public void move(ArrayList<MoveAction> moveActions) throws IOException {
+    public void move() throws IOException {
         String welcome = "Player " + this.name + ", you can move units within your accessible territories: " + getMyTerritoryName();
         String sourceTerMesg = "Please specify the source territory with the territory name: ";
         String targetTerMesg = "Please specify the target territory with the territory name: ";
@@ -174,21 +177,7 @@ public class RestClientPlayer extends Player {
         source = checkSource(checker, sourceTerMesg);
         target = checkTarget(checker, targetTerMesg, source, Status.actionStatus.MOVE);
         unitMove = checkUnits(checker, unitNumMesg, source, "move");
-//                out.println(sourceTerMesg);
-//                sourceTer = inputReader.readLine();
-//                checker.checkSource(this, source, "move");
 
-//                out.println(targetTerMesg);
-//                targetTer = inputReader.readLine();
-//
-//                out.println(unitNumMesg);
-//                unitMove = Integer.parseInt(inputReader.readLine());
-
-//                source = getTerritoryByName(sourceTer);
-//                target = getTerritoryByName(targetTer);
-//                ActionChecker checker = new ActionChecker();
-//                String checkResult = checker.checkMoveRule(this, source, target, unitMove);
-//                if (checkResult != null) throw new IllegalArgumentException(checkResult);
         MoveAction move = new MoveAction(source, target, unitMove, Status.actionStatus.MOVE, this);
         move.moveOut(); // check done here
         moveActions.add(move);
@@ -197,7 +186,7 @@ public class RestClientPlayer extends Player {
         System.out.println("**-------------------------------------------------------------------------------------**");
     }
 
-    public void attack(ArrayList<AttackAction> attackActions) throws  IOException {
+    public void attack() throws  IOException {
         String welcome = "Player " + this.name + ", which territory would you want to attack? " + getMyTerritoryName();
         String sourceTerMesg = "Please specify the source territory with the territory name: ";
         String targetTerMesg = "Please specify the target territory with the territory name: ";
@@ -215,19 +204,6 @@ public class RestClientPlayer extends Player {
         AttackAction attack = new AttackAction(source, target, unitAttack, Status.actionStatus.ATTACK, this);
         attack.moveOut(); // check done here
         attackActions.add(attack);
-//                out.println(sourceTerMesg);
-//                sourceTer = inputReader.readLine();
-//                out.println(targetTerMesg);
-//                targetTer = inputReader.readLine();
-//                out.println(unitNumMesg);
-//                unitAttack = Integer.parseInt(inputReader.readLine());
-//
-//                source = getTerritoryByName(sourceTer);
-//                target = getTerritoryByName(targetTer);
-
-//                ActionChecker checker = new ActionChecker();
-//                String checkResult = checker.checkAttackRule(this, source, target, unitAttack);
-//                if (checkResult != null) throw new IllegalArgumentException(checkResult);
 
         out.println("Attack Successful ~");
         System.out.println("**-------------------------------------------------------------------------------------**");
@@ -251,8 +227,8 @@ public class RestClientPlayer extends Player {
         this.view.displayMap();
     }
 
-    public void initUnitPlacement() {
-        this.view.displayMap();
+    public ArrayList<Territory> initUnitPlacement() {
+        displayMap();
         int numTer = this.territories.size();
         String prompt = "Hi~ Player " + this.name + ", you have in total " + initUnits + " units and " + numTer + " territory, please specify the units for "
                 + getMyTerritoryName() + "with the format: <unit1> <unit2> ... <unitN>, where N is the number of your territory. ";
@@ -287,10 +263,12 @@ public class RestClientPlayer extends Player {
         }
         out.println("Unit Placement Success!");
         System.out.println("**-------------------------------------------------------------------------------------**");
+        return parseUnitsPlacement(unitsInput);
     }
 
     // parse the input from user and update its Territories
-    private void parseUnitsPlacement(String prompt, ArrayList<Territory> myTerritory) throws IOException {
+    private ArrayList<Territory> parseUnitsPlacement(String prompt) {
+        ArrayList<Territory> myTerritory = getTerritories();
         ArrayList<Integer> numList = new ArrayList();
         String[] parts = prompt.split(" ");
         int sumUnits = 0;
@@ -304,37 +282,34 @@ public class RestClientPlayer extends Player {
             for (int i = 0; i < numList.size(); i++) {
                 myTerritory.get(i).updateUnits(numList.get(i));
             }
-            communicator.sendAllocation(myTerritory);
         }
         else {
             throw new IllegalArgumentException("Total input units beyond or below scope!\n");
         }
+
+        return myTerritory;
     }
 
     // player play one turn with move and attack orders
-    public void playOneTurn()  {
-        if (checkWin()) return;
-        if (checkLose()) return;
-
-        ArrayList<MoveAction> moveActions = new ArrayList<>();
-        ArrayList<AttackAction> attackActions = new ArrayList<>();
+    public void readActions()  {
+        moveActions.clear();
+        attackActions.clear();
         // keep receiving order input until (D)one
         try{
             while (true) {
-                view.displayMap();
+//                view.displayMap();
                 out.println(name + ", your options: M for move, A for attack, D for Done");
                 String s = inputReader.readLine().toUpperCase();
                 if (s.equals("D")) {
                     System.out.println("D" + moveActions.size());
-                    communicator.sendActions(moveActions, attackActions);
                     break;
                 }
                 switch (s) {
                     case "M":
-                        move(moveActions);
+                        move();
                         break;
                     case "A":
-                        attack(attackActions);
+                        attack();
                         break;
                     default:
                         out.println("Invalid input, please input again");
@@ -345,8 +320,12 @@ public class RestClientPlayer extends Player {
         }
     }
 
-    public void connectServer() throws IOException {
-       communicator.sendName();
+    public ArrayList<MoveAction> getMoveActions() {
+        return moveActions;
+    }
+
+    public ArrayList<AttackAction> getAttackActions() {
+        return attackActions;
     }
 
     private boolean checkLose() {

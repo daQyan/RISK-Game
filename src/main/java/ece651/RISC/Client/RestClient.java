@@ -3,8 +3,11 @@ package ece651.RISC.Client;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import ece651.RISC.Online.OnlineClient2Server;
+import ece651.RISC.Server.Service.Game;
 import ece651.RISC.shared.GameMap;
 import ece651.RISC.shared.JSONConvertor;
+import ece651.RISC.shared.Status;
+import ece651.RISC.shared.Territory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -13,8 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.util.ArrayList;
 
 public class RestClient {
     private String server = "http://127.0.0.1:8080";
@@ -62,19 +67,11 @@ public class RestClient {
         return jsonObj.getInteger("player_id");
     }
 
-    public int parseUnitNum(String unitNumJSON) {
-        JSONObject jsonObj = JSON.parseObject(unitNumJSON);
-        return jsonObj.getInteger("init_units");
-    }
-
     public void idHandler(int playerId){
         player.setId(playerId);
     }
 
-    public void unitNumHandler(int unitNum){
-        player.setInitUnits(unitNum);
-    }
-    public GameMap parseMap(String mapJSON) {
+    public GameMap parseGameMap(String mapJSON) {
         System.out.println("receiveMap" + mapJSON);
         JSONObject jsonObj = JSON.parseObject(mapJSON);
         String map = jsonObj.getString("map");
@@ -96,6 +93,37 @@ public class RestClient {
         player.setMap(map);
     }
 
+    public int parseUnitNum(String unitNumJSON) {
+        JSONObject jsonObj = JSON.parseObject(unitNumJSON);
+        return jsonObj.getInteger("init_units");
+    }
+
+    public void unitNumHandler(int unitNum){
+        player.setInitUnits(unitNum);
+    }
+
+    public void gameMapHandler(int unitNum){
+        player.setInitUnits(unitNum);
+    }
+
+    public Status.gameStatus parseGameStatus(String oneTurnResultJSON) {
+        System.out.println("processing oneTurnResultJSON" + oneTurnResultJSON);
+        JSONObject jsonObj = JSON.parseObject(oneTurnResultJSON);
+        String statusStr = jsonObj.getString("game_status");
+        Status.gameStatus status = Status.gameStatus.valueOf(statusStr);
+
+        return status;
+    }
+
+    public Status.playerStatus parsePlayerStatus(String oneTurnResultJSON) {
+        System.out.println("processing oneTurnResultJSON" + oneTurnResultJSON);
+        JSONObject jsonObj = JSON.parseObject(oneTurnResultJSON);
+        String statusStr = jsonObj.getString("player_status");
+        Status.playerStatus status = Status.playerStatus.valueOf(statusStr);
+
+        return status;
+    }
+
     public void startConnect() {
         // restClient.POST("/player_name");
         player.readPlayerName();
@@ -107,9 +135,8 @@ public class RestClient {
 
         // restClient.get("/map");
         String resMapJSON = get("/map");
-        GameMap gameMap = parseMap(resMapJSON);
+        GameMap gameMap = parseGameMap(resMapJSON);
         setMapToPlayer(gameMap);
-        player.displayMap();
 
         // GET /unit_num
         String unitNumJSON = get("/unit_num");
@@ -118,18 +145,37 @@ public class RestClient {
         System.out.println("startConnect end");
     }
 
+    public void allocation(){
+        // restClient.POST("/allocation");
+        ArrayList<Territory> territories = player.initUnitPlacement();
+        String territoriesJSON = post("/allocation", msgMaker.allocationMsg(player, territories));
+        System.out.println("territoriesJSON" + territoriesJSON);
+        GameMap gameMap = parseGameMap(territoriesJSON);
+        setMapToPlayer(gameMap);
+        player.displayMap();
+        System.out.println("allocation end");
+    }
 
-    public void allocation() {
-//        // restClient.POST("/allocation");
-//        String allocationJSON = player.initUnitPlacement();
-//        String unitNumJSON = post("/allocation", msgMaker.allocationMsg(player, ));
-//        int unitNum = parseUnitNum(unitNumJSON);
-//        unitNumHandler(unitNum);
-//        System.out.println("allocation end");
+    public void playing(){
+        // restClient.POST("/playing");
+        Status.gameStatus gameStatus = Status.gameStatus.PLAYING;
+        while(gameStatus != Status.gameStatus.FINISHED) {
+            player.readActions();
+            String oneTurnResultJSON = post("/playing", msgMaker.actionsMsg(player, player.getMoveActions(), player.getAttackActions()));
+            System.out.println("territoriesJSON" + oneTurnResultJSON);
+            gameStatus = parseGameStatus(oneTurnResultJSON);
+            Status.playerStatus playerStatus = parsePlayerStatus(oneTurnResultJSON);
+
+            GameMap gameMap = parseGameMap(oneTurnResultJSON);
+            setMapToPlayer(gameMap);
+            player.displayMap();
+            System.out.println("playing one turn end");
+        }
     }
     public static void main(String[] args) {
         RestClient restClient = new RestClient();
         restClient.startConnect();
         restClient.allocation();
+        restClient.playing();
     }
 }
