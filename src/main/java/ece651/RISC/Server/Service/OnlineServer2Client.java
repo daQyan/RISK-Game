@@ -1,4 +1,4 @@
-package ece651.RISC.Server.Model;
+package ece651.RISC.Server.Service;
 
 import com.alibaba.fastjson2.JSONObject;
 import ece651.RISC.shared.*;

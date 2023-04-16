@@ -1,4 +1,4 @@
-package ece651.RISC.Server.Model;
+package ece651.RISC.Server.Service;
 
 import ece651.RISC.shared.AttackAction;
 import ece651.RISC.shared.GameMap;

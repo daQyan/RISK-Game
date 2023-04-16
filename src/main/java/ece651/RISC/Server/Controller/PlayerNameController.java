@@ -1,8 +1,8 @@
 package ece651.RISC.Server.Controller;
 
 import com.alibaba.fastjson2.JSON;
-import ece651.RISC.Server.Model.OnlineServer2Client;
-import ece651.RISC.Server.Model.Game;
+import ece651.RISC.Server.Service.OnlineServer2Client;
+import ece651.RISC.Server.Service.Game;
 import ece651.RISC.shared.Player;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
