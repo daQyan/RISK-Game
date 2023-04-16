@@ -18,7 +18,7 @@ public class GameMap {
     public void updateAccessible(){
         for(Territory t : territories){
             //clear the old accessible territories
-            t.setAccessibles(new ArrayList<>());
+            t.setAccessibles(new LinkedHashMap<>());
             Player p = t.getOwner();
             ArrayList<Territory> visited = new ArrayList<>();
             visited.add(t);
@@ -28,29 +28,35 @@ public class GameMap {
                     next.add(n);
                 }
             }
-            searchAccessible(p, t, next, visited);
+            int cost = 2;
+            searchAccessible(p, t, next, visited, cost);
         }
     }
 
     //helper function to search every accessible territory
-    public void searchAccessible(Player owner, Territory t, Queue<Territory> next, ArrayList<Territory> visited){
+    public void searchAccessible(Player owner, Territory t, Queue<Territory> next, ArrayList<Territory> visited, int cost){
         if(next.isEmpty()){
             return;
         }
         while(!next.isEmpty()){
-            Territory temp = next.peek();
-            if(!visited.contains(temp)){
-                visited.add(temp);
-                t.addAccessible(temp);
-                if(temp.getOwner().equals(owner)){
-                    for(Territory i : temp.getAdjacents()){
-                        if(i.getOwner().equals(owner)) {
-                            next.add(i);
+            int size = next.size();
+            while(size > 0){
+                Territory temp = next.peek();
+                if(!visited.contains(temp)){
+                    visited.add(temp);
+                    t.addAccessible(temp, cost);
+                    if(temp.getOwner().equals(owner)){
+                        for(Territory i : temp.getAdjacents()){
+                            if(i.getOwner().equals(owner)) {
+                                next.add(i);
+                            }
                         }
                     }
                 }
+                next.poll();
+                --size;
             }
-            next.poll();
+            cost += 2;
         }
     }
     public int getMapSize(){

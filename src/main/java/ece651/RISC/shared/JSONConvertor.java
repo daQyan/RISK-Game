@@ -33,7 +33,8 @@ public class JSONConvertor {
                 if(adjacent) {
                     selfTerritory.addAdjacent(relatedTerritory);
                 } else {
-                    selfTerritory.addAccessible(relatedTerritory);
+                    //need change here
+                    selfTerritory.addAccessible(relatedTerritory, 0);
                 }
             }
         }
@@ -51,7 +52,7 @@ public class JSONConvertor {
             for(Territory related: territory.getAdjacents()){
                 adjacentRelation.addRelated(related.getId());
             }
-            for(Territory related: territory.getAccessibles()){
+            for(Territory related: territory.getAccessibles().keySet()){
                 accessibleRelation.addRelated(related.getId());
             }
             adjacentRelations.add(adjacentRelation);

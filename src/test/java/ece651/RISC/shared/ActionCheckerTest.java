@@ -31,7 +31,7 @@ public class ActionCheckerTest {
         MoveAction mv0 = new MoveAction(temp.get(0), temp.get(1), 1, Status.actionStatus.MOVE, null);
         MoveAction mv1 = new MoveAction(temp.get(0), temp.get(1), 6, Status.actionStatus.MOVE, null);
         assertEquals(mv0.moveTerritory(), "The move action is not valid: there's no valid path from t0 to t1!");
-        temp.get(0).addAccessible(temp.get(1));
+        temp.get(0).addAccessible(temp.get(1), 2);
         assertEquals(mv1.moveTerritory(), "The move action is not valid: there's not enough soldiers in the t0!");
         assertNull(mv0.moveTerritory());
     }
