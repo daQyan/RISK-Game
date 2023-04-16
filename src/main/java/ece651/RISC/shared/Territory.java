@@ -54,7 +54,7 @@ public class Territory {
     }
 
     public Territory(int id, String name) {
-        this(id, name, 0, new Player(), 0);
+        this(id, name, 0, new Player());
     }
 
     public void setFee(int fee) {
@@ -142,7 +142,7 @@ public class Territory {
 
     public static void main(String[] args) throws URISyntaxException {
         Player cp = new Player();
-        Territory t = new Territory(1, "test", 10, cp, 5);
+        Territory t = new Territory(1, "test", 10, cp);
         String json = t.toJSON();
         System.out.println(json);
         Territory t2 = JSON.parseObject(json, Territory.class);
