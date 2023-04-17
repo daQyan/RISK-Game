@@ -48,6 +48,7 @@ public class Round {
             move.moveTerritory();
         }
     }
+    //!!! needs refactor here
     public ArrayList<AttackAction> parseAttacks(ArrayList<AttackAction> attackActions){
         //check the attack rule first
         //minus the deployed soldiers from the source territory first
@@ -74,14 +75,21 @@ public class Round {
         //merge all the grouped attack actions
         Iterator<Map.Entry<Map.Entry<Territory, Player>, ArrayList<AttackAction>>> iterator = parsing.entrySet().iterator();
         while (iterator.hasNext()) {
+            //for evo 2: not only changing the unit number, but also the number in arraylist myUnits
+            ArrayList<Integer> myDeploy = new ArrayList<>(Collections.nCopies(7,0));
             Map.Entry<Map.Entry<Territory, Player>, ArrayList<AttackAction>> entry = iterator.next();
             int newUnits = 0;
             for(int j = 0; j < entry.getValue().size(); j++){
                 newUnits += entry.getValue().get(j).getHitUnits();
+                ArrayList<Integer> singleAttack = entry.getValue().get(j).getSourceTerritory().deployMyUnits(entry.getValue().get(j).getHitUnits());
+                //add single attack order's units into myDeploy
+                for(int k = 0; k < 7; ++k){
+                    myDeploy.set(k, myDeploy.get(k) + singleAttack.get(k));
+                }
             }
             //use the first source territory as the merged default source territory
             Territory newSourceTerritory = entry.getValue().get(0).getSourceTerritory();
-            AttackAction merged = new AttackAction(newSourceTerritory, entry.getKey().getKey(), newUnits, Status.actionStatus.ATTACK, entry.getKey().getValue());
+            AttackAction merged = new AttackAction(newSourceTerritory, entry.getKey().getKey(), newUnits, Status.actionStatus.ATTACK, entry.getKey().getValue(), myDeploy);
             parsed.add(merged);
         }
         return parsed;
@@ -99,6 +107,7 @@ public class Round {
     public void naturalUnitIncrease(){
         for(Territory t: myMap.getTerritories()){
             t.updateUnits(1);
+            t.increaseMyUnitsEachTurn();
         }
     }
     public Status.gameStatus checkStatus(){

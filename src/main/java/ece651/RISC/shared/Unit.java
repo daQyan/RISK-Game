@@ -16,4 +16,7 @@ public class Unit {
         //check if upgraded unit will have precedence larger than 6(0 at first)
 
     }
+    public Boolean equals(Unit rhs){
+        return this.myType == rhs.myType;
+    }
 }
