@@ -56,7 +56,9 @@ public class Unit {
         }
         return cost;
     }
-
+    public Boolean equals(Unit rhs){
+        return this.myType == rhs.myType;
+    }
     public static void main(String[] args) {
         Player p = new Player();
         p.updateTechResource(300);
@@ -77,8 +79,6 @@ public class Unit {
         System.out.println("tech level: " + p.getTechLevel() + ", techResource: " + p.getTechResource() + ", unit3: " + u3.myType);
 
     }
-    public Boolean equals(Unit rhs){
-        return this.myType == rhs.myType;
-    }
+
 
 }
