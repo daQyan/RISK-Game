@@ -131,7 +131,7 @@ public class Territory {
 
     public ArrayList<Integer> getMyUnits(){ return this.myUnits;}
 
-    //only for attacking other territory; upgrade should call another overloading function
+    //only for moving and attacking other territory; upgrade should call another overloading function
     public ArrayList<Integer> deployMyUnits(int num){
         int index = 6;
         ArrayList<Integer> deploy = new ArrayList<>(Collections.nCopies(7, 0));
@@ -149,7 +149,13 @@ public class Territory {
         return deploy;
     }
 
-    public void increaseMyUnitsEachTurn(){this.myUnits.set(0, myUnits.get(0) + 1);}
+    public void updateMyUnits(int unitIndex, int numUnits){
+        this.myUnits.set(unitIndex, myUnits.get(unitIndex) + numUnits);
+    }
+
+    public void setMyUnits(ArrayList<Integer> newUnits){
+        this.myUnits = newUnits;
+    }
 
     public void changeOwner(int newUnits, Player newOwner){
         this.numUnits = newUnits;

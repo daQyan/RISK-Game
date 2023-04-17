@@ -107,7 +107,7 @@ public class Round {
     public void naturalUnitIncrease(){
         for(Territory t: myMap.getTerritories()){
             t.updateUnits(1);
-            t.increaseMyUnitsEachTurn();
+            t.updateMyUnits(0,1);
         }
     }
     public Status.gameStatus checkStatus(){
