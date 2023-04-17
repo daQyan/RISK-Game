@@ -5,14 +5,17 @@ import java.util.ArrayList;
 public class Unit {
     private int myType;
     private int[] diction;
+    private int[] bonus;
 
     public Unit() {
         this.myType = 0;
         diction = new int[] {0, 3, 11, 30, 55, 90, 140};
+        bonus = new int[] {0, 1, 3, 5, 8, 11, 15};
     }
     public Unit(int Type) {
         this.myType = Type;
         diction = new int[] {0, 3, 11, 30, 55, 90, 140};
+        bonus = new int[] {0, 1, 3, 5, 8, 11, 15};
     }
 
     // upgrade the unit based on the given new level
@@ -24,6 +27,14 @@ public class Unit {
         //check if upgraded unit will have precedence larger than 6(0 at first)
         myType = newType;
         owner.updateTechResource(-cost);
+    }
+
+    public int getMyType() {
+        return myType;
+    }
+
+    public int getBonusByType(int type){
+        return bonus[type];
     }
 
     private int getUnitUpgradeCost(int newType, Player owner) {
