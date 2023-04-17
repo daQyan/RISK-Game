@@ -22,6 +22,9 @@ public class Territory {
     @JSONField(name = "owner")
     private Player owner;
 
+    @JSONField(name = "fee")
+    private int fee;
+
     @JSONField(serialize = false, deserialize = false)
     private ArrayList<Territory> adjacents = new ArrayList<>();
 
@@ -32,6 +35,7 @@ public class Territory {
 
     @JSONField(name = "size")
     private int size;
+
 
     public Territory() {}
     public Territory(int id, String name, int unit, Player owner, ArrayList<Territory> adjacents, LinkedHashMap<Territory, Integer> accessibles, ArrayList<Integer> myUnits) {
@@ -51,9 +55,16 @@ public class Territory {
     }
 
     public Territory(int id, String name) {
-        this(id, name, 0, new Player());
+        this(id, name, 0, new Player(), 0);
     }
 
+    public void setFee(int fee) {
+        this.fee = fee;
+    }
+
+    public int getFee() {
+        return fee;
+    }
 
     public int getId() {
         return id;
@@ -151,8 +162,8 @@ public class Territory {
     }
 
     public static void main(String[] args) throws URISyntaxException {
-        Player cp = new Player(1, "cp");
-        Territory t = new Territory(1, "test", 10, cp);
+        Player cp = new Player();
+        Territory t = new Territory(1, "test", 10, cp, 5);
         String json = t.toJSON();
         System.out.println(json);
         Territory t2 = JSON.parseObject(json, Territory.class);

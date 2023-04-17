@@ -18,6 +18,17 @@ public class Player {
     @JSONField(name = "status")
     protected Status.playerStatus status;
 
+
+    @JSONField(name = "techResource")
+    protected int techResource;
+
+    @JSONField(name = "foodResource")
+    protected int foodResource;
+
+    @JSONField(name = "techLevel")
+    protected int techLevel;
+
+
     public void setStatus(Status.playerStatus status) {
         this.status = status;
     }
@@ -30,11 +41,14 @@ public class Player {
 
     protected MapTextView view = new MapTextView(map);
 
-    public Player(int id, String name, ArrayList<Territory> territories) {
+    public Player(int id, String name, ArrayList<Territory> territories, int techResource, int foodResource) {
         this.id = id;
         this.name = name;
         this.territories = territories;
         this.status = Status.playerStatus.PLAYING;
+        this.techLevel = 1;
+        this.techResource = techResource;
+        this.foodResource = foodResource;
     }
 
     public Player(int id, String name, ArrayList<Territory> territories, GameMap map) {
@@ -47,7 +61,7 @@ public class Player {
     }
 
     public Player(int id, String name) {
-        this(id, name, new ArrayList<>());
+        this(id, name, new ArrayList<>(), 1000, 1000);
     }
     public Player(String name) {
         this(-1, name);
@@ -84,6 +98,25 @@ public class Player {
         territories.add(t);
     }
 
+    public void updateTechResource(int num) {
+        this.techResource += num;
+    }
+
+    public void updateFoodResource(int num) {
+        this.foodResource += num;
+    }
+
+    public int getTechResource() {
+        return techResource;
+    }
+
+    public int getFoodResource() {
+        return foodResource;
+    }
+
+    public int getTechLevel() {
+        return techLevel;
+    }
 
     @Override
     public String toString() {
@@ -104,7 +137,66 @@ public class Player {
         return json;
     }
 
+
+
+
+
+
+    // TODO
+
+    public void upgradeTechLevel() {
+        // check tech resource
+        int cost = costTechUpgrade(this.techLevel);
+        checkTechUpgrade(cost);
+
+
+        // update resource, follow --> table
+        this.updateTechResource(-cost);
+        this.techLevel++;
+    }
+
+    // TODO move to new checker class later
+    private void checkTechUpgrade(int cost) {
+        // check max
+        if (this.techLevel == 5) {
+            throw new IllegalArgumentException("You have reached max level! Cannot upgrade anymore !");
+        }
+        // check resource
+        if (this.techResource < cost) {
+            throw new IllegalArgumentException("Upgrade Failed, you do not have enough tech resources !");
+        }
+    }
+
+    public int costTechUpgrade(int level) {
+        if (level == 1) return 50;
+        return costTechUpgrade(level - 1) + 25 * (level - 1);
+    }
+
+    public void upgradeUnit() {
+        // player choose <UI>
+
+        // check
+        // update resource
+        // update unit
+    }
+
+    // helper function to get the Unit to update from user
+
     public static void main(String[] args) {
+        Player p = new Player();
+        p.updateTechResource(300);
+        System.out.println("tech level: " + p.getTechLevel() + ", techResource: " + p.getTechResource() + "\n");
+
+        p.upgradeTechLevel();
+        System.out.println("tech level: " + p.getTechLevel() + ", techResource: " + p.getTechResource());
+        p.upgradeTechLevel();
+        System.out.println("tech level: " + p.getTechLevel() + ", techResource: " + p.getTechResource());
+        p.upgradeTechLevel();
+        System.out.println("tech level: " + p.getTechLevel() + ", techResource: " + p.getTechResource());
+        p.upgradeTechLevel();
+        System.out.println("tech level: " + p.getTechLevel() + ", techResource: " + p.getTechResource());
+        p.upgradeTechLevel();
+        System.out.println("tech level: " + p.getTechLevel() + ", techResource: " + p.getTechResource());
 
     }
 }
