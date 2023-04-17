@@ -145,11 +145,8 @@ public class Player {
     // TODO
 
     public void upgradeTechLevel() {
-        // check tech resource
         int cost = costTechUpgrade(this.techLevel);
         checkTechUpgrade(cost);
-
-
         // update resource, follow --> table
         this.updateTechResource(-cost);
         this.techLevel++;
@@ -158,7 +155,7 @@ public class Player {
     // TODO move to new checker class later
     private void checkTechUpgrade(int cost) {
         // check max
-        if (this.techLevel == 5) {
+        if (this.techLevel == 6) {
             throw new IllegalArgumentException("You have reached max level! Cannot upgrade anymore !");
         }
         // check resource
