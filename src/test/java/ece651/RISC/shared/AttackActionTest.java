@@ -25,10 +25,10 @@ public class AttackActionTest {
         mp.updateAccessible();
         //attack self
         AttackAction aa0 = new AttackAction(mp.getTerritory(0), mp.getTerritory(1),2, Status.actionStatus.ATTACK, p0);
-        System.out.println(aa0.attackTerritory());
+//        System.out.println(aa0.attackTerritory());
         mp.getTerritory(2).setNumUnits(10);
         AttackAction aa1 = new AttackAction(mp.getTerritory(2), mp.getTerritory(4), 6, Status.actionStatus.ATTACK, p0);
-        System.out.println(aa1.attackTerritory());
+//        System.out.println(aa1.attackTerritory());
         System.out.println(mp.getTerritory(2).getNumUnits());
         System.out.println(mp.getTerritory(2).getOwner());
         System.out.println(mp.getTerritory(3).getNumUnits());

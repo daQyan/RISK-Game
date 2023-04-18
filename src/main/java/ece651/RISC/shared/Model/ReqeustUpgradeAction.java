@@ -1,6 +1,6 @@
 package ece651.RISC.shared.Model;
 
-public class UpgradeAction {
+public class ReqeustUpgradeAction {
     private String territoryId;
     private String unitType;
     private String upgradeType;

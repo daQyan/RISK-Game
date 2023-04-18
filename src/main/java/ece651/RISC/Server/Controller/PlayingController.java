@@ -47,7 +47,7 @@ public class PlayingController {
         String attackActionsJSON = jsonObject.getString("attackActions");
         List<MoveAction> moveActions = JSON.parseArray(moveActionsJSON, MoveAction.class);
         List<AttackAction> attackActions = JSON.parseArray(attackActionsJSON, AttackAction.class);
-        serverGame.receiveAction(player, (ArrayList<MoveAction>) moveActions, (ArrayList<AttackAction>) attackActions);
+        serverGame.handleActions(player, (ArrayList<MoveAction>) moveActions, (ArrayList<AttackAction>) attackActions);
         System.out.println(serverGame.getOperatedPlayerNum() + " serverGame.getOperatedPlayerSize()");
         lock.lock();
         try {
