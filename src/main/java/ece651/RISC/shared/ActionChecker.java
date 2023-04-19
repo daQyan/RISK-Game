@@ -6,6 +6,7 @@ public class ActionChecker {
         if (checkSource(owner, sourceTerritory, "attack") != null) return checkSource(owner, sourceTerritory, "attack");
         if (checkUnits(sourceTerritory, units, "attack") != null) return checkUnits(sourceTerritory, units, "attack");
         if (checkAtkTarget(sourceTerritory, targetTerritory) != null) return checkAtkTarget(sourceTerritory, targetTerritory);
+        if(checkFoodResource(sourceTerritory, targetTerritory, units, "attack") != null) return checkFoodResource(sourceTerritory, targetTerritory, units, "attack");
 
 //        //if the attacking units are larger than the source territory's units, return error message
 //        if(Units > sourceTerritory.getNumUnits()) {
@@ -36,6 +37,7 @@ public class ActionChecker {
         if (checkSource(owner, sourceTerritory, "move") != null) return checkSource(owner, sourceTerritory, "move");
         if (checkUnits(sourceTerritory, units, "move") != null) return checkUnits(sourceTerritory, units, "move");
         if (checkAccess(sourceTerritory, targetTerritory) != null) return checkAccess(sourceTerritory, targetTerritory);
+        if(checkFoodResource(sourceTerritory, targetTerritory, units, "move") != null) return checkFoodResource(sourceTerritory, targetTerritory, units, "move");
 
 //        if(owner == null || !owner.equals(sourceTerritory.getOwner())){
 //            return ("The move action is not valid: " + owner.getName() +  " does not own " + sourceTerritory.getName() + "!");
@@ -98,7 +100,20 @@ public class ActionChecker {
         return null;
     }
 
+    public String checkFoodResource(Territory sourceTerritory, Territory targetTerritory, int units, String actionType){
+        if(actionType.equals("attack")){
+            if(sourceTerritory.getOwner().getFoodResource() < units){
+                return("The attack action is invalid: there's not enough food resource!");
+            }
+        }
+        else if(actionType.equals("move")){
+            if(sourceTerritory.getOwner().getFoodResource() < sourceTerritory.getAccessibles().get(targetTerritory) * units){
+                return("The move action is invalid: there's not enough food resource!");
+            }
 
+        }
+        return null;
+    }
 
 
 }

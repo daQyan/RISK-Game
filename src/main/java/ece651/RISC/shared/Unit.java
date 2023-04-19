@@ -7,6 +7,14 @@ public class Unit {
     private int[] diction;
     private int[] bonus;
 
+    public int[] getDiction() {
+        return diction;
+    }
+
+    public int[] getBonus() {
+        return bonus;
+    }
+
     public Unit() {
         this.myType = 0;
         diction = new int[] {0, 3, 11, 30, 55, 90, 140};

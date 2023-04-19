@@ -16,7 +16,6 @@ public class Action {
     protected Territory targetTerritory;
     protected int hitUnits;
     //For EVO 2
-    protected LinkedHashMap<Unit, Integer> actionUnits;
 
     public void setSourceTerritory(Territory sourceTerritory) {
         this.sourceTerritory = sourceTerritory;

@@ -12,7 +12,7 @@ public class MapTextView extends MapView{
         super(myMap);
     }
 
-    public LinkedHashMap<Player, ArrayList<Territory>> sortTerritory(){
+    private LinkedHashMap<Player, ArrayList<Territory>> sortTerritory(){
         LinkedHashMap<Player, ArrayList<Territory>> sorted = new LinkedHashMap<>();
         for(Territory t: myMap.getTerritories()){
             if(!sorted.containsKey(t.getOwner())){
