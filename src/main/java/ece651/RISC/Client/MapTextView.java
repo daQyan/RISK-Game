@@ -6,11 +6,10 @@ import ece651.RISC.shared.Territory;
 
 import java.util.*;
 
-public class MapTextView {
-    private GameMap myMap;
+public class MapTextView extends MapView{
 
     public MapTextView(GameMap myMap) {
-        this.myMap = myMap;
+        super(myMap);
     }
 
     public LinkedHashMap<Player, ArrayList<Territory>> sortTerritory(){
@@ -23,7 +22,7 @@ public class MapTextView {
         }
         return sorted;
     }
-
+    @Override
     public void displayMap(){
         LinkedHashMap<Player, ArrayList<Territory>> sorted = sortTerritory();
         StringBuilder result = new StringBuilder();

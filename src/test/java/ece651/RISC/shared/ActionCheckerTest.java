@@ -13,16 +13,16 @@ import java.util.ArrayList;
 
 public class ActionCheckerTest {
     private ArrayList<Territory> createTestHelper(){
-        Player p0 = new Player(0, "0", null);
-        Player p1 = new Player(1, "1", null);
-        ArrayList<Territory> t = new ArrayList<>();
-        Territory t0 = new Territory(0, "t0", 5, p0);
-        Territory t1 = new Territory(1, "t1", 4,p1);
-        Territory t2 = new Territory(2, "t2", 3, p0);
-        t.add(t0);
-        t.add(t1);
-        t.add(t2);
-        return t;
+//        Player p0 = new Player(0, "0", null);
+//        Player p1 = new Player(1, "1", null);
+//        ArrayList<Territory> t = new ArrayList<>();
+//        Territory t0 = new Territory(0, "t0", 5, p0);
+//        Territory t1 = new Territory(1, "t1", 4,p1);
+//        Territory t2 = new Territory(2, "t2", 3, p0);
+//        t.add(t0);
+//        t.add(t1);
+//        t.add(t2);
+        return null;
     }
 
     @Test
@@ -31,7 +31,7 @@ public class ActionCheckerTest {
         MoveAction mv0 = new MoveAction(temp.get(0), temp.get(1), 1, Status.actionStatus.MOVE, null);
         MoveAction mv1 = new MoveAction(temp.get(0), temp.get(1), 6, Status.actionStatus.MOVE, null);
         assertEquals(mv0.moveTerritory(), "The move action is not valid: there's no valid path from t0 to t1!");
-        temp.get(0).addAccessible(temp.get(1));
+        temp.get(0).addAccessible(temp.get(1), 2);
         assertEquals(mv1.moveTerritory(), "The move action is not valid: there's not enough soldiers in the t0!");
         assertNull(mv0.moveTerritory());
     }

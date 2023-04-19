@@ -22,9 +22,13 @@ public class Round {
     private ArrayList<AttackAction> attackActions = new ArrayList<>();
     private ArrayList<Player> players;
     private GameMap myMap;
-    public Round(ArrayList<Player> players, GameMap map) {
+    private int resourceGrow;
+
+
+    public Round(ArrayList<Player> players, GameMap map, int resourceGrow) {
         this.players = players;
         this.myMap = map;
+        this.resourceGrow = resourceGrow;
     }
 
     public int playerOneTurn(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
@@ -97,6 +101,15 @@ public class Round {
             t.updateUnits(1);
         }
     }
+
+    //TODO implement this
+    public void naturalResourceIncrease() {
+        for (Player p : players) {
+            p.updateTechResource(resourceGrow * p.getTerritories().size());
+            p.updateFoodResource(resourceGrow * p.getTerritories().size());
+        }
+    }
+
     public Status.gameStatus checkStatus(){
         for(Player sp : players){
             if(sp.getTerritories().isEmpty()){
