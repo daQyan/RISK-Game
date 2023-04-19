@@ -3,13 +3,13 @@ package ece651.RISC.Server.Repository;
 import ece651.RISC.Server.Model.User;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Repository
 public class UserRepository {
-    private final Map<Long, User> userMap = new HashMap<>();
-    private final Map<String, Long> usernameToIdMap = new HashMap<>();
+    private final Map<Long, User> userMap = new LinkedHashMap<>();
+    private final Map<String, Long> usernameToIdMap = new LinkedHashMap<>();
 
     public void addUser(long userId, User user) {
         user.setId(userId);

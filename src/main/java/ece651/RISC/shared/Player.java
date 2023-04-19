@@ -2,14 +2,12 @@ package ece651.RISC.shared;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.annotation.JSONField;
-import ece651.RISC.Client.MapTextView;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 @Component
 public class Player {
+    protected int player_index;
     @JSONField(name = "id")
     protected int id;
     @JSONField(name = "name")
@@ -76,12 +74,12 @@ public class Player {
 
     @Override
     public String toString() {
-        String res = name + ":" + System.lineSeparator() +
-                "-------------" + System.lineSeparator();
+        StringBuilder res = new StringBuilder(name + ":" + System.lineSeparator() +
+                "-------------" + System.lineSeparator());
         for(Territory t: territories){
-            res += (t.toString() + System.lineSeparator());
+            res.append(t.toString()).append(System.lineSeparator());
         }
-        return res;
+        return res.toString();
     }
 
     public boolean equals(Player p) {
@@ -89,11 +87,6 @@ public class Player {
     }
 
     public String toJSON(){
-        String json = JSON.toJSONString(this);
-        return json;
-    }
-
-    public static void main(String[] args) {
-
+        return JSON.toJSONString(this);
     }
 }

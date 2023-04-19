@@ -6,5 +6,5 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class CreateUserResponse {
-    private Long userId;
+    private Long user_id;
 }
