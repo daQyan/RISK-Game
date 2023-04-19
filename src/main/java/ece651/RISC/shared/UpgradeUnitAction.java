@@ -3,15 +3,15 @@ package ece651.RISC.shared;
 public class UpgradeUnitAction {
     private int unitType;
     private int unitNum;
-    private int territoryID;
+    private Territory myterritory;
 
-    public UpgradeUnitAction(int unitType, int unitNum, int territoryID) {
+    public UpgradeUnitAction(int unitType, int unitNum, Territory myterritory) {
         this.unitType = unitType;
         this.unitNum = unitNum;
-        this.territoryID = territoryID;
+        this.myterritory = myterritory;
     }
 
-    public void upgradeUnitLevel(Territory t){
+    public void upgradeUnitLevel(){
 
 
     }
