@@ -25,7 +25,7 @@ public class Game {
     private OnlineServer2Client server2Client = new OnlineServer2Client();
     private Set<Integer> allocatedPlayerId = new HashSet<>();
     private Set<Player> allocatedPlayer = new HashSet<>();
-
+    private int gameId;
     private int playerInitUnits;
     private Round round;
 
@@ -56,6 +56,12 @@ public class Game {
         this.myStatus = Status.gameStatus.WAITINGPLAYER;
     }
 
+    public int getGameId() {
+        return gameId;
+    }
+    public void setGameId(int gameId) {
+        this.gameId = gameId;
+    }
     // TODO: handle different player numbers
     public void init(int playerSize, int initialTerritorySize, int playerInitUnits){
         this.initialTerritorySize = initialTerritorySize;
