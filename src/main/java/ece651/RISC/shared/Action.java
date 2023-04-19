@@ -6,6 +6,7 @@ import com.alibaba.fastjson2.annotation.JSONField;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class Action {
@@ -14,6 +15,8 @@ public class Action {
     @JSONField(serializeUsing = Territory.class)
     protected Territory targetTerritory;
     protected int hitUnits;
+    //For EVO 2
+    protected LinkedHashMap<Unit, Integer> actionUnits;
 
     public void setSourceTerritory(Territory sourceTerritory) {
         this.sourceTerritory = sourceTerritory;
@@ -73,7 +76,7 @@ public class Action {
         ArrayList<Territory> territories = new ArrayList<>();
         territories.add(t1);
         territories.add(t2);
-        Player p = new Player(0, "player1", territories);
+        Player p = new Player(0, "player1", territories, 999, 999);
         Action action = new Action(t1, t2, 3, Status.actionStatus.MOVE, p);
         ArrayList<Action> actions = new ArrayList<>();
         actions.add(action);

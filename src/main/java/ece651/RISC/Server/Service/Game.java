@@ -32,6 +32,9 @@ public class Game {
     private Set<Integer> allocatedPlayerId = new HashSet<>();
     private Set<Player> allocatedPlayer = new HashSet<>();
     private long gameId;
+    private int resourceGrow;
+
+
     private int playerInitUnits;
     private Round round;
 
@@ -41,7 +44,7 @@ public class Game {
     private int operatedPlayerNum = 0;
 
     public Game() {
-        this(3, 3, 30);
+        this(3, 3, 5, 30);
         this.myStatus = Status.gameStatus.WAITINGPLAYER;
         MapFactory mf = new MapFactory();
         this.myMap = mf.createMap(3);
@@ -50,9 +53,10 @@ public class Game {
         System.out.println("ServerGame Constructor");
     }
 
-    public Game(int playerSize, int initialTerritorySize, int playerInitUnits){
+    public Game(int playerSize, int initialTerritorySize, int resourceGrow, int playerInitUnits){
         this.initialTerritorySize = initialTerritorySize;
         this.playerSize = playerSize;
+        this.resourceGrow = resourceGrow;
         this.playerInitUnits = playerInitUnits;
 
         this.players = new ArrayList<>();
@@ -121,7 +125,7 @@ public class Game {
             myStatus = Status.gameStatus.PLAYING;
             myMap.updateAccessible();
             System.out.println("Game can begin");
-            this.round = new Round(players, myMap);
+            this.round = new Round(players, myMap, resourceGrow);
         }
     }
     public int getAllocatedPlayerSize() {
@@ -153,7 +157,7 @@ public class Game {
         if(myStatus == Status.gameStatus.FINISHED) {
             return Status.gameStatus.FINISHED;
         }
-        this.round = new Round(players, myMap);
+        this.round = new Round(players, myMap, resourceGrow);
         return Status.gameStatus.PLAYING;
     }
 
