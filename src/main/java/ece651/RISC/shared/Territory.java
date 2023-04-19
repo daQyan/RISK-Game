@@ -51,7 +51,7 @@ public class Territory {
     }
 
     public Territory(int id, String name, int unit, Player owner) {
-        this(id, name, unit, owner, new ArrayList<>(), new LinkedHashMap<>(), new ArrayList<>());
+        this(id, name, unit, owner, new ArrayList<>(), new LinkedHashMap<>(), new ArrayList<>(Collections.nCopies(7, 0)));
     }
 
     public Territory(int id, String name) {

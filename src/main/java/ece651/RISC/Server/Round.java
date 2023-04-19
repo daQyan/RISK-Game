@@ -99,7 +99,7 @@ public class Round {
         attackActions = parseAttacks(attackActions);
         while(attackActions.size() > 0){
             int order = rand.nextInt(attackActions.size());
-            String result = attackActions.get(order).attackTerritory();
+            String result = attackActions.get(order).attackTerritoryEVO2();
             attackActions.remove(order);
         }
     }

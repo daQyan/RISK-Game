@@ -13,8 +13,8 @@ import java.util.ArrayList;
 
 public class ActionCheckerTest {
     private ArrayList<Territory> createTestHelper(){
-        Player p0 = new Player(0, "0", null);
-        Player p1 = new Player(1, "1", null);
+        Player p0 = new Player(0, "0");
+        Player p1 = new Player(1, "1");
         ArrayList<Territory> t = new ArrayList<>();
         Territory t0 = new Territory(0, "t0", 5, p0);
         Territory t1 = new Territory(1, "t1", 4,p1);

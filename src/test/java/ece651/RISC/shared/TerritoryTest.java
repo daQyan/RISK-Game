@@ -24,7 +24,7 @@ class TerritoryTest {
     @Test
     void testGetOwner() {
         // Create a player and a territory with that player as the owner
-        Player owner = new Player(0, "Player 1", new ArrayList<>());
+        Player owner = new Player(0, "Player 1");
         Territory territory = new Territory(0, "Territory 1", 0, owner);
 
         // Check that the territory's owner matches the original player

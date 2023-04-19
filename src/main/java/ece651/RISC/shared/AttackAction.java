@@ -1,6 +1,7 @@
 package ece651.RISC.shared;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class AttackAction extends Action {
     private Combat myCombat;
@@ -49,18 +50,22 @@ public class AttackAction extends Action {
 
     public String attackTerritoryEVO2(){
         String attackResult;
-        int minSelf = 0, minEnemy = 0;
-        int maxSelf = 6, maxEnemy = 6;
-        findStartingUnit(minSelf, minEnemy, maxSelf,maxEnemy);
-        int myIndex = maxSelf;
-        int enemyIndex = minEnemy;
-        while(hitUnits > 0 && targetTerritory.getNumUnits() > 0 && minSelf <= 6 && minEnemy <= 6 && maxSelf >= 0 && maxEnemy >= 0) {
-            if (myCombat.rollCombatDice(myIndex, enemyIndex) == true) {
+        AtomicInteger minSelf = new AtomicInteger(0);
+        AtomicInteger minEnemy = new AtomicInteger(0);
+        AtomicInteger maxSelf = new AtomicInteger(6);
+        AtomicInteger maxEnemy = new AtomicInteger(6);
+        findStartingUnit(minSelf, minEnemy, maxSelf, maxEnemy);
+        AtomicInteger myIndex = new AtomicInteger(maxSelf.get());
+        AtomicInteger enemyIndex = new AtomicInteger(minEnemy.get());
+        while(hitUnits > 0 && targetTerritory.getNumUnits() > 0 && minSelf.get() <= 6 && minEnemy.get() <= 6 && maxSelf.get() >= 0 && maxEnemy.get() >= 0) {
+            Unit myUnit = new Unit();
+            if (myCombat.rollCombatDice(myUnit.getBonusByType(myIndex.get()), myUnit.getBonusByType(enemyIndex.get())) == true) {
                 targetTerritory.updateUnits(-1);
-                targetTerritory.updateMyUnits(enemyIndex, -1);
+                targetTerritory.updateMyUnits(enemyIndex.get(), -1);
+                //enemyUnits.set(enemyIndex.get(), enemyUnits.get(enemyIndex.get()) - 1);
             } else {
                 --hitUnits;
-                this.myUnits.set(myIndex, myUnits.get(myIndex) - 1);
+                this.myUnits.set(myIndex.get(), myUnits.get(myIndex.get()) - 1);
             }
             switchOrderAndUpdate(myIndex, enemyIndex, minSelf, minEnemy, maxSelf, maxEnemy);
         }
@@ -76,44 +81,44 @@ public class AttackAction extends Action {
         }
         return attackResult;
     }
-
-    private void findStartingUnit(int minSelf, int minEnemy, int maxSelf, int maxEnemy){
-        while(minSelf <= 6){
-            if(myUnits.get(minSelf) > 0){
+    //problem here
+    private void findStartingUnit(AtomicInteger minSelf, AtomicInteger minEnemy, AtomicInteger maxSelf, AtomicInteger maxEnemy){
+        while(minSelf.get() <= 6){
+            if(myUnits.get(minSelf.get()) > 0){
                 break;
             }
-            ++minSelf;
+            minSelf.set(minSelf.get() + 1);
         }
-        while(minEnemy <= 6){
-            if(myUnits.get(minEnemy) > 0){
+        while(minEnemy.get() <= 6){
+            if(enemyUnits.get(minEnemy.get()) > 0){
                 break;
             }
-            ++minEnemy;
+            minEnemy.set(minEnemy.get() + 1);
         }
-        while(maxSelf >= 0){
-            if(myUnits.get(maxSelf) > 0){
+        while(maxSelf.get() >= 0){
+            if(myUnits.get(maxSelf.get()) > 0){
                 break;
             }
-            --maxSelf;
+            maxSelf.set(maxSelf.get() - 1);
         }
-        while(maxEnemy >= 0){
-            if(myUnits.get(maxEnemy) > 0){
+        while(maxEnemy.get() >= 0){
+            if(enemyUnits.get(maxEnemy.get()) > 0){
                 break;
             }
-            --maxEnemy;
+            maxEnemy.set(maxEnemy.get() - 1);
         }
     }
-    private void switchOrderAndUpdate(int myIndex, int enemyIndex, int minSelf, int minEnemey, int maxSelf, int maxEnemy){
-        if(myIndex == maxSelf && enemyIndex == minEnemey){
+    private void switchOrderAndUpdate(AtomicInteger myIndex, AtomicInteger enemyIndex, AtomicInteger minSelf, AtomicInteger minEnemy, AtomicInteger maxSelf, AtomicInteger maxEnemy){
+        if(myIndex.get() == maxSelf.get() && enemyIndex.get() == minEnemy.get()){
             //update the starting point
-            findStartingUnit(minSelf, minEnemey, maxSelf, maxEnemy);
-            myIndex = minSelf;
-            enemyIndex = maxEnemy;
+            findStartingUnit(minSelf, minEnemy, maxSelf, maxEnemy);
+            myIndex.set(minSelf.get());
+            enemyIndex.set(maxEnemy.get());
         }
-        else if(myIndex == minSelf && enemyIndex == maxEnemy){
-            findStartingUnit(minSelf, minEnemey, maxSelf, maxEnemy);
-            myIndex = maxSelf;
-            enemyIndex = minEnemey;
+        else if(myIndex.get() == minSelf.get() && enemyIndex.get() == maxEnemy.get()){
+            findStartingUnit(minSelf, minEnemy, maxSelf, maxEnemy);
+            myIndex.set(maxSelf.get());
+            enemyIndex.set(minEnemy.get());
         }
 
     }

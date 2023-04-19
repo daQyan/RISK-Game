@@ -3,6 +3,9 @@ package ece651.RISC.shared;
 import ece651.RISC.Server.MapFactory;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class AttackActionTest {
     @Test
     public void testAttackAction(){
@@ -24,15 +27,21 @@ public class AttackActionTest {
         }
         mp.updateAccessible();
         //attack self
-        AttackAction aa0 = new AttackAction(mp.getTerritory(0), mp.getTerritory(1),2, Status.actionStatus.ATTACK, p0);
-        System.out.println(aa0.attackTerritory());
+        //AttackAction aa0 = new AttackAction(mp.getTerritory(0), mp.getTerritory(1),2, Status.actionStatus.ATTACK, p0);
+        //System.out.println(aa0.attackTerritory());
         mp.getTerritory(2).setNumUnits(10);
-        AttackAction aa1 = new AttackAction(mp.getTerritory(2), mp.getTerritory(4), 6, Status.actionStatus.ATTACK, p0);
-        System.out.println(aa1.attackTerritory());
+        //updated units:
+        ArrayList<Integer> t2Units = new ArrayList<>(Arrays.asList(0, 0, 0, 2, 3, 0, 5));
+        ArrayList<Integer> t4Units = new ArrayList<>(Arrays.asList(0, 0, 0, 2, 3, 0, 0));
+        ArrayList<Integer> deploy = new ArrayList<>(Arrays.asList(0, 0, 0, 2, 3, 0, 0));
+        mp.getTerritory(2).setMyUnits(t2Units);
+        mp.getTerritory(4).setMyUnits(t4Units);
+        AttackAction aa1 = new AttackAction(mp.getTerritory(2), mp.getTerritory(4), 8, Status.actionStatus.ATTACK, p0, deploy);
+        System.out.println(aa1.attackTerritoryEVO2());
         System.out.println(mp.getTerritory(2).getNumUnits());
         System.out.println(mp.getTerritory(2).getOwner());
-        System.out.println(mp.getTerritory(3).getNumUnits());
-        System.out.println(mp.getTerritory(3).getOwner());
+        System.out.println(mp.getTerritory(4).getNumUnits());
+        System.out.println(mp.getTerritory(4).getOwner());
     }
 
 }
