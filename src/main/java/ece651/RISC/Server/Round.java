@@ -100,7 +100,7 @@ public class Round {
         while(attackActions.size() > 0){
             int order = rand.nextInt(attackActions.size());
             AttackAction attack = attackActions.get(order);
-            attack.attackTerritory(myMap, attack.getSourceTerritory().getId(), attack.getTargetTerritory().getId());
+            attack.attackTerritoryEVO2(myMap, attack.getSourceTerritory().getId(), attack.getTargetTerritory().getId());
             attackActions.remove(order);
         }
     }

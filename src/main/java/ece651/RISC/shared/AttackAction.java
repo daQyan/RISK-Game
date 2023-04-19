@@ -49,7 +49,7 @@ public class AttackAction extends Action {
         return attackResult;
     }
 
-    public String attackTerritoryEVO2(){
+    public String attackTerritoryEVO2(GameMap gameMap, int sourceTerritoryId, int targetTerritoryId){
         String attackResult;
         AtomicInteger minSelf = new AtomicInteger(0);
         AtomicInteger minEnemy = new AtomicInteger(0);
@@ -58,11 +58,11 @@ public class AttackAction extends Action {
         findStartingUnit(minSelf, minEnemy, maxSelf, maxEnemy);
         AtomicInteger myIndex = new AtomicInteger(maxSelf.get());
         AtomicInteger enemyIndex = new AtomicInteger(minEnemy.get());
-        while(hitUnits > 0 && targetTerritory.getNumUnits() > 0 && minSelf.get() <= 6 && minEnemy.get() <= 6 && maxSelf.get() >= 0 && maxEnemy.get() >= 0) {
+        while(hitUnits > 0 && gameMap.getTerritory(targetTerritoryId).getNumUnits() > 0 && minSelf.get() <= 6 && minEnemy.get() <= 6 && maxSelf.get() >= 0 && maxEnemy.get() >= 0) {
             Unit myUnit = new Unit();
             if (myCombat.rollCombatDice(myUnit.getBonusByType(myIndex.get()), myUnit.getBonusByType(enemyIndex.get())) == true) {
-                targetTerritory.updateUnits(-1);
-                targetTerritory.updateMyUnits(enemyIndex.get(), -1);
+                gameMap.getTerritory(targetTerritoryId).updateUnits(-1);
+                gameMap.getTerritory(targetTerritoryId).updateMyUnits(enemyIndex.get(), -1);
                 //enemyUnits.set(enemyIndex.get(), enemyUnits.get(enemyIndex.get()) - 1);
             } else {
                 --hitUnits;
@@ -71,14 +71,14 @@ public class AttackAction extends Action {
             switchOrderAndUpdate(myIndex, enemyIndex, minSelf, minEnemy, maxSelf, maxEnemy);
         }
         // if the attack wins
-        if (targetTerritory.getNumUnits() <= 0 && hitUnits > 0) {
-            targetTerritory.setOwner(this.owner);
-            targetTerritory.setNumUnits(hitUnits);
-            targetTerritory.setMyUnits(myUnits);
-            attackResult = this.owner.getName() + " has taken over " + targetTerritory.getName() + "!";
+        if (gameMap.getTerritory(targetTerritoryId).getNumUnits() <= 0 && hitUnits > 0) {
+            gameMap.getTerritory(targetTerritoryId).setOwner(this.owner);
+            gameMap.getTerritory(targetTerritoryId).setNumUnits(hitUnits);
+            gameMap.getTerritory(targetTerritoryId).setMyUnits(myUnits);
+            attackResult = this.owner.getName() + " has taken over " + gameMap.getTerritory(targetTerritoryId).getName() + "!";
         }
         else{
-            attackResult = this.owner.getName() + " has failed in the attack on " + targetTerritory.getName() + "!";
+            attackResult = this.owner.getName() + " has failed in the attack on " + gameMap.getTerritory(targetTerritoryId).getName() + "!";
         }
         return attackResult;
     }
