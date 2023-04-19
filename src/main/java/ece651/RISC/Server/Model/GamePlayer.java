@@ -7,17 +7,21 @@ public class GamePlayer {
 
     protected int playerIndex;
 
-    protected int userId;
+    protected long userId;
 
     protected String name;
 
     protected Status.playerStatus status;
 
-    public void setStatus(Status.playerStatus status) {
-        this.status = status;
+    protected int techResource;
+
+    protected int foodResource;
+
+    protected int techLevel;
+
+    public GamePlayer(long userId, String userName) {
+        this.userId = userId;
+        this.name = userName;
     }
 
-    public Status.playerStatus getStatus() {
-        return status;
-    }
 }

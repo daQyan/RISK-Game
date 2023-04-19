@@ -23,14 +23,18 @@ public class UserController {
     private long userIDCounter = 0;
 
     @PostMapping("/signup")
-    public ResponseEntity<CreateUserResponse> signUp(@RequestBody CreateUserRequest createUserRequest) {
+    public synchronized ResponseEntity<CreateUserResponse> signUp(@RequestBody CreateUserRequest createUserRequest) {
         User user = new User(createUserRequest.getUsername(), createUserRequest.getPassword());
         String createUserRequestJsonString = JSON.toJSONString(createUserRequest);
         System.out.println("New user created: " + createUserRequestJsonString);
-        userRepository.addUser(userIDCounter, user);
-        CreateUserResponse response = new CreateUserResponse(userIDCounter);
-        userIDCounter++;
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        boolean isAdded = userRepository.tryAddUser(userIDCounter, user);
+        if(isAdded) {
+            CreateUserResponse response = new CreateUserResponse(userIDCounter);
+            userIDCounter++;
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/login")

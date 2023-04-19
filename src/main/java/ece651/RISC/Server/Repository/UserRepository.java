@@ -11,10 +11,19 @@ public class UserRepository {
     private final Map<Long, User> userMap = new LinkedHashMap<>();
     private final Map<String, Long> usernameToIdMap = new LinkedHashMap<>();
 
-    public void addUser(long userId, User user) {
+    public boolean tryAddUser(long userId, User user) {
+        if(checkIfUserExist(user.getUsername())) {
+            return false;
+        }
+
         user.setId(userId);
         userMap.put(userId, user);
         usernameToIdMap.put(user.getUsername(), userId);
+        return true;
+    }
+
+    public boolean checkIfUserExist(String userName) {
+        return usernameToIdMap.containsKey(userName);
     }
 
     public User getUser(long userId) {

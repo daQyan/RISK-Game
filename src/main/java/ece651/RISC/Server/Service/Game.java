@@ -1,6 +1,7 @@
 package ece651.RISC.Server.Service;
 
 import ece651.RISC.Server.MapFactory;
+import ece651.RISC.Server.Model.GamePlayer;
 import ece651.RISC.shared.AttackAction;
 import ece651.RISC.shared.GameMap;
 import ece651.RISC.shared.MapController;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 @Data
@@ -22,8 +24,9 @@ public class Game {
     private int playerSize;
     private int initialTerritorySize;
     private ArrayList<Player> players;
+    private ArrayList<GamePlayer> gamePlayers;
 
-    private HashMap<Integer, ArrayList<Integer>> territoriesOfPlayers;
+    private HashMap<Integer, ArrayList<Integer>> territoriesOfPlayersMap;
     private GameMap myMap;
     private MapController myMapController;
     private Status.gameStatus myStatus;
@@ -33,8 +36,6 @@ public class Game {
     private Set<Player> allocatedPlayer = new HashSet<>();
     private long gameId;
     private int resourceGrow;
-
-
     private int playerInitUnits;
     private Round round;
 
@@ -66,17 +67,35 @@ public class Game {
         this.myStatus = Status.gameStatus.WAITINGPLAYER;
     }
 
+    // most important
     public Game(int playerSize, int playerInitUnits, long gameId){
+        this.territoriesOfPlayersMap = new LinkedHashMap<>();
         this.playerSize = playerSize;
         this.playerInitUnits = playerInitUnits;
         this.setGameId(gameId);
+        this.gamePlayers = new ArrayList<>();
         this.players = new ArrayList<>();
         MapFactory mf = new MapFactory();
         this.myMap = mf.createMap(playerSize);
         this.myMapController = new MapController(myMap);
         this.myStatus = Status.gameStatus.WAITINGPLAYER;
     }
+    public void initTerritoriesOfPlayersMap(int eachBlocksOfTerritory) {
+            for(int i = 0; i < playerSize; i++) {
+                territoriesOfPlayersMap.put(i, new ArrayList<>());
+                for(int j = eachBlocksOfTerritory * i; j < eachBlocksOfTerritory * (i + 1); j++) {
+                    territoriesOfPlayersMap.get(i).add(j);
+                }
+            }
 
+        for(Integer a:territoriesOfPlayersMap.keySet()) {
+            System.out.println(a + ": ");
+            for(Integer b: territoriesOfPlayersMap.get(a)) {
+                System.out.print(b + " ");
+            }
+            System.out.println();
+        }
+    }
     public long getGameId() {
         return gameId;
     }
@@ -106,6 +125,35 @@ public class Game {
             myStatus = Status.gameStatus.WAITINGPLAYERALLOCATE;
         }
         return playerIndex;
+    }
+
+
+    public Boolean tryAddPlayer(long userId, String username) {
+        GamePlayer gmPlayer = new GamePlayer(userId, username);
+        int playerIndex = gamePlayers.size();
+        if(playerIndex > playerSize - 1) {
+            return false;
+        }
+        gmPlayer.setPlayerIndex(playerIndex);
+        gamePlayers.add(gmPlayer);
+
+        if(gamePlayers.size() == playerSize) {
+            // allocate the territories
+            switch (playerSize) {
+                case 2:
+                    initTerritoriesOfPlayersMap(4);
+                    break;
+                case 3:
+                    initTerritoriesOfPlayersMap(3);
+                    break;
+                case 4:
+                case 5:
+                    initTerritoriesOfPlayersMap(2);
+                    break;
+            }
+            myStatus = Status.gameStatus.WAITINGPLAYERALLOCATE;
+        }
+        return true;
     }
 
     public Player getPlayer(int playerId) {
