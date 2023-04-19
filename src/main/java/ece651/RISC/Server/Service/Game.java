@@ -8,23 +8,30 @@ import ece651.RISC.shared.MoveAction;
 import ece651.RISC.shared.Player;
 import ece651.RISC.shared.Status;
 import ece651.RISC.shared.Territory;
+import lombok.Data;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
 @Component
 public class Game {
     private int playerSize;
     private int initialTerritorySize;
     private ArrayList<Player> players;
+
+    private HashMap<Integer, ArrayList<Integer>> territoriesOfPlayers;
     private GameMap myMap;
     private MapController myMapController;
     private Status.gameStatus myStatus;
+
     private OnlineServer2Client server2Client = new OnlineServer2Client();
     private Set<Integer> allocatedPlayerId = new HashSet<>();
     private Set<Player> allocatedPlayer = new HashSet<>();
+    private long gameId;
     private int resourceGrow;
 
 
@@ -59,17 +66,22 @@ public class Game {
         this.myStatus = Status.gameStatus.WAITINGPLAYER;
     }
 
-    // TODO: handle different player numbers
-    public void init(int playerSize, int initialTerritorySize, int playerInitUnits){
-        this.initialTerritorySize = initialTerritorySize;
-        this.playerInitUnits = playerInitUnits;
+    public Game(int playerSize, int playerInitUnits, long gameId){
         this.playerSize = playerSize;
+        this.playerInitUnits = playerInitUnits;
+        this.setGameId(gameId);
         this.players = new ArrayList<>();
         MapFactory mf = new MapFactory();
-        this.myMap = mf.createMap(3);
-        System.out.println("size:" + myMap.getMapSize());
+        this.myMap = mf.createMap(playerSize);
+        this.myMapController = new MapController(myMap);
         this.myStatus = Status.gameStatus.WAITINGPLAYER;
-        this.myMapController= new MapController(myMap);
+    }
+
+    public long getGameId() {
+        return gameId;
+    }
+    public void setGameId(long gameId) {
+        this.gameId = gameId;
     }
 
     public GameMap getMyMap() {
@@ -82,13 +94,15 @@ public class Game {
             return -1; // TODO: HANDLE HTTP ERRORs
         }
         player.setId(playerIndex);
-        for(int i = playerIndex * initialTerritorySize; i < (playerIndex + 1 ) * initialTerritorySize; i++) {
-            Territory t = myMap.getTerritory(i);
-            player.addTerritories(t);
-            t.setOwner(player);
-        }
+
         players.add(player);
         if(players.size() == playerSize) {
+            // allocate the territories
+            for(int i = playerIndex * initialTerritorySize; i < (playerIndex + 1 ) * initialTerritorySize; i++) {
+                Territory t = myMap.getTerritory(i);
+                player.addTerritories(t);
+                t.setOwner(player);
+            }
             myStatus = Status.gameStatus.WAITINGPLAYERALLOCATE;
         }
         return playerIndex;
@@ -96,20 +110,6 @@ public class Game {
 
     public Player getPlayer(int playerId) {
         return players.get(playerId);
-    }
-
-
-    public void AllocateUnitFromPlayer(int playerId, Set<Integer> territoriesId, int numUnits) {
-        for(Integer territoryId: territoriesId) {
-            Territory serverSideTerritory = myMap.getTerritory(territoryId);
-            if(serverSideTerritory.getOwner().getId() == playerId){
-                serverSideTerritory.setNumUnits(numUnits);
-            }
-        }
-        allocatedPlayerId.add(playerId);
-        if(allocatedPlayerId.size() == playerSize) {
-            myStatus = Status.gameStatus.PLAYING;
-        }
     }
 
     public void playerAllocate(Player player, ArrayList<Territory> territories) {
@@ -131,16 +131,6 @@ public class Game {
     public int getAllocatedPlayerSize() {
         return allocatedPlayer.size();
     }
-
-
-
-//    public void letPlayerPlay() {
-//        for(Player player: players){
-//            server2Client.sendOneTurn(player, myMap, player.getStatus());
-//            this.round = new Round(players, myMap, server2Client);
-//        }
-//    }
-
 
     public void setOperatedPlayerNum(int num) {
         operatedPlayerNum = num;
