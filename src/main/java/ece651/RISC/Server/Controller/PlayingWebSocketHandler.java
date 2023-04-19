@@ -3,7 +3,7 @@ import com.alibaba.fastjson2.JSON;
 
 import ece651.RISC.Server.Manager.ClientManager;
 import ece651.RISC.Server.Manager.SocketManager;
-import ece651.RISC.Server.Model.Game;
+import ece651.RISC.Server.Service.Game;
 import ece651.RISC.Server.config.WebSocketEndpoint;
 import ece651.RISC.shared.Player;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -27,7 +27,8 @@ public class AttackAction extends Action {
     /**
      * attack the territory from the chosen territory
      */
-    public String attackTerritory() {
+    public String attackTerritory(GameMap gameMap, int sourceTerritoryId, int targetTerritoryId) {
+        targetTerritory = gameMap.getTerritory(targetTerritoryId);
         String attackResult;
         while(hitUnits > 0 && targetTerritory.getNumUnits() > 0) {
             if (myCombat.rollCombatDice() == true) {

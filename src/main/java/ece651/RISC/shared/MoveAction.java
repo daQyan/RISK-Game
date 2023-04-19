@@ -19,16 +19,17 @@ public class MoveAction extends Action {
     /**
      * move the units from one territory to the target one
      */
-    public String moveTerritory() {
+    public String moveTerritory(GameMap gameMap, int sourceTerritoryId, int targetTerritoryId) {
         // check adjacent and owned
         String checkMove = myAC.checkMoveRule(this.owner, this.sourceTerritory, this.targetTerritory, hitUnits);
         if(checkMove == null){
+            gameMap.getTerritory(sourceTerritoryId).updateUnits(-hitUnits);
+            gameMap.getTerritory(targetTerritoryId).updateUnits(hitUnits);
             //for evo 2: by default moving out from the highest level of units
-            sourceTerritory.updateUnits(-hitUnits);
-            ArrayList<Integer> moved = sourceTerritory.deployMyUnits(this.hitUnits);
-            targetTerritory.updateUnits(hitUnits);
+            ArrayList<Integer> moved = gameMap.getTerritory(sourceTerritoryId).deployMyUnits(this.hitUnits);
+            gameMap.getTerritory(targetTerritoryId).updateUnits(hitUnits);
             for(int i = 0; i < moved.size(); ++i){
-                targetTerritory.updateMyUnits(i, moved.get(i));
+                gameMap.getTerritory(targetTerritoryId).updateMyUnits(i, moved.get(i));
             }
         }
         return checkMove;

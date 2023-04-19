@@ -55,9 +55,9 @@ public class ActionChecker {
         if (sourceTerritory == null) {
             return ("The " + actionType + " action is not valid: this is not a valid Territory name !");
         }
-        if(owner == null || !owner.equals(sourceTerritory.getOwner())){
-            return ("The " + actionType + " action is not valid: " + owner.getName() +  " does not own " + sourceTerritory.getName() + "!");
-        }
+//        if(owner == null || !owner.equals(sourceTerritory.getOwner())){
+//            return ("The " + actionType + " action is not valid: " + owner.getName() +  " does not own " + sourceTerritory.getName() + "!");
+//        }
         return null;
     }
 

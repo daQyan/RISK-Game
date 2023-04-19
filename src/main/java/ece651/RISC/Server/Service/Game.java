@@ -1,4 +1,4 @@
-package ece651.RISC.Server.Model;
+package ece651.RISC.Server.Service;
 
 import ece651.RISC.Server.MapFactory;
 import ece651.RISC.shared.AttackAction;
@@ -33,7 +33,8 @@ public class Game {
 
     private ArrayList<MoveAction> moveActions = new ArrayList<>();
     private ArrayList<AttackAction> attackActions = new ArrayList<>();
-    private Set<Integer> operatedPlayerId = new HashSet<>();
+
+    private int operatedPlayerNum = 0;
 
     public Game() {
         this(3, 3, 5, 30);
@@ -97,6 +98,7 @@ public class Game {
         return players.get(playerId);
     }
 
+
     public void AllocateUnitFromPlayer(int playerId, Set<Integer> territoriesId, int numUnits) {
         for(Integer territoryId: territoriesId) {
             Territory serverSideTerritory = myMap.getTerritory(territoryId);
@@ -109,8 +111,6 @@ public class Game {
             myStatus = Status.gameStatus.PLAYING;
         }
     }
-
-
 
     public void playerAllocate(Player player, ArrayList<Territory> territories) {
         for(Territory territory: territories) {
@@ -142,16 +142,18 @@ public class Game {
 //    }
 
 
-    public int getOperatedPlayerSize() {
-        return operatedPlayerId.size();
+    public void setOperatedPlayerNum(int num) {
+        operatedPlayerNum = num;
     }
 
-    public void resetOperatedPlayerId() {
-        operatedPlayerId.clear();
+    public int getOperatedPlayerNum() {
+        return operatedPlayerNum;
     }
-    public void recieveAction(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
+
+    public void handleActions(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
         System.out.println("playerOneTurn" + moveActions.size() +","+ attackActions.size());
         int operatedPlayerNum = round.playerOneTurn(player, moveActions, attackActions);
+        setOperatedPlayerNum(operatedPlayerNum);
         if(operatedPlayerNum == playerSize){
             playOneTurn();
         }

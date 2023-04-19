@@ -1,4 +1,4 @@
-package ece651.RISC.Server.Model;
+package ece651.RISC.Server.Service;
 
 import ece651.RISC.shared.AttackAction;
 import ece651.RISC.shared.GameMap;
@@ -43,7 +43,7 @@ public class Round {
      */
     public void executeMoves(ArrayList<MoveAction> moveActions) {
         for (MoveAction move: moveActions) {
-            move.moveTerritory();
+            move.moveTerritory(myMap, move.getSourceTerritory().getId(), move.getTargetTerritory().getId());
         }
     }
     public ArrayList<AttackAction> parseAttacks(ArrayList<AttackAction> attackActions){
@@ -87,9 +87,12 @@ public class Round {
     public void executeAttacks(ArrayList<AttackAction> attackActions) {
         Random rand = new Random();
         attackActions = parseAttacks(attackActions);
+        // attackActions 为null 就不能.size()了
+        if(attackActions == null) return;
         while(attackActions.size() > 0){
             int order = rand.nextInt(attackActions.size());
-            String result = attackActions.get(order).attackTerritory();
+            AttackAction attack = attackActions.get(order);
+            attack.attackTerritory(myMap, attack.getSourceTerritory().getId(), attack.getTargetTerritory().getId());
             attackActions.remove(order);
         }
     }

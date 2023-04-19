@@ -1,27 +1,17 @@
 package ece651.RISC.shared;
 
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import ece651.RISC.Client.ClientPlayer;
-import ece651.RISC.Client.ClientReceiver;
-import ece651.RISC.Offline.OfflineClient2Server;
-import ece651.RISC.Offline.OfflineServer2Client;
 import ece651.RISC.Server.MapFactory;
-import ece651.RISC.Server.ServerGame;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class JSONConvertor {
     public static GameMap convertTerritories(String json) {
-        List<Territory> territories= JSON.parseArray(json, Territory.class);
-        GameMap toReturn = new GameMap((ArrayList<Territory>) territories);
-        return toReturn;
+        List<Territory> territories = JSON.parseArray(json, Territory.class);
+        return new GameMap((ArrayList<Territory>) territories);
     }
     public static void setRelations(String json, GameMap gm, boolean adjacent) {
         List<TerritoryRelation> relations= JSON.parseArray(json, TerritoryRelation.class);

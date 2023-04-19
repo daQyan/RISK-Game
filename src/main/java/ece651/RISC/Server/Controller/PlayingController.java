@@ -2,17 +2,16 @@ package ece651.RISC.Server.Controller;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import ece651.RISC.Server.Model.Game;
-import ece651.RISC.Server.Model.OnlineServer2Client;
-import ece651.RISC.Server.Model.Round;
+import ece651.RISC.Server.Service.Game;
+import ece651.RISC.Server.Service.OnlineServer2Client;
 import ece651.RISC.shared.AttackAction;
 import ece651.RISC.shared.MoveAction;
 import ece651.RISC.shared.Player;
 import ece651.RISC.shared.Status;
-import ece651.RISC.shared.Territory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,7 +31,7 @@ public class PlayingController {
     public OnlineServer2Client msgMaker;
     private final Lock lock = new ReentrantLock();
     private final Condition actionComplete = lock.newCondition();
-    @GetMapping("/playing")
+    @PostMapping("/playing")
     public String greeting(@RequestBody String actionsJSON) throws InterruptedException {
         // check status first
         if (serverGame.getStatus() != Status.gameStatus.PLAYING) {
@@ -48,11 +47,11 @@ public class PlayingController {
         String attackActionsJSON = jsonObject.getString("attackActions");
         List<MoveAction> moveActions = JSON.parseArray(moveActionsJSON, MoveAction.class);
         List<AttackAction> attackActions = JSON.parseArray(attackActionsJSON, AttackAction.class);
-        serverGame.recieveAction(player, (ArrayList<MoveAction>) moveActions, (ArrayList<AttackAction>) attackActions);
-
+        serverGame.handleActions(player, (ArrayList<MoveAction>) moveActions, (ArrayList<AttackAction>) attackActions);
+        System.out.println(serverGame.getOperatedPlayerNum() + " serverGame.getOperatedPlayerSize()");
         lock.lock();
         try {
-            if (serverGame.getAllocatedPlayerSize() < 3) {
+            if (serverGame.getOperatedPlayerNum() < 3) {
                 actionComplete.await();
             } else {
                 actionComplete.signalAll();
@@ -60,7 +59,6 @@ public class PlayingController {
         } finally {
             lock.unlock();
         }
-
 
         return msgMaker.oneTurnMsg(serverGame.getMyMap(), serverGame.getPlayer(player.getId()).getStatus(), serverGame.getStatus());
     }
