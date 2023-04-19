@@ -5,7 +5,7 @@ import java.util.List;
 public class ActionsRequest {
     private List<RequestMoveAction> moveActions;
     private List<RequestAttackAction> attackActions;
-    private List<ReqeustUpgradeAction> upgradeActions;
+    private List<RequestUpgradeAction> upgradeActions;
 
     public List<RequestMoveAction> getMoveActions() {
         return moveActions;
@@ -23,11 +23,11 @@ public class ActionsRequest {
         this.attackActions = attackActions;
     }
 
-    public List<ReqeustUpgradeAction> getUpgradeActions() {
+    public List<RequestUpgradeAction> getUpgradeActions() {
         return upgradeActions;
     }
 
-    public void setUpgradeActions(List<ReqeustUpgradeAction> upgradeActions) {
+    public void setUpgradeActions(List<RequestUpgradeAction> upgradeActions) {
         this.upgradeActions = upgradeActions;
     }
 }

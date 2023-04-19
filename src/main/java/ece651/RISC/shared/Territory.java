@@ -48,6 +48,7 @@ public class Territory {
         //fixed size of cost
         this.size = 2;
         this.myUnits = myUnits;
+        updateMyUnits(0, numUnits);
     }
 
     public Territory(int id, String name, int unit, Player owner) {
