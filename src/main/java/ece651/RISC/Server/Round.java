@@ -34,7 +34,6 @@ public class Round {
             a.setSourceTerritory(myMap.getTerritory(a.getSourceTerritory().getId()));
             a.setTargetTerritory(myMap.getTerritory(a.getTargetTerritory().getId()));
         }
-
         this.moveActions.addAll(moveActions);
         this.attackActions.addAll(attackActions);
         this.operatedPlayers.add(player);
@@ -101,7 +100,7 @@ public class Round {
         while(attackActions.size() > 0){
             int order = rand.nextInt(attackActions.size());
             AttackAction attack = attackActions.get(order);
-            attack.attackTerritory(myMap, attack.getSourceTerritory().getId(), attack.getTargetTerritory().getId());
+            attack.attackTerritoryEVO2(myMap, attack.getSourceTerritory().getId(), attack.getTargetTerritory().getId());
             attackActions.remove(order);
         }
     }
@@ -109,7 +108,7 @@ public class Round {
     public void naturalUnitIncrease(){
         for(Territory t: myMap.getTerritories()){
             t.updateUnits(1);
-            t.increaseMyUnitsEachTurn();
+            t.updateMyUnits(0,1);
         }
     }
     public Status.gameStatus checkStatus(){
