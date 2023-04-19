@@ -17,13 +17,12 @@ import java.util.Random;
 import java.util.Set;
 
 public class Round {
-    private Set<Player> operatedPlayers = new HashSet<>();
-    private ArrayList<MoveAction> moveActions = new ArrayList<>();
-    private ArrayList<AttackAction> attackActions = new ArrayList<>();
-    private ArrayList<Player> players;
-    private GameMap myMap;
-    private int resourceGrow;
-
+    private final Set<Player> operatedPlayers = new HashSet<>();
+    private final ArrayList<MoveAction> moveActions = new ArrayList<>();
+    private final ArrayList<AttackAction> attackActions = new ArrayList<>();
+    private final ArrayList<Player> players;
+    private final GameMap myMap;
+    private final int resourceGrow;
 
     public Round(ArrayList<Player> players, GameMap map, int resourceGrow) {
         this.players = players;

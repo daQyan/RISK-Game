@@ -5,11 +5,12 @@ import ece651.RISC.Server.Model.Payload.Request.CreateGameRequest;
 import ece651.RISC.Server.Model.Payload.Request.JoinGameRequest;
 import ece651.RISC.Server.Model.Payload.Response.CreateGameResponse;
 import ece651.RISC.Server.Model.Payload.Response.GetAllGamesResponse;
+import ece651.RISC.Server.Model.Payload.Response.GetGameInfoResponse;
 import ece651.RISC.Server.Model.User;
 import ece651.RISC.Server.Repository.GameRepository;
 import ece651.RISC.Server.Repository.UserRepository;
 import ece651.RISC.Server.Service.Game;
-import ece651.RISC.shared.Player;
+import ece651.RISC.shared.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,6 @@ import java.util.Map;
 public class GameController {
     @Autowired
     private GameRepository gameRepository;
-
     @Autowired
     private UserRepository userRepository;
 
@@ -45,15 +45,17 @@ public class GameController {
         Long userId = joinGameRequest.getUserId();
         User user = userRepository.getUser(userId);
         Game game = gameRepository.getGameById(gameId);
-        game.addPlayer(new Player(user.getUsername()));
-        return new ResponseEntity<>(HttpStatus.OK);
+        if(!game.getStatus().equals(Status.gameStatus.WAITINGPLAYER)){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        boolean isAdded = game.tryAddPlayer(userId, user.getUsername());
+        if (isAdded) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
-//
-//    @PostMapping("/{gameId}/start")
-//    public ResponseEntity<StartGameResponse> startGame(@PathVariable Long gameId) {
-//        // TODO: implement starting game logic
-//        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-//    }
 
     @GetMapping("/all")
     public ResponseEntity<GetAllGamesResponse> allRooms() {
@@ -61,10 +63,20 @@ public class GameController {
         List<GameInfo> gameInfos = new ArrayList<>();
         for (Long gameId : games.keySet()) {
             Game game = games.get(gameId);
-            GameInfo gameInfo = new GameInfo(gameId, game.getPlayerSize(), game.getPlayerInitUnits(), game.getStatus());
+            GameInfo gameInfo = new GameInfo(gameId, game.getPlayerSize(), game.getGamePlayers().size(), game.getPlayerInitUnits(), game.getStatus());
             gameInfos.add(gameInfo);
         }
         GetAllGamesResponse response = new GetAllGamesResponse(gameInfos);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/{gameId}/game_info")
+    public ResponseEntity<GetGameInfoResponse> getGameInfo(@PathVariable Long gameId) {
+        Map<Long, Game> games = gameRepository.getAllGames();
+        Game game = games.get(gameId);
+        GameInfo gameInfo = new GameInfo(gameId, game.getPlayerSize(), game.getGamePlayers().size(), game.getPlayerInitUnits(), game.getStatus());
+        GetGameInfoResponse response = new GetGameInfoResponse(gameInfo);
+        return ResponseEntity.ok(response);
+    }
 }
+

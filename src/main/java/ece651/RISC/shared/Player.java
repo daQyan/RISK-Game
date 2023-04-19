@@ -2,11 +2,11 @@ package ece651.RISC.shared;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.annotation.JSONField;
-import org.springframework.stereotype.Component;
+import lombok.Data;
 import ece651.RISC.Client.MapTextView;
 
 import java.util.ArrayList;
-@Component
+@Data
 public class Player {
     protected int player_index;
     @JSONField(name = "id")
@@ -133,13 +133,8 @@ public class Player {
     }
 
     public String toJSON(){
-        String json = JSON.toJSONString(this);
-        return json;
+        return JSON.toJSONString(this);
     }
-
-
-
-
 
 
     // TODO
