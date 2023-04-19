@@ -2,11 +2,13 @@ package ece651.RISC.shared;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.annotation.JSONField;
+import ece651.RISC.Client.MapTextView;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-
+@Component
 public class Player {
     @JSONField(name = "id")
     protected int id;

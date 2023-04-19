@@ -23,12 +23,13 @@ public class PlayerNameController {
     public String getPlayerIdJSON(@RequestBody String playerNameJSON) {
         // transform json to Object to get player name
         Player player = JSON.parseObject(playerNameJSON, Player.class);
-        System.out.println("receivePlayerName" + player.toJSON());
+        System.out.println(" n" + player.toJSON());
         int playerId = serverGame.addPlayer(player);
         return msgMaker.playerIdMsg(playerId);
     }
 
     @GetMapping("/map")
+
     public String getMapJSON() {
         return msgMaker.gameMapMsg(serverGame.getMyMap());
     }
