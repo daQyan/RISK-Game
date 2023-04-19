@@ -46,7 +46,7 @@ public class Round {
      */
     public void executeMoves(ArrayList<MoveAction> moveActions) {
         for (MoveAction move: moveActions) {
-            move.moveTerritory();
+            move.moveTerritory(myMap, move.getSourceTerritory().getId(), move.getTargetTerritory().getId());
         }
     }
     //!!! needs refactor here
@@ -100,7 +100,8 @@ public class Round {
         attackActions = parseAttacks(attackActions);
         while(attackActions.size() > 0){
             int order = rand.nextInt(attackActions.size());
-            String result = attackActions.get(order).attackTerritory();
+            AttackAction attack = attackActions.get(order);
+            attack.attackTerritory(myMap, attack.getSourceTerritory().getId(), attack.getTargetTerritory().getId());
             attackActions.remove(order);
         }
     }

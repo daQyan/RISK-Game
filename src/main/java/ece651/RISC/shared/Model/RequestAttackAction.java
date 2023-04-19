@@ -1,6 +1,6 @@
 package ece651.RISC.shared.Model;
 
-public class AttackAction {
+public class RequestAttackAction {
     private String sourceTerritoryId;
     private String destinationTerritoryId;
     private int unitCount;

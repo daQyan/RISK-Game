@@ -149,7 +149,8 @@ public class Game {
     public int getOperatedPlayerNum() {
         return operatedPlayerNum;
     }
-    public void receiveAction(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
+
+    public void handleActions(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
         System.out.println("playerOneTurn" + moveActions.size() +","+ attackActions.size());
         int operatedPlayerNum = round.playerOneTurn(player, moveActions, attackActions);
         setOperatedPlayerNum(operatedPlayerNum);

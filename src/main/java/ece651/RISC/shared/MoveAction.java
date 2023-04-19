@@ -17,12 +17,12 @@ public class MoveAction extends Action {
     /**
      * move the units from one territory to the target one
      */
-    public String moveTerritory() {
+    public String moveTerritory(GameMap gameMap, int sourceTerritoryId, int targetTerritoryId) {
         // check adjacent and owned
         String checkMove = myAC.checkMoveRule(this.owner, this.sourceTerritory, this.targetTerritory, hitUnits);
         if(checkMove == null){
-            sourceTerritory.updateUnits(-hitUnits);
-            targetTerritory.updateUnits(hitUnits);
+            gameMap.getTerritory(sourceTerritoryId).updateUnits(-hitUnits);
+            gameMap.getTerritory(targetTerritoryId).updateUnits(hitUnits);
         }
         return checkMove;
     }
