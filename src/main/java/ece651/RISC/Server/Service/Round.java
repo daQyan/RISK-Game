@@ -9,6 +9,7 @@ public class Round {
     private ArrayList<MoveAction> moveActions = new ArrayList<>();
     private ArrayList<AttackAction> attackActions = new ArrayList<>();
     private ArrayList<UpgradeTechAction> UTAction = new ArrayList<>();
+    private ArrayList<UpgradeUnitAction> UUAction = new ArrayList<>();
     private ArrayList<Player> players;
     private GameMap myMap;
     private int resourceGrow;
@@ -106,6 +107,11 @@ public class Round {
         }
     }
 
+    public void executeUpgradeUnit(ArrayList<UpgradeUnitAction> UUAction){
+        for(UpgradeUnitAction a: UUAction){
+            a.upgradeUnitLevel();
+        }
+    }
     public void naturalUnitIncrease(){
         for(Territory t: myMap.getTerritories()){
             t.updateUnits(1);
@@ -138,6 +144,7 @@ public class Round {
         executeMoves(moveActions);
         executeAttacks(attackActions);
         executeUpgradeTech(UTAction);
+        executeUpgradeUnit(UUAction);
         naturalUnitIncrease();
         naturalResourceIncrease();
         myMap.updateAccessible();
