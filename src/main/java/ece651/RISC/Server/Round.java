@@ -46,9 +46,12 @@ public class Round {
     public void executeMoves(ArrayList<MoveAction> moveActions) {
         for (MoveAction move: moveActions) {
             move.moveTerritory(myMap, move.getSourceTerritory().getId(), move.getTargetTerritory().getId());
+            //for evo 2: deduct the food resource
+            int resourceConsumed = -move.getHitUnits() * move.getSourceTerritory().getAccessibles().get(move.getTargetTerritory());
+            move.getOwner().updateFoodResource(resourceConsumed);
         }
     }
-    //!!! needs refactor here
+
     public ArrayList<AttackAction> parseAttacks(ArrayList<AttackAction> attackActions){
         //check the attack rule first
         //minus the deployed soldiers from the source territory first
@@ -56,6 +59,7 @@ public class Round {
             String checkAttack = a.getMyAC().checkAttackRule(a.getOwner(), a.getSourceTerritory(), a.getTargetTerritory(), a.getHitUnits());
             if(checkAttack == null){
                 a.getSourceTerritory().updateUnits(-a.getHitUnits());
+                a.getOwner().updateFoodResource(-a.getHitUnits());
             }
             else{
                 System.out.println(checkAttack);

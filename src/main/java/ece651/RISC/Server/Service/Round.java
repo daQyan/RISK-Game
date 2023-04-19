@@ -1,25 +1,14 @@
 package ece651.RISC.Server.Service;
 
-import ece651.RISC.shared.AttackAction;
-import ece651.RISC.shared.GameMap;
-import ece651.RISC.shared.MoveAction;
-import ece651.RISC.shared.Player;
-import ece651.RISC.shared.Status;
-import ece651.RISC.shared.Territory;
+import ece651.RISC.shared.*;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class Round {
     private Set<Player> operatedPlayers = new HashSet<>();
     private ArrayList<MoveAction> moveActions = new ArrayList<>();
     private ArrayList<AttackAction> attackActions = new ArrayList<>();
+    private ArrayList<UpgradeTechAction> UTAction = new ArrayList<>();
     private ArrayList<Player> players;
     private GameMap myMap;
     private int resourceGrow;
@@ -44,8 +33,12 @@ public class Round {
     public void executeMoves(ArrayList<MoveAction> moveActions) {
         for (MoveAction move: moveActions) {
             move.moveTerritory(myMap, move.getSourceTerritory().getId(), move.getTargetTerritory().getId());
+            //for evo 2: deduct the food resource
+            int resourceConsumed = -move.getHitUnits() * move.getSourceTerritory().getAccessibles().get(move.getTargetTerritory());
+            move.getOwner().updateFoodResource(resourceConsumed);
         }
     }
+
     public ArrayList<AttackAction> parseAttacks(ArrayList<AttackAction> attackActions){
         //check the attack rule first
         //minus the deployed soldiers from the source territory first
@@ -53,6 +46,7 @@ public class Round {
             String checkAttack = a.getMyAC().checkAttackRule(a.getOwner(), a.getSourceTerritory(), a.getTargetTerritory(), a.getHitUnits());
             if(checkAttack == null){
                 a.getSourceTerritory().updateUnits(-a.getHitUnits());
+                a.getOwner().updateFoodResource(-a.getHitUnits());
             }
             else{
                 System.out.println(checkAttack);
@@ -72,14 +66,21 @@ public class Round {
         //merge all the grouped attack actions
         Iterator<Map.Entry<Map.Entry<Territory, Player>, ArrayList<AttackAction>>> iterator = parsing.entrySet().iterator();
         while (iterator.hasNext()) {
+            //for evo 2: not only changing the unit number, but also the number in arraylist myUnits
+            ArrayList<Integer> myDeploy = new ArrayList<>(Collections.nCopies(7,0));
             Map.Entry<Map.Entry<Territory, Player>, ArrayList<AttackAction>> entry = iterator.next();
             int newUnits = 0;
             for(int j = 0; j < entry.getValue().size(); j++){
                 newUnits += entry.getValue().get(j).getHitUnits();
+                ArrayList<Integer> singleAttack = entry.getValue().get(j).getSourceTerritory().deployMyUnits(entry.getValue().get(j).getHitUnits());
+                //add single attack order's units into myDeploy
+                for(int k = 0; k < 7; ++k){
+                    myDeploy.set(k, myDeploy.get(k) + singleAttack.get(k));
+                }
             }
             //use the first source territory as the merged default source territory
             Territory newSourceTerritory = entry.getValue().get(0).getSourceTerritory();
-            AttackAction merged = new AttackAction(newSourceTerritory, entry.getKey().getKey(), newUnits, Status.actionStatus.ATTACK, entry.getKey().getValue());
+            AttackAction merged = new AttackAction(newSourceTerritory, entry.getKey().getKey(), newUnits, Status.actionStatus.ATTACK, entry.getKey().getValue(), myDeploy);
             parsed.add(merged);
         }
         return parsed;
@@ -87,19 +88,28 @@ public class Round {
     public void executeAttacks(ArrayList<AttackAction> attackActions) {
         Random rand = new Random();
         attackActions = parseAttacks(attackActions);
-        // attackActions 为null 就不能.size()了
-        if(attackActions == null) return;
         while(attackActions.size() > 0){
             int order = rand.nextInt(attackActions.size());
             AttackAction attack = attackActions.get(order);
-            attack.attackTerritory(myMap, attack.getSourceTerritory().getId(), attack.getTargetTerritory().getId());
+            attack.attackTerritoryEVO2(myMap, attack.getSourceTerritory().getId(), attack.getTargetTerritory().getId());
             attackActions.remove(order);
+        }
+    }
+
+    public void executeUpgradeTech(ArrayList<UpgradeTechAction> UTAction){
+        for(UpgradeTechAction uta: UTAction){
+            for(int i = 0; i < players.size(); ++i){
+                if(uta.getPlayerID() == players.get(i).getId()){
+                    players.get(i).upgradeTechLevel();
+                }
+            }
         }
     }
 
     public void naturalUnitIncrease(){
         for(Territory t: myMap.getTerritories()){
             t.updateUnits(1);
+            t.updateMyUnits(0,1);
         }
     }
 
@@ -127,7 +137,10 @@ public class Round {
     public Status.gameStatus playOneTurn() {
         executeMoves(moveActions);
         executeAttacks(attackActions);
+        executeUpgradeTech(UTAction);
         naturalUnitIncrease();
+        naturalResourceIncrease();
+        myMap.updateAccessible();
         return checkStatus();
     }
 }
