@@ -146,14 +146,40 @@ public class Game {
     public int getOperatedPlayerNum() {
         return operatedPlayerNum;
     }
+
+
     public void receiveAction(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
+        //TODO parse actions
+        ArrayList<MoveAction> newMoves = parseMoves(moveActions);
+        ArrayList<AttackAction> nwewAtks = parseAtk(attackActions);
+
         System.out.println("playerOneTurn" + moveActions.size() +","+ attackActions.size());
-        int operatedPlayerNum = round.playerOneTurn(player, moveActions, attackActions);
+        int operatedPlayerNum = round.playerOneTurn(player, newMoves, nwewAtks);
         setOperatedPlayerNum(operatedPlayerNum);
         if(operatedPlayerNum == playerSize){
             playOneTurn();
         }
         // TODO: what kinds of information should return
+    }
+
+    // TODO
+    private ArrayList<AttackAction> parseAtk(ArrayList<AttackAction> attackActions) {
+        for (AttackAction atk : attackActions) {
+            // replace each territory
+            atk.setSourceTerritory(myMap.getTerritory(atk.getSourceTerritory().getId()));
+            atk.setTargetTerritory(myMap.getTerritory(atk.getTargetTerritory().getId()));
+        }
+        return attackActions;
+    }
+
+    // TODO
+    private ArrayList<MoveAction> parseMoves(ArrayList<MoveAction> moveActions) {
+        for (MoveAction atk : moveActions) {
+            // replace each territory
+            atk.setSourceTerritory(myMap.getTerritory(atk.getSourceTerritory().getId()));
+            atk.setTargetTerritory(myMap.getTerritory(atk.getTargetTerritory().getId()));
+        }
+        return moveActions;
     }
 
     //play one turn of the game

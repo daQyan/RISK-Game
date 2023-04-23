@@ -97,7 +97,6 @@ public class RestClientPlayer extends Player {
         }
         return null;
     }
-// 5 5 10 10
 
     private Territory checkSource(ActionChecker checker, String sourceTerMesg) throws IOException {
         Territory source = null;
@@ -234,6 +233,7 @@ public class RestClientPlayer extends Player {
                 + getMyTerritoryName() + "with the format: <unit1> <unit2> ... <unitN>, where N is the number of your territory. ";
         String unitsInput;
         out.println(prompt);
+        ArrayList<Territory> terList = new ArrayList<>();
         while (true) {
             try {
                 unitsInput = inputReader.readLine();
@@ -255,6 +255,7 @@ public class RestClientPlayer extends Player {
                         break;
                 }
                 System.out.println("initUnitPlacement" + getTerritories().size());
+                terList = parseUnitsPlacement(unitsInput);
                 break;
             } catch (IllegalArgumentException | IOException e) {
                 System.out.println("initUnitPlacement" + e.getStackTrace());
@@ -263,7 +264,7 @@ public class RestClientPlayer extends Player {
         }
         out.println("Unit Placement Success!");
         System.out.println("**-------------------------------------------------------------------------------------**");
-        return parseUnitsPlacement(unitsInput);
+        return terList;
     }
 
     // parse the input from user and update its Territories
@@ -294,6 +295,8 @@ public class RestClientPlayer extends Player {
     public void readActions()  {
         moveActions.clear();
         attackActions.clear();
+        if (checkLose()) return;
+        if (checkWin()) return;
         // keep receiving order input until (D)one
         try{
             while (true) {

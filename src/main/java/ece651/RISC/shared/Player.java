@@ -82,9 +82,20 @@ public class Player {
         return res;
     }
 
-    public boolean equals(Player p) {
-        return id == p.getId();
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + id;
+        return result;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        Player objPlayer = (Player)obj;
+        return id == objPlayer.getId();
+    }
+
 
     public String toJSON(){
         String json = JSON.toJSONString(this);
