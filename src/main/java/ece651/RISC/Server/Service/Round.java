@@ -7,14 +7,7 @@ import ece651.RISC.shared.Player;
 import ece651.RISC.shared.Status;
 import ece651.RISC.shared.Territory;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class Round {
     private Set<Player> operatedPlayers = new HashSet<>();
@@ -98,11 +91,20 @@ public class Round {
         }
     }
     public Status.gameStatus checkStatus(){
+        //change how to determine win/lose
+        //use a hashmap to store the grouped territories
+        HashMap<Player, ArrayList<Territory>> sorted = new HashMap<>();
+        for(Territory t : myMap.getTerritories()){
+            if(!sorted.containsKey(t.getOwner())){
+                sorted.put(t.getOwner(), new ArrayList<>());
+            }
+            sorted.get(t.getOwner()).add(t);
+        }
         for(Player sp : players){
-            if(sp.getTerritories().isEmpty()){
+            if(!sorted.containsKey(sp)){
                 sp.setStatus(Status.playerStatus.LOSE);
             }
-            if(sp.getTerritories().size() == myMap.getMapSize()){
+            if(sorted.get(sp).size() == myMap.getMapSize()){
                 sp.setStatus(Status.playerStatus.WIN);
                 return Status.gameStatus.FINISHED;
             }

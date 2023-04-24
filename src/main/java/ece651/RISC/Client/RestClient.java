@@ -171,6 +171,9 @@ public class RestClient {
             player.displayMap();
             System.out.println("playing one turn end");
         }
+        if(gameStatus == Status.gameStatus.FINISHED){
+            System.out.println(player.getName() + player.getStatus() + " !");
+        }
     }
     public static void main(String[] args) {
         RestClient restClient = new RestClient();
