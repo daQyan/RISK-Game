@@ -4,10 +4,8 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import ece651.RISC.Online.OnlineClient2Server;
 import ece651.RISC.Server.Service.Game;
-import ece651.RISC.shared.GameMap;
+import ece651.RISC.shared.*;
 import ece651.RISC.shared.JSONConvertor;
-import ece651.RISC.shared.Status;
-import ece651.RISC.shared.Territory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -165,13 +163,13 @@ public class RestClient {
             System.out.println("territoriesJSON" + oneTurnResultJSON);
             gameStatus = parseGameStatus(oneTurnResultJSON);
             Status.playerStatus playerStatus = parsePlayerStatus(oneTurnResultJSON);
-
+            player.setStatus(playerStatus);
             GameMap gameMap = parseGameMap(oneTurnResultJSON);
             setMapToPlayer(gameMap);
             player.displayMap();
             System.out.println("playing one turn end");
         }
-        if(gameStatus == Status.gameStatus.FINISHED){
+        if(player.getStatus() == Status.playerStatus.WIN || player.getStatus() == Status.playerStatus.LOSE){
             System.out.println(player.getName() + player.getStatus() + " !");
         }
     }

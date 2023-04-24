@@ -104,7 +104,7 @@ public class Round {
             if(!sorted.containsKey(sp)){
                 sp.setStatus(Status.playerStatus.LOSE);
             }
-            if(sorted.get(sp).size() == myMap.getMapSize()){
+            else if(sorted.get(sp).size() == myMap.getMapSize()){
                 sp.setStatus(Status.playerStatus.WIN);
                 return Status.gameStatus.FINISHED;
             }

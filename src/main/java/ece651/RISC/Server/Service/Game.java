@@ -35,7 +35,7 @@ public class Game {
     private int operatedPlayerNum = 0;
 
     public Game() {
-        this(3, 3, 30);
+        this(3, 3, 3);
         this.myStatus = Status.gameStatus.WAITINGPLAYER;
         MapFactory mf = new MapFactory();
         this.myMap = mf.createMap(3);

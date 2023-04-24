@@ -36,6 +36,6 @@ public class PlayerNameController {
     @GetMapping("/unit_num")
     public String getUnitNumJSON() {
         // TODO: change it to variable
-        return msgMaker.unitNumMsg(30);
+        return msgMaker.unitNumMsg(3);
     }
 }
