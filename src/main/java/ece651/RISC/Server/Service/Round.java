@@ -128,11 +128,20 @@ public class Round {
     }
 
     public Status.gameStatus checkStatus(){
+        //change how to determine win/lose
+        //use a hashmap to store the grouped territories
+        HashMap<Player, ArrayList<Territory>> sorted = new HashMap<>();
+        for(Territory t : myMap.getTerritories()){
+            if(!sorted.containsKey(t.getOwner())){
+                sorted.put(t.getOwner(), new ArrayList<>());
+            }
+            sorted.get(t.getOwner()).add(t);
+        }
         for(Player sp : players){
-            if(sp.getTerritories().isEmpty()){
+            if(!sorted.containsKey(sp)){
                 sp.setStatus(Status.playerStatus.LOSE);
             }
-            if(sp.getTerritories().size() == myMap.getMapSize()){
+            else if(sorted.get(sp).size() == myMap.getMapSize()){
                 sp.setStatus(Status.playerStatus.WIN);
                 return Status.gameStatus.FINISHED;
             }

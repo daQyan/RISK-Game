@@ -9,6 +9,8 @@ import lombok.Data;
 public class GameInfo {
     private long gameId;
     private int roomSize;
+//    private String GameMapString;
+//    private String GamePlayersString;
     private int currentSize;
     private int initialUnit;
     private Status.gameStatus myStatus;

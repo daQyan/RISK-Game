@@ -2,12 +2,9 @@ package ece651.RISC.Client;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import ece651.RISC.Online.OnlineClient2Server;
-import ece651.RISC.Server.Service.Game;
-import ece651.RISC.shared.GameMap;
+import ece651.RISC.Server.Model.OnlineClient2Server;
+import ece651.RISC.shared.*;
 import ece651.RISC.shared.JSONConvertor;
-import ece651.RISC.shared.Status;
-import ece651.RISC.shared.Territory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -16,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -165,11 +161,14 @@ public class RestClient {
             System.out.println("territoriesJSON" + oneTurnResultJSON);
             gameStatus = parseGameStatus(oneTurnResultJSON);
             Status.playerStatus playerStatus = parsePlayerStatus(oneTurnResultJSON);
-
+            player.setStatus(playerStatus);
             GameMap gameMap = parseGameMap(oneTurnResultJSON);
             setMapToPlayer(gameMap);
             player.displayMap();
             System.out.println("playing one turn end");
+        }
+        if(player.getStatus() == Status.playerStatus.WIN || player.getStatus() == Status.playerStatus.LOSE){
+            System.out.println(player.getName() + player.getStatus() + " !");
         }
     }
     public static void main(String[] args) {

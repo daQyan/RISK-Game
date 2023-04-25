@@ -1,6 +1,5 @@
 package ece651.RISC.shared;
 
-import java.lang.reflect.Array;
 import java.net.URISyntaxException;
 import java.util.*;
 
@@ -166,6 +165,19 @@ public class Territory {
     public String toJSON(){
         String json = JSON.toJSONString(this);
         return json;
+    }
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + id;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Territory objT = (Territory) obj;
+        return id == objT.getId();
     }
 
     public static void main(String[] args) throws URISyntaxException {
