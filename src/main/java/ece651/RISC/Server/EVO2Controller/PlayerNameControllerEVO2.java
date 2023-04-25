@@ -9,18 +9,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-public class PlayerNameController {
+@RequestMapping("/api/user")
+public class PlayerNameControllerEVO2 {
     @Autowired
     public Game serverGame;
     @Autowired
     public OnlineServer2Client msgMaker;
 
     @PostMapping("/player_name")
-    public String getPlayerIdJSON(@RequestBody String playerNameJSON) {
+    public String getPlayerIdJSONEVO2(@RequestBody String playerNameJSON) {
         // transform json to Object to get player name
         Player player = JSON.parseObject(playerNameJSON, Player.class);
         System.out.println(" n" + player.toJSON());
@@ -29,12 +31,12 @@ public class PlayerNameController {
     }
 
     @GetMapping("/map")
-    public String getMapJSON() {
+    public String getMapJSONEVO2() {
         return msgMaker.gameMapMsg(serverGame.getMyMap());
     }
 
     @GetMapping("/unit_num")
-    public String getUnitNumJSON() {
+    public String getUnitNumJSONEVO2() {
         // TODO: change it to variable
         return msgMaker.unitNumMsg(30);
     }

@@ -27,7 +27,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @Slf4j
 @RestController
 @RequestMapping("/api/game")
-public class PlayingController {
+public class PlayingControllerEVO2 {
     @Autowired
     public GameRepository gameRepository;
     @Autowired
@@ -35,7 +35,7 @@ public class PlayingController {
     private final Lock lock = new ReentrantLock();
     private final Condition actionComplete = lock.newCondition();
     @PostMapping("{gameId}/playing")
-    public String Playing(@RequestBody String actionsJSON, @PathVariable Long gameId) throws InterruptedException {
+    public String PlayingEVO2(@RequestBody String actionsJSON, @PathVariable Long gameId) throws InterruptedException {
         Game serverGame = gameRepository.getGameById(gameId);
         // check status first
         if (serverGame.getStatus() != Status.gameStatus.PLAYING) {

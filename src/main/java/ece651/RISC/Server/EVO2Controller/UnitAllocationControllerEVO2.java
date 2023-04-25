@@ -25,7 +25,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @Slf4j
 @RestController
 @RequestMapping("/api/game")
-public class UnitAllocationController {
+public class UnitAllocationControllerEVO2 {
     @Autowired
     public GameRepository gameRepository;
     @Autowired
@@ -33,7 +33,7 @@ public class UnitAllocationController {
     private final Lock lock = new ReentrantLock();
     private final Condition allocationComplete = lock.newCondition();
     @PostMapping("{gameId}/allocation")
-    public String allocationUnits(@PathVariable Long gameId, @RequestBody String allocationJSON) throws InterruptedException {
+    public String allocationUnitsEVO2(@PathVariable Long gameId, @RequestBody String allocationJSON) throws InterruptedException {
         Game serverGame = gameRepository.getGameById(gameId);
         // check status first
         if (serverGame.getStatus() != Status.gameStatus.WAITINGPLAYERALLOCATE) {
