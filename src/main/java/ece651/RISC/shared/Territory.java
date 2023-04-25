@@ -23,10 +23,10 @@ public class Territory {
 
     @JSONField(name = "fee")
     private int fee;
-
+    // TODO change to using ID
     @JSONField(serialize = false, deserialize = false)
     private ArrayList<Territory> adjacents = new ArrayList<>();
-
+    // TODO change to using ID
     @JSONField(serialize = false, deserialize = false)
     //private ArrayList<Territory> accessibles = new ArrayList<>();
     //for evo 2: change to linkedHashmap
