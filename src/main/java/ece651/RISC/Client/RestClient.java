@@ -2,7 +2,7 @@ package ece651.RISC.Client;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import ece651.RISC.Online.OnlineClient2Server;
+import ece651.RISC.Server.Model.OnlineClient2Server;
 import ece651.RISC.shared.*;
 import ece651.RISC.shared.JSONConvertor;
 import org.springframework.http.HttpEntity;
