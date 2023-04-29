@@ -7,4 +7,7 @@ import lombok.Data;
 @Data
 public class LoginUserResponse {
     private long user_id;
+    private String user_name;
+
+    private boolean isLoggedIn;
 }

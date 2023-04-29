@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
+@CrossOrigin
 @RequestMapping("/api/user")
 public class UserController {
     @Autowired
@@ -47,7 +48,17 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        LoginUserResponse response = new LoginUserResponse(user.getId());
+        LoginUserResponse response = new LoginUserResponse(user.getId(), user.getUsername(), true);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+//    @GetMapping("/user")
+//    public  ResponseEntity<LoginUserResponse> user() {
+//        // TODO 根据session返回user info
+//    }
+//
+//    @GetMapping("/logout")
+//    public  ResponseEntity<LoginUserResponse> user() {
+//        // TODO 根据session返回user info loggedIn变成false
+//    }
 }

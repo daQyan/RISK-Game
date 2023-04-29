@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/game")
 public class GameController {
     @Autowired
@@ -49,9 +50,12 @@ public class GameController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
+        GameInfo gameInfo = new GameInfo(gameId, game.getPlayerSize(), game.getGamePlayers().size(), game.getPlayerInitUnits(), game.getStatus());
+        GetGameInfoResponse response = new GetGameInfoResponse(gameInfo);
+
         boolean isAdded = game.tryAddPlayer(userId, user.getUsername());
         if (isAdded) {
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseEntity.ok(response);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
