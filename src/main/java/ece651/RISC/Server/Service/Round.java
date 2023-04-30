@@ -11,8 +11,8 @@ public class Round {
     private final ArrayList<Player> players;
     private final GameMap myMap;
     private final int resourceGrow;
-    private ArrayList<UpgradeTechAction> UTAction = new ArrayList<>();
-    private ArrayList<UpgradeUnitAction> UUAction = new ArrayList<>();
+    private final ArrayList<UpgradeTechAction> UTAction = new ArrayList<>();
+    private final ArrayList<UpgradeUnitAction> UUAction = new ArrayList<>();
 
 
     public Round(ArrayList<Player> players, GameMap map, int resourceGrow) {
@@ -150,10 +150,11 @@ public class Round {
     }
     //play one turn of the game
     public Status.gameStatus playOneTurn() {
-        executeMoves(moveActions);
-        executeAttacks(attackActions);
         executeUpgradeTech(UTAction);
         executeUpgradeUnit(UUAction);
+        executeMoves(moveActions);
+        executeAttacks(attackActions);
+
         naturalUnitIncrease();
         naturalResourceIncrease();
         myMap.updateAccessible();
