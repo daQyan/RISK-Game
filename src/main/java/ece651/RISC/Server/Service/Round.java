@@ -158,6 +158,7 @@ public class Round {
         naturalUnitIncrease();
         naturalResourceIncrease();
         myMap.updateAccessible();
+        myMap.setAccessibleIdsFromAccessible();
         return checkStatus();
     }
 }

@@ -3,7 +3,7 @@ package ece651.RISC.shared;
 import java.util.*;
 
 public class GameMap {
-    private ArrayList<Territory> territories;
+    private final ArrayList<Territory> territories;
 
     public GameMap(ArrayList<Territory> territories) {
         System.out.println("Game map:" +  territories.size());
@@ -30,6 +30,19 @@ public class GameMap {
             }
             int cost = 2;
             searchAccessible(p, t, next, visited, cost);
+        }
+
+    }
+
+    public void setAccessibleIdsFromAccessible() {
+        for (Territory terr : territories) {
+            terr.setAccessibleIdsFromItsAccessible(terr.getAccessibles());
+        }
+    }
+
+    public void setAdjacentIdsFromAdjacent () {
+        for (Territory terr : territories) {
+            terr.setAdjacentIdsFromItsAdjacent(terr.getAdjacents());
         }
     }
 
