@@ -1,5 +1,6 @@
-package ece651.RISC.Server.Controller;
+package ece651.RISC.Server.EVO2Controller;
 
+import com.alibaba.fastjson2.JSON;
 import ece651.RISC.Server.Model.GameInfo;
 import ece651.RISC.Server.Model.Payload.Request.CreateGameRequest;
 import ece651.RISC.Server.Model.Payload.Request.JoinGameRequest;
@@ -11,6 +12,7 @@ import ece651.RISC.Server.Repository.GameRepository;
 import ece651.RISC.Server.Repository.UserRepository;
 import ece651.RISC.Server.Service.Game;
 import ece651.RISC.shared.Status;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ import java.util.Map;
 @RestController
 @CrossOrigin
 @RequestMapping("/api/game")
+@Slf4j
 public class GameController {
     @Autowired
     private GameRepository gameRepository;
@@ -43,21 +46,20 @@ public class GameController {
 
     @PostMapping("/{gameId}/join")
     public ResponseEntity<?> joinGame(@PathVariable Long gameId, @RequestBody JoinGameRequest joinGameRequest) {
-        Long userId = joinGameRequest.getUserId();
+        long userId = joinGameRequest.getUserId();
         User user = userRepository.getUser(userId);
         Game game = gameRepository.getGameById(gameId);
         if(!game.getStatus().equals(Status.gameStatus.WAITINGPLAYER)){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        GameInfo gameInfo = new GameInfo(gameId, game.getPlayerSize(), game.getGamePlayers().size(), game.getPlayerInitUnits(), game.getStatus());
-        GetGameInfoResponse response = new GetGameInfoResponse(gameInfo);
-
-        boolean isAdded = game.tryAddPlayer(userId, user.getUsername());
-        if (isAdded) {
-            return ResponseEntity.ok(response);
+        String msg = game.tryAddPlayer((int)userId, user.getUsername());
+        if (msg == null) {
+            LOGGER.info("Player " + userId + " joined game " + gameId);
+            return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            LOGGER.error("Player " + userId + " joined game " + gameId + "failed, " + msg);
+            return new ResponseEntity<>(msg, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -67,7 +69,11 @@ public class GameController {
         List<GameInfo> gameInfos = new ArrayList<>();
         for (Long gameId : games.keySet()) {
             Game game = games.get(gameId);
-            GameInfo gameInfo = new GameInfo(gameId, game.getPlayerSize(), game.getGamePlayers().size(), game.getPlayerInitUnits(), game.getStatus());
+            // parse game map into JSon format
+            String territoriesJSON = JSON.toJSONString(game.getMyMap().getTerritories());
+            // parse game player into JSON format
+            String playersJSON = JSON.toJSONString(game.getPlayers());
+            GameInfo gameInfo = new GameInfo(territoriesJSON, playersJSON, gameId, game.getPlayerSize(), game.getPlayers().size(), game.getPlayerInitUnits(), game.getStatus());
             gameInfos.add(gameInfo);
         }
         GetAllGamesResponse response = new GetAllGamesResponse(gameInfos);
@@ -78,7 +84,11 @@ public class GameController {
     public ResponseEntity<GetGameInfoResponse> getGameInfo(@PathVariable Long gameId) {
         Map<Long, Game> games = gameRepository.getAllGames();
         Game game = games.get(gameId);
-        GameInfo gameInfo = new GameInfo(gameId, game.getPlayerSize(), game.getGamePlayers().size(), game.getPlayerInitUnits(), game.getStatus());
+        // parse game map into JSon format
+        String territoriesJSON = JSON.toJSONString(game.getMyMap().getTerritories());
+        // parse game player into JSON format
+        String playersJSON = JSON.toJSONString(game.getPlayers());
+        GameInfo gameInfo = new GameInfo(territoriesJSON, playersJSON, gameId, game.getPlayerSize(), game.getPlayers().size(), game.getPlayerInitUnits(), game.getStatus());
         GetGameInfoResponse response = new GetGameInfoResponse(gameInfo);
         return ResponseEntity.ok(response);
     }

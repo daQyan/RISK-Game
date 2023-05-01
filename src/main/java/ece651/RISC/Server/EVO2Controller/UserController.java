@@ -1,4 +1,4 @@
-package ece651.RISC.Server.Controller;
+package ece651.RISC.Server.EVO2Controller;
 
 import com.alibaba.fastjson2.JSON;
 import ece651.RISC.Server.Model.Payload.Request.CreateUserRequest;
@@ -27,7 +27,7 @@ public class UserController {
     public synchronized ResponseEntity<CreateUserResponse> signUp(@RequestBody CreateUserRequest createUserRequest) {
         User user = new User(createUserRequest.getUsername(), createUserRequest.getPassword());
         String createUserRequestJsonString = JSON.toJSONString(createUserRequest);
-        System.out.println("New user created: " + createUserRequestJsonString);
+        LOGGER.info("New user created: " + createUserRequestJsonString);
         boolean isAdded = userRepository.tryAddUser(userIDCounter, user);
         if(isAdded) {
             CreateUserResponse response = new CreateUserResponse(userIDCounter);
