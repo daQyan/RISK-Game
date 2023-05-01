@@ -27,7 +27,6 @@ public class PlayerNameController {
     }
 
     @GetMapping("/map")
-
     public String getMapJSON() {
         return msgMaker.gameMapMsg(serverGame.getMyMap());
     }

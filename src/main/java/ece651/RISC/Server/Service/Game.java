@@ -1,7 +1,6 @@
 package ece651.RISC.Server.Service;
 
 import ece651.RISC.Server.MapFactory;
-import ece651.RISC.Server.Model.GamePlayer;
 import ece651.RISC.shared.AttackAction;
 import ece651.RISC.shared.GameMap;
 import ece651.RISC.shared.MapController;
@@ -10,6 +9,7 @@ import ece651.RISC.shared.Player;
 import ece651.RISC.shared.Status;
 import ece651.RISC.shared.Territory;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -20,12 +20,11 @@ import java.util.Set;
 
 @Data
 @Component
+@Slf4j
 public class Game {
     private int playerSize;
     private int initialTerritorySize;
     private ArrayList<Player> players;
-    private ArrayList<GamePlayer> gamePlayers;
-
     private HashMap<Integer, ArrayList<Integer>> territoriesOfPlayersMap;
     private GameMap myMap;
     private MapController myMapController;
@@ -71,7 +70,6 @@ public class Game {
         this.playerSize = playerSize;
         this.playerInitUnits = playerInitUnits;
         this.setGameId(gameId);
-        this.gamePlayers = new ArrayList<>();
         this.players = new ArrayList<>();
         MapFactory mf = new MapFactory();
         this.myMap = mf.createMap(playerSize);
@@ -79,26 +77,27 @@ public class Game {
         this.myStatus = Status.gameStatus.WAITINGPLAYER;
     }
     public void initTerritoriesOfPlayersMap(int eachBlocksOfTerritory) {
-            for(int i = 0; i < playerSize; i++) {
-                territoriesOfPlayersMap.put(i, new ArrayList<>());
-                for(int j = eachBlocksOfTerritory * i; j < eachBlocksOfTerritory * (i + 1); j++) {
-                    territoriesOfPlayersMap.get(i).add(j);
-                }
+        // for each player, add the territories to the player
+        for(int i = 0; i < playerSize; i++) {
+            Player player = players.get(i);
+            for(int j = eachBlocksOfTerritory * i; j < eachBlocksOfTerritory * (i + 1); j++) {
+                Territory t = myMap.getTerritory(j);
+                t.setOwner(player);
+                // set owner id of territory
+                t.setOwnerId(player.getId());
             }
+        }
 
-        for(Integer a:territoriesOfPlayersMap.keySet()) {
-            System.out.println(a + ": ");
-            for(Integer b: territoriesOfPlayersMap.get(a)) {
-                System.out.print(b + " ");
+        // print each territory of each player
+        for(int i = 0; i < playerSize; i++) {
+            System.out.println( "id: " + players.get(i).getId() + " name: " + players.get(i).getName());
+            for(int j = 0; j < myMap.getTerritories().size(); j++) {
+                if (myMap.getTerritory(j).getOwner().getId() == i) {
+                    System.out.print(myMap.getTerritory(j).getId() + " ");
+                }
             }
             System.out.println();
         }
-    }
-    public long getGameId() {
-        return gameId;
-    }
-    public void setGameId(long gameId) {
-        this.gameId = gameId;
     }
 
     public GameMap getMyMap() {
@@ -126,20 +125,26 @@ public class Game {
     }
 
 
-    public Boolean tryAddPlayer(long userId, String username) {
-        GamePlayer gmPlayer = new GamePlayer(userId, username);
-        int playerIndex = gamePlayers.size();
-        if(playerIndex > playerSize - 1) {
-            return false;
+    public String tryAddPlayer(int userId, String username) {
+        // If there is one player with the same username, return false
+        for(Player p: players) {
+            if(p.getName().equals(username)) {
+                return "You've already joined the game!";
+            }
         }
-        gmPlayer.setPlayerIndex(playerIndex);
-        gamePlayers.add(gmPlayer);
+        // If the game is full, return false
+        if(players.size() >= playerSize) {
+            return "The game is full!";
+        }
 
-        if(gamePlayers.size() == playerSize) {
+        Player player = new Player(userId, username);
+        players.add(player);
+
+        if(players.size() >= playerSize) {
             // allocate the territories
             switch (playerSize) {
                 case 2:
-                    initTerritoriesOfPlayersMap(4);
+                    initTerritoriesOfPlayersMap(5);
                     break;
                 case 3:
                     initTerritoriesOfPlayersMap(3);
@@ -151,7 +156,7 @@ public class Game {
             }
             myStatus = Status.gameStatus.WAITINGPLAYERALLOCATE;
         }
-        return true;
+        return null;
     }
 
     public Player getPlayer(int playerId) {

@@ -4,12 +4,13 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import ece651.RISC.Server.Repository.GameRepository;
 import ece651.RISC.Server.Service.Game;
-import ece651.RISC.Server.Service.OnlineServer2Client;
 import ece651.RISC.shared.Player;
 import ece651.RISC.shared.Status;
 import ece651.RISC.shared.Territory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,27 +29,22 @@ import java.util.concurrent.locks.ReentrantLock;
 public class UnitAllocationControllerEVO2 {
     @Autowired
     public GameRepository gameRepository;
-    @Autowired
-    public OnlineServer2Client msgMaker;
     private final Lock lock = new ReentrantLock();
     private final Condition allocationComplete = lock.newCondition();
     @PostMapping("{gameId}/allocation")
-    public String allocationUnitsEVO2(@PathVariable Long gameId, @RequestBody String allocationJSON) throws InterruptedException {
+    public ResponseEntity<?> allocationUnitsEVO2(@PathVariable Long gameId, @RequestBody String allocationJSON) throws InterruptedException {
         Game serverGame = gameRepository.getGameById(gameId);
         // check status first
         if (serverGame.getStatus() != Status.gameStatus.WAITINGPLAYERALLOCATE) {
-            // return HTTP.serverError;
-            return "error";
+            return new ResponseEntity<>("Invalid game status", HttpStatus.BAD_REQUEST);
         }
         JSONObject jsonObject = JSON.parseObject(allocationJSON);
-        System.out.println("allocationJSON " + allocationJSON);
-
+        // allocation Json has player and territories
         String playerJSON = jsonObject.getString("player");
         String territoriesJSON = jsonObject.getString("territories");
         Player player = JSON.parseObject(playerJSON, Player.class);
         List<Territory> territories = JSON.parseArray(territoriesJSON, Territory.class);
         serverGame.playerAllocate(player, (ArrayList<Territory>) territories);
-
 
         lock.lock();
         try {
@@ -60,7 +56,6 @@ public class UnitAllocationControllerEVO2 {
         } finally {
             lock.unlock();
         }
-
-        return msgMaker.allocationMsg(serverGame.getMyMap());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -1,6 +1,5 @@
 package ece651.RISC.shared;
 
-import java.net.URISyntaxException;
 import java.util.*;
 
 import com.alibaba.fastjson2.JSON;
@@ -20,8 +19,11 @@ public class Territory {
     //for evo 2: use index as unit's level, from low to high
     private ArrayList<Integer> myUnits = new ArrayList<>(Collections.nCopies(7, 0));
 
-    @JSONField(name = "owner")
+    @JSONField(serialize = false, deserialize = false)
     private Player owner;
+
+    @JSONField(name = "ownerId")
+    private int ownerId;
 
     @JSONField(name = "fee")
     private int fee;
@@ -47,7 +49,6 @@ public class Territory {
         this.name = name;
         this.numUnits = unit;
         this.owner = owner;
-//        this.ownerId = ownerId;
         this.accessibles = accessibles;
         this.accessibleIds = accessibleIds;
         this.adjacents = adjacents;
@@ -78,14 +79,6 @@ public class Territory {
         for (Territory adjacent : adjacents) {
             this.adjacentIds.add(adjacent.getId());
         }
-    }
-
-    public void setFee(int fee) {
-        this.fee = fee;
-    }
-
-    public int getFee() {
-        return fee;
     }
 
     public int getId() {
@@ -123,15 +116,16 @@ public class Territory {
     public void setOwner(Player ownerPlayer) {
         this.owner = ownerPlayer;
     }
+
+    public void setOwnerId(int ownerId) {
+        this.ownerId = ownerId;
+    }
+
     public Boolean equals(Territory rhs){
         return this.getId() == rhs.getId();
     }
     public ArrayList<Territory> getAdjacents() {
         return adjacents;
-    }
-
-    public void setAdjacents(ArrayList<Territory> adjacents) {
-        this.adjacents = adjacents;
     }
 
     public void addAdjacent(Territory adjacent) {
@@ -179,14 +173,8 @@ public class Territory {
         this.myUnits = newUnits;
     }
 
-    public void changeOwner(int newUnits, Player newOwner){
-        this.numUnits = newUnits;
-        this.owner = newOwner;
-    }
-
     public String toJSON(){
-        String json = JSON.toJSONString(this);
-        return json;
+        return JSON.toJSONString(this);
     }
     @Override
     public int hashCode() {
@@ -198,14 +186,20 @@ public class Territory {
 
     @Override
     public boolean equals(Object obj) {
-        Territory objT = (Territory) obj;
-        return id == objT.getId();
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Territory otherTerritory = (Territory) obj;
+        return id == otherTerritory.getId();
     }
 
-    public static void main(String[] args) throws URISyntaxException {
+    public static void main(String[] args) {
         Player cp = new Player();
         Territory t = new Territory(1, "test", 10, cp);
-        LinkedHashMap lmp = new LinkedHashMap();
+        LinkedHashMap<Integer, Integer> lmp = new LinkedHashMap<>();
         lmp.put(1, 1);
         t.setAccessibleIds(lmp);
         String json = t.toJSON();
@@ -218,8 +212,6 @@ public class Territory {
     public String toString() {
         return name;
     }
-
-
 }
 
 

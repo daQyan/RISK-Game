@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AttackAction extends Action {
-    private Combat myCombat;
+    private final Combat myCombat;
     private ArrayList<Integer> myUnits = new ArrayList<>();
-    private ArrayList<Integer> enemyUnits = new ArrayList<>();
+    private final ArrayList<Integer> enemyUnits;
     //for source territory, the player would by default deploy his/her units from the highest unit to the lowest unit
     public AttackAction(Territory sourceTerritory, Territory targetTerritory, int hitUnits, Status.actionStatus type, Player owner) {
         super(sourceTerritory, targetTerritory, hitUnits, type, owner);
@@ -31,7 +31,7 @@ public class AttackAction extends Action {
         targetTerritory = gameMap.getTerritory(targetTerritoryId);
         String attackResult;
         while(hitUnits > 0 && targetTerritory.getNumUnits() > 0) {
-            if (myCombat.rollCombatDice() == true) {
+            if (myCombat.rollCombatDice()) {
                 targetTerritory.updateUnits(-1);
             } else {
                 --hitUnits;
@@ -40,6 +40,8 @@ public class AttackAction extends Action {
         // if the attack wins
         if (targetTerritory.getNumUnits() <= 0 && hitUnits > 0) {
             targetTerritory.setOwner(this.owner);
+            targetTerritory.setOwnerId(this.owner.getId());
+
             targetTerritory.setNumUnits(hitUnits);
             attackResult = this.owner.getName() + " has taken over " + targetTerritory.getName() + "!";
         }
@@ -60,7 +62,7 @@ public class AttackAction extends Action {
         AtomicInteger enemyIndex = new AtomicInteger(minEnemy.get());
         while(hitUnits > 0 && gameMap.getTerritory(targetTerritoryId).getNumUnits() > 0 && minSelf.get() <= 6 && minEnemy.get() <= 6 && maxSelf.get() >= 0 && maxEnemy.get() >= 0) {
             Unit myUnit = new Unit();
-            if (myCombat.rollCombatDice(myUnit.getBonusByType(myIndex.get()), myUnit.getBonusByType(enemyIndex.get())) == true) {
+            if (myCombat.rollCombatDice(myUnit.getBonusByType(myIndex.get()), myUnit.getBonusByType(enemyIndex.get()))) {
                 gameMap.getTerritory(targetTerritoryId).updateUnits(-1);
                 gameMap.getTerritory(targetTerritoryId).updateMyUnits(enemyIndex.get(), -1);
                 //enemyUnits.set(enemyIndex.get(), enemyUnits.get(enemyIndex.get()) - 1);
@@ -73,6 +75,7 @@ public class AttackAction extends Action {
         // if the attack wins
         if (gameMap.getTerritory(targetTerritoryId).getNumUnits() <= 0 && hitUnits > 0) {
             gameMap.getTerritory(targetTerritoryId).setOwner(this.owner);
+            gameMap.getTerritory(targetTerritoryId).setOwnerId(this.owner.getId());
             gameMap.getTerritory(targetTerritoryId).setNumUnits(hitUnits);
             gameMap.getTerritory(targetTerritoryId).setMyUnits(myUnits);
             attackResult = this.owner.getName() + " has taken over " + gameMap.getTerritory(targetTerritoryId).getName() + "!";

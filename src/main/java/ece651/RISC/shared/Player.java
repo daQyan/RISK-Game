@@ -8,16 +8,21 @@ import ece651.RISC.Client.MapTextView;
 import java.util.ArrayList;
 @Data
 public class Player {
-    protected int player_index;
+
     @JSONField(name = "id")
     protected int id;
+
     @JSONField(name = "name")
     protected String name;
+
     @JSONField(serialize = false, deserialize = false)
     protected ArrayList<Territory> territories;
+
+    @JSONField(name = "territoriesID")
+    protected ArrayList<Integer> territoriesId;
+
     @JSONField(name = "status")
     protected Status.playerStatus status;
-
 
     @JSONField(name = "techResource")
     protected int techResource;
@@ -41,10 +46,11 @@ public class Player {
 
     protected MapTextView view = new MapTextView(map);
 
-    public Player(int id, String name, ArrayList<Territory> territories, int techResource, int foodResource) {
+    public Player(int id, String name, ArrayList<Territory> territories, ArrayList<Integer> territoriesId, int techResource, int foodResource) {
         this.id = id;
         this.name = name;
         this.territories = territories;
+        this.territoriesId = territoriesId;
         this.status = Status.playerStatus.PLAYING;
         this.techLevel = 1;
         this.techResource = techResource;
@@ -61,7 +67,7 @@ public class Player {
     }
 
     public Player(int id, String name) {
-        this(id, name, new ArrayList<>(), 1000, 1000);
+        this(id, name, new ArrayList<>(), new ArrayList<>(), 1000, 1000);
     }
     public Player(String name) {
         this(-1, name);
@@ -138,6 +144,10 @@ public class Player {
 
     @Override
     public boolean equals(Object obj) {
+        // 'equals()' should check the class of its parameter
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
         Player objPlayer = (Player)obj;
         return id == objPlayer.getId();
     }
@@ -174,16 +184,6 @@ public class Player {
         if (level == 1) return 50;
         return costTechUpgrade(level - 1) + 25 * (level - 1);
     }
-
-    public void upgradeUnit() {
-        // player choose <UI>
-
-        // check
-        // update resource
-        // update unit
-    }
-
-    // helper function to get the Unit to update from user
 
     public static void main(String[] args) {
         Player p = new Player();

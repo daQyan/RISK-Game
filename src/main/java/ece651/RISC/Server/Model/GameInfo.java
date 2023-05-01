@@ -7,10 +7,10 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class GameInfo {
+    private String GameMapString;
+    private String GamePlayersString;
     private long gameId;
     private int roomSize;
-//    private String GameMapString;
-//    private String GamePlayersString;
     private int currentSize;
     private int initialUnit;
     private Status.gameStatus myStatus;
