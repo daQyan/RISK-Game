@@ -36,7 +36,6 @@ public class GameController {
     public ResponseEntity<CreateGameResponse> createGame(@RequestBody CreateGameRequest createGameRequest) {
         // create a new game with the specified room size and initial unit
         long gameId = gameRepository.createGame(createGameRequest.getRoomSize(), createGameRequest.getInitialUnit());
-        System.out.println(gameRepository.getAllGames().entrySet().size());
         // create a response object containing the new game ID
         CreateGameResponse response = new CreateGameResponse(gameId);
 

@@ -39,7 +39,8 @@ public class Territory {
     private LinkedHashMap<Integer, Integer> accessibleIds = new LinkedHashMap<>();
     @JSONField(name = "size")
     private int size;
-
+    @JSONField(name = "resourceGrow")
+    private int resourceGrow;
 
     public Territory() {}
     public Territory(int id, String name, int unit, Player owner,
@@ -55,6 +56,7 @@ public class Territory {
         this.adjacentIds = adjacentIds;
         //fixed size of cost
         this.size = 2;
+        this.resourceGrow = 5;
         this.myUnits = myUnits;
         updateMyUnits(0, numUnits);
     }
