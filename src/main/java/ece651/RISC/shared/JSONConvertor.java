@@ -14,7 +14,7 @@ public class JSONConvertor {
         return new GameMap((ArrayList<Territory>) territories);
     }
     public static void setRelations(String json, GameMap gm, boolean adjacent) {
-        List<TerritoryRelation> relations= JSON.parseArray(json, TerritoryRelation.class);
+        List<TerritoryRelation> relations = JSON.parseArray(json, TerritoryRelation.class);
         for(TerritoryRelation relation: relations) {
             int selfId =  relation.getSelfId();
             Territory selfTerritory = gm.getTerritory(selfId);

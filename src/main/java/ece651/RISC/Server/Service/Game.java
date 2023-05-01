@@ -50,8 +50,6 @@ public class Game {
         MapFactory mf = new MapFactory();
         this.myMap = mf.createMap(3);
         this.myMapController = new MapController(myMap);
-
-        System.out.println("ServerGame Constructor");
     }
 
     public Game(int playerSize, int initialTerritorySize, int resourceGrow, int playerInitUnits){
@@ -171,7 +169,13 @@ public class Game {
         allocatedPlayer.add(player);
         if(allocatedPlayer.size() == playerSize) {
             myStatus = Status.gameStatus.PLAYING;
+            // set adjacent ids from adjacent territories
+            myMap.setAdjacentIdsFromAdjacent();
+
+            // set accessible territories and accessible ids for each territory
             myMap.updateAccessible();
+            myMap.setAccessibleIdsFromAccessible();
+
             System.out.println("Game can begin");
             this.round = new Round(players, myMap, resourceGrow);
         }
@@ -225,7 +229,6 @@ public class Game {
     //play one turn of the game
     public Status.gameStatus playOneTurn() {
         myStatus  = round.playOneTurn();
-        myMap.updateAccessible();
         if(myStatus == Status.gameStatus.FINISHED) {
             return Status.gameStatus.FINISHED;
         }

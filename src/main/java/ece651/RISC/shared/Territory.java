@@ -5,7 +5,9 @@ import java.util.*;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.annotation.JSONField;
+import lombok.Data;
 
+@Data
 public class Territory {
     @JSONField(name = "id")
     private int id;
@@ -26,24 +28,30 @@ public class Territory {
     // TODO change to using ID
     @JSONField(serialize = false, deserialize = false)
     private ArrayList<Territory> adjacents = new ArrayList<>();
-    // TODO change to using ID
-    @JSONField(serialize = false, deserialize = false)
-    //private ArrayList<Territory> accessibles = new ArrayList<>();
-    //for evo 2: change to linkedHashmap
-    private LinkedHashMap<Territory, Integer> accessibles = new LinkedHashMap<>();
 
+    @JSONField(name = "adjacentsID")
+    private ArrayList<Integer> adjacentIds = new ArrayList<>();
+    @JSONField(serialize = false, deserialize = false)
+    private LinkedHashMap<Territory, Integer> accessibles = new LinkedHashMap<>();
+    @JSONField(name = "accessiblesID")
+    private LinkedHashMap<Integer, Integer> accessibleIds = new LinkedHashMap<>();
     @JSONField(name = "size")
     private int size;
 
 
     public Territory() {}
-    public Territory(int id, String name, int unit, Player owner, ArrayList<Territory> adjacents, LinkedHashMap<Territory, Integer> accessibles, ArrayList<Integer> myUnits) {
+    public Territory(int id, String name, int unit, Player owner,
+                     ArrayList<Territory> adjacents, ArrayList<Integer> adjacentIds, LinkedHashMap<Territory, Integer> accessibles,
+                     LinkedHashMap<Integer, Integer> accessibleIds, ArrayList<Integer> myUnits) {
         this.id = id;
         this.name = name;
         this.numUnits = unit;
         this.owner = owner;
+//        this.ownerId = ownerId;
         this.accessibles = accessibles;
+        this.accessibleIds = accessibleIds;
         this.adjacents = adjacents;
+        this.adjacentIds = adjacentIds;
         //fixed size of cost
         this.size = 2;
         this.myUnits = myUnits;
@@ -51,11 +59,25 @@ public class Territory {
     }
 
     public Territory(int id, String name, int unit, Player owner) {
-        this(id, name, unit, owner, new ArrayList<>(), new LinkedHashMap<>(), new ArrayList<>(Collections.nCopies(7, 0)));
+        this(id, name, unit, owner, new ArrayList<>(), new ArrayList<>(), new LinkedHashMap<>(), new LinkedHashMap<>(), new ArrayList<>(Collections.nCopies(7, 0)));
     }
 
     public Territory(int id, String name) {
         this(id, name, 0, new Player());
+    }
+
+    public void setAccessibleIdsFromItsAccessible(HashMap<Territory, Integer> accessibles) {
+        // set the accessibleIds from its accessibles
+        for (Map.Entry<Territory, Integer> entry : accessibles.entrySet()) {
+            this.accessibleIds.put(entry.getKey().getId(), entry.getValue());
+        }
+    }
+
+    public void setAdjacentIdsFromItsAdjacent(ArrayList<Territory> adjacents) {
+        // set the adjacentIds from its adjacents
+        for (Territory adjacent : adjacents) {
+            this.adjacentIds.add(adjacent.getId());
+        }
     }
 
     public void setFee(int fee) {
@@ -183,6 +205,9 @@ public class Territory {
     public static void main(String[] args) throws URISyntaxException {
         Player cp = new Player();
         Territory t = new Territory(1, "test", 10, cp);
+        LinkedHashMap lmp = new LinkedHashMap();
+        lmp.put(1, 1);
+        t.setAccessibleIds(lmp);
         String json = t.toJSON();
         System.out.println(json);
         Territory t2 = JSON.parseObject(json, Territory.class);
@@ -191,9 +216,10 @@ public class Territory {
 
     @Override
     public String toString() {
-
         return name;
     }
+
+
 }
 
 
