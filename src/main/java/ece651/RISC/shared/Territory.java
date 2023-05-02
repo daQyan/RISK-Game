@@ -19,6 +19,8 @@ public class Territory {
     //for evo 2: use index as unit's level, from low to high
     private ArrayList<Integer> myUnits = new ArrayList<>(Collections.nCopies(7, 0));
 
+    private ArrayList<Integer> allyUnits = new ArrayList<>(Collections.nCopies(7, 0));
+
     @JSONField(serialize = false, deserialize = false)
     private Player owner;
 
@@ -45,10 +47,16 @@ public class Territory {
     @JSONField(name = "techResourceGrow")
     private int techResourceGrow;
 
+    //initialized as null, need to check if it's applicable
+    @JSONField(name = "allyOwner")
+    private Player allyOwner;
+
+    private int numAllyUnits;
+
     public Territory() {}
     public Territory(int id, String name, int unit, Player owner,
                      ArrayList<Territory> adjacents, ArrayList<Integer> adjacentIds, LinkedHashMap<Territory, Integer> accessibles,
-                     LinkedHashMap<Integer, Integer> accessibleIds, ArrayList<Integer> myUnits) {
+                     LinkedHashMap<Integer, Integer> accessibleIds, ArrayList<Integer> myUnits, Player allyPlayer, int numAllyUnits) {
         this.id = id;
         this.name = name;
         this.numUnits = unit;
@@ -62,11 +70,14 @@ public class Territory {
         this.foodResourceGrow = 5;
         this.techResourceGrow = 5;
         this.myUnits = myUnits;
+        this.allyOwner = allyPlayer;
+        this.numAllyUnits = numAllyUnits;
+        updateAllyUnits(0,numAllyUnits);
         updateMyUnits(0, numUnits);
     }
 
     public Territory(int id, String name, int unit, Player owner) {
-        this(id, name, unit, owner, new ArrayList<>(), new ArrayList<>(), new LinkedHashMap<>(), new LinkedHashMap<>(), new ArrayList<>(Collections.nCopies(7, 0)));
+        this(id, name, unit, owner, new ArrayList<>(), new ArrayList<>(), new LinkedHashMap<>(), new LinkedHashMap<>(), new ArrayList<>(Collections.nCopies(7, 0)), null, 0);
     }
 
     public Territory(int id, String name) {
@@ -115,6 +126,8 @@ public class Territory {
         this.numUnits += unit;
     }
 
+    public void updateAllyUnitsNum(int unit){this.numAllyUnits += unit;}
+
     public Player getOwner() {
         return owner;
     }
@@ -122,6 +135,8 @@ public class Territory {
     public void setOwner(Player ownerPlayer) {
         this.owner = ownerPlayer;
     }
+
+    public void setAllyOwner(Player allyOwner){this.allyOwner = allyOwner;}
 
     public void setOwnerId(int ownerId) {
         this.ownerId = ownerId;
@@ -146,6 +161,14 @@ public class Territory {
         this.accessibles = accessibles;
     }
 
+    public Player getAllyOwner() {
+        return allyOwner;
+    }
+
+    public ArrayList<Integer> getAllyUnits() {
+        return allyUnits;
+    }
+
     public void addAccessible(Territory accessible, int cost) {
         this.accessibles.put(accessible, cost);
         //need to call updateAccessible() in the GameMap after using this function
@@ -153,13 +176,12 @@ public class Territory {
 
     public ArrayList<Integer> getMyUnits(){ return this.myUnits;}
 
-    //only for moving and attacking other territory; upgrade should call another overloading function
-    public ArrayList<Integer> deployMyUnits(int num){
+    private ArrayList<Integer> deployUnits(int num, ArrayList<Integer> units){
         int index = 6;
         ArrayList<Integer> deploy = new ArrayList<>(Collections.nCopies(7, 0));
         while(num > 0){
-            if(myUnits.get(index) > 0){
-                myUnits.set(index, myUnits.get(index) - 1);
+            if(units.get(index) > 0){
+                units.set(index, units.get(index) - 1);
                 deploy.set(index, deploy.get(index) + 1);
             }
             else{
@@ -171,12 +193,27 @@ public class Territory {
         return deploy;
     }
 
+    //only for moving and attacking other territory; upgrade should call another overloading function
+    public ArrayList<Integer> deployMyUnits(int num){
+        return deployUnits(num, this.myUnits);
+    }
+    public ArrayList<Integer> deployAllyUnits(int num){
+        return deployUnits(num, this.allyUnits);
+    }
     public void updateMyUnits(int unitIndex, int numUnits){
         this.myUnits.set(unitIndex, myUnits.get(unitIndex) + numUnits);
     }
 
+    public void updateAllyUnits(int unitIndex, int numUnits){
+        this.allyUnits.set(unitIndex, allyUnits.get(unitIndex) + numUnits);
+    }
+
     public void setMyUnits(ArrayList<Integer> newUnits){
         this.myUnits = newUnits;
+    }
+
+    public void setAllyUnits(ArrayList<Integer> newUnits){
+        this.allyUnits = newUnits;
     }
 
     public String toJSON(){

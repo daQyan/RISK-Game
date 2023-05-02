@@ -20,6 +20,7 @@ public class GameMap {
             //clear the old accessible territories
             t.setAccessibles(new LinkedHashMap<>());
             Player p = t.getOwner();
+            Player ally = t.getAllyOwner();
             ArrayList<Territory> visited = new ArrayList<>();
             visited.add(t);
             Queue<Territory> next = new LinkedList<>();
@@ -27,9 +28,12 @@ public class GameMap {
                 if(n.getOwner().equals(p)){
                     next.add(n);
                 }
+                else if(n.getAllyOwner() != null && n.getAllyOwner().equals(ally)){
+                    next.add(n);
+                }
             }
             int cost = 2;
-            searchAccessible(p, t, next, visited, cost);
+            searchAccessible(p, ally, t, next, visited, cost);
         }
 
     }
@@ -56,7 +60,7 @@ public class GameMap {
     }
 
     //helper function to search every accessible territory
-    public void searchAccessible(Player owner, Territory t, Queue<Territory> next, ArrayList<Territory> visited, int cost){
+    public void searchAccessible(Player owner, Player ally, Territory t, Queue<Territory> next, ArrayList<Territory> visited, int cost){
         if(next.isEmpty()){
             return;
         }
@@ -67,9 +71,9 @@ public class GameMap {
                 if(!visited.contains(temp)){
                     visited.add(temp);
                     t.addAccessible(temp, cost);
-                    if(temp.getOwner().equals(owner)){
+                    if(temp.getOwner().equals(owner) || (temp.getAllyOwner() != null && temp.getAllyOwner().equals(ally))){
                         for(Territory i : temp.getAdjacents()){
-                            if(i.getOwner().equals(owner)) {
+                            if(i.getOwner().equals(owner) || (i.getAllyOwner() != null && i.getAllyOwner().equals(ally))) {
                                 next.add(i);
                             }
                         }

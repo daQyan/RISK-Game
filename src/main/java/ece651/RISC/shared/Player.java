@@ -15,6 +15,7 @@ public class Player {
     @JSONField(name = "name")
     protected String name;
 
+
     @JSONField(serialize = false, deserialize = false)
     protected ArrayList<Territory> territories;
 
@@ -124,6 +125,17 @@ public class Player {
 
     public int getTechLevel() {
         return techLevel;
+    }
+
+    public Player getAllyPlayer() {
+        return allyPlayer;
+    }
+
+    public void formAlliance(Player ally){
+        this.allyPlayer = ally;
+        for(Territory t: territories){
+            t.setAllyOwner(ally);
+        }
     }
 
     @Override

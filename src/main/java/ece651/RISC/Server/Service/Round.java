@@ -11,8 +11,8 @@ public class Round {
     private final ArrayList<Player> players;
     private final GameMap myMap;
     private final int resourceGrow;
-    private final ArrayList<UpgradeTechAction> UTAction = new ArrayList<>();
-    private final ArrayList<UpgradeUnitAction> UUAction = new ArrayList<>();
+    private final ArrayList<UpgradeTechAction> UpgradeTechAction = new ArrayList<>();
+    private final ArrayList<UpgradeUnitAction> UpgradeUnitAction = new ArrayList<>();
     private final ArrayList<FormAllyAction> allyActions = new ArrayList<>();
 
 
@@ -34,6 +34,7 @@ public class Round {
      */
     public void executeMoves(ArrayList<MoveAction> moveActions) {
         for (MoveAction move: moveActions) {
+            //for evo3, need to change checker for move
             move.moveTerritory(myMap, move.getSourceTerritory().getId(), move.getTargetTerritory().getId());
             //for evo 2: deduct the food resource
             int resourceConsumed = -move.getHitUnits() * move.getSourceTerritory().getAccessibles().get(move.getTargetTerritory());
@@ -157,8 +158,8 @@ public class Round {
     }
     //play one turn of the game
     public Status.gameStatus playOneTurn() {
-        executeUpgradeTech(UTAction);
-        executeUpgradeUnit(UUAction);
+        executeUpgradeTech(UpgradeTechAction);
+        executeUpgradeUnit(UpgradeUnitAction);
         executeMoves(moveActions);
         executeAttacks(attackActions);
 

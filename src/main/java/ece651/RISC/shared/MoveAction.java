@@ -23,15 +23,39 @@ public class MoveAction extends Action {
         // check adjacent and owned
         String checkMove = myAC.checkMoveRule(this.owner, this.sourceTerritory, this.targetTerritory, hitUnits);
         if(checkMove == null){
-            gameMap.getTerritory(sourceTerritoryId).updateUnits(-hitUnits);
-            gameMap.getTerritory(targetTerritoryId).updateUnits(hitUnits);
-            //for evo 2: by default moving out from the highest level of units
-            ArrayList<Integer> moved = gameMap.getTerritory(sourceTerritoryId).deployMyUnits(this.hitUnits);
+            //moving the player's own units
+            if(this.owner.getId() == gameMap.getTerritory(sourceTerritoryId).getOwner().getId()){
+                gameMap.getTerritory(sourceTerritoryId).updateUnits(-hitUnits);
+                //for evo 2: by default moving out from the highest level of units
+                ArrayList<Integer> moved = gameMap.getTerritory(sourceTerritoryId).deployMyUnits(this.hitUnits);
+                //moving to owner's own territory
+                targetTerritoryReceive(gameMap, targetTerritoryId, moved);
+            }
+            //moving the ally player's units
+            else if(this.owner.getId() == gameMap.getTerritory(sourceTerritoryId).getAllyOwner().getId()){
+                gameMap.getTerritory(sourceTerritoryId).updateAllyUnitsNum(-hitUnits);
+                //for evo 2: by default moving out from the highest level of units
+                ArrayList<Integer> moved = gameMap.getTerritory(sourceTerritoryId).deployAllyUnits(this.hitUnits);
+                //moving to owner's own territory
+                targetTerritoryReceive(gameMap, targetTerritoryId, moved);
+            }
+        }
+        return checkMove;
+    }
+
+    private void targetTerritoryReceive(GameMap gameMap, int targetTerritoryId, ArrayList<Integer> moved) {
+        if(this.owner.getId() == gameMap.getTerritory(targetTerritoryId).getOwner().getId()){
             gameMap.getTerritory(targetTerritoryId).updateUnits(hitUnits);
             for(int i = 0; i < moved.size(); ++i){
                 gameMap.getTerritory(targetTerritoryId).updateMyUnits(i, moved.get(i));
             }
         }
-        return checkMove;
+        //moving to ally's territory
+        else if(this.owner.getId() == gameMap.getTerritory(targetTerritoryId).getAllyOwner().getId()){
+            gameMap.getTerritory(targetTerritoryId).updateAllyUnitsNum(hitUnits);
+            for(int i = 0; i < moved.size(); ++i){
+                gameMap.getTerritory(targetTerritoryId).updateAllyUnits(i, moved.get(i));
+            }
+        }
     }
 }
