@@ -1,5 +1,6 @@
 package ece651.RISC.Server.Service;
 
+import ch.qos.logback.core.joran.sanity.Pair;
 import ece651.RISC.shared.*;
 
 import java.util.*;
@@ -115,9 +116,18 @@ public class Round {
         }
     }
 
-    // TODO execute the ally-actions
-    public void executeAllyActions(ArrayList<FormAllyAction> allyActions){
 
+    // first traverse the allyActions list to see if there are two players who want to ally with each other
+    // if there are, add them as each other's ally
+    public void executeAllyActions(ArrayList<FormAllyAction> allyActions){
+        for(FormAllyAction faa1 : allyActions) {
+            for (FormAllyAction faa2 : allyActions) {
+                if (faa1.getPlayer().getId() == faa2.getTargetPlayer().getId() && faa1.getTargetPlayer().getId() == faa2.getPlayer().getId()) {
+                    faa1.getPlayer().addAlly(faa2.getTargetPlayer());
+                    faa2.getPlayer().addAlly(faa1.getTargetPlayer());
+                }
+            }
+        }
     }
 
     public void naturalUnitIncrease(){
@@ -127,7 +137,6 @@ public class Round {
         }
     }
 
-    //TODO implement this
     public void naturalResourceIncrease() {
         for (Player p : players) {
             p.updateTechResource(resourceGrow * p.getTerritories().size());
