@@ -34,6 +34,15 @@ public class GameMap {
 
     }
 
+    // get the number of players in the game
+    public int getNumPlayers() {
+        Set<Player> players = new HashSet<>();
+        for (Territory territory : territories) {
+            players.add(territory.getOwner());
+        }
+        return players.size();
+    }
+
     public void setAccessibleIdsFromAccessible() {
         for (Territory terr : territories) {
             terr.setAccessibleIdsFromItsAccessible(terr.getAccessibles());

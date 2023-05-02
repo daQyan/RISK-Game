@@ -13,6 +13,7 @@ public class Round {
     private final int resourceGrow;
     private final ArrayList<UpgradeTechAction> UTAction = new ArrayList<>();
     private final ArrayList<UpgradeUnitAction> UUAction = new ArrayList<>();
+    private final ArrayList<FormAllyAction> allyActions = new ArrayList<>();
 
 
     public Round(ArrayList<Player> players, GameMap map, int resourceGrow) {
@@ -112,6 +113,12 @@ public class Round {
             a.upgradeUnitLevel();
         }
     }
+
+    // TODO execute the ally-actions
+    public void executeAllyActions(ArrayList<FormAllyAction> allyActions){
+
+    }
+
     public void naturalUnitIncrease(){
         for(Territory t: myMap.getTerritories()){
             t.updateUnits(1);

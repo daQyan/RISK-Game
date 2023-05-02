@@ -33,6 +33,8 @@ public class Player {
     @JSONField(name = "techLevel")
     protected int techLevel;
 
+    @JSONField(name = "allyPlayer")
+    protected Player allyPlayer;
 
     public void setStatus(Status.playerStatus status) {
         this.status = status;
@@ -157,8 +159,10 @@ public class Player {
         return JSON.toJSONString(this);
     }
 
-
-    // TODO
+    // get the number of players in the game
+    public int getNumPlayers() {
+        return map.getNumPlayers();
+    }
 
     public void upgradeTechLevel() {
         int cost = costTechUpgrade(this.techLevel);
@@ -201,5 +205,9 @@ public class Player {
         p.upgradeTechLevel();
         System.out.println("tech level: " + p.getTechLevel() + ", techResource: " + p.getTechResource());
 
+    }
+
+    public void addAlly(Player targetPlayer) {
+        this.allyPlayer = targetPlayer;
     }
 }
