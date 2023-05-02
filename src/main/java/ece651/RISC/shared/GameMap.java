@@ -72,6 +72,7 @@ public class GameMap {
             cost += 2;
         }
     }
+
     public int getMapSize(){
         return territories.size();
     }
