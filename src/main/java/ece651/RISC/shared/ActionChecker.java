@@ -32,7 +32,7 @@ public class ActionChecker {
             return ("The " + actionType + " action is not valid: this is not a valid Player name !");
         }
         if(!owner.equals(sourceTerritory.getOwner())){
-            return ("The " + actionType + " action is not valid: " + owner.getName() +  " does not own " + sourceTerritory.getName() + "!");
+            return ("The " + actionType + " action is not valid: " + owner.getId() +  " does not own " + sourceTerritory.getName() + "!");
         }
         return null;
     }

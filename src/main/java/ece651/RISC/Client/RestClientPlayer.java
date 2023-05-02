@@ -16,8 +16,8 @@ import java.util.ArrayList;
 
 public class RestClientPlayer extends Player {
 
-    private BufferedReader inputReader;
-    private PrintStream out;
+    private final BufferedReader inputReader;
+    private final PrintStream out;
 
     public GameMap getMap() {
         return map;
@@ -57,13 +57,6 @@ public class RestClientPlayer extends Player {
     @JSONField(serialize = false, deserialize = false)
     public ArrayList<AttackAction> attackActions = new ArrayList<>();
 
-    public RestClientPlayer(String name, BufferedReader inputReader, PrintStream out){
-        super(name);
-        this.inputReader = inputReader;
-        this.out = out;
-        this.status = Status.playerStatus.INIT;
-    }
-
     public RestClientPlayer(BufferedReader inputReader, PrintStream out){
         super();
         this.inputReader = inputReader;
@@ -96,7 +89,7 @@ public class RestClientPlayer extends Player {
     }
 
     private Territory checkSource(ActionChecker checker, String sourceTerMesg) throws IOException {
-        Territory source = null;
+        Territory source;
         while (true) {
             try {
                 out.println(sourceTerMesg);
@@ -115,13 +108,13 @@ public class RestClientPlayer extends Player {
     }
 
     private Territory checkTarget(ActionChecker checker, String targetTerMesg, Territory source, Status.actionStatus status) throws IOException {
-        Territory target = null;
+        Territory target;
         while (true) {
             try {
                 out.println(targetTerMesg);
                 String targetTer = inputReader.readLine();
                 target = getTerritoryByName(targetTer);
-                String result = null;
+                String result;
                 if (status == Status.actionStatus.MOVE) {
                     result = checker.checkAccess(source, target);
                 }
@@ -139,7 +132,7 @@ public class RestClientPlayer extends Player {
 
 
     private int checkUnits(ActionChecker checker, String unitNumMesg, Territory sourceTerritory, String type) throws IOException {
-        int units = 0;
+        int units;
         while (true) {
             try {
                 out.println(unitNumMesg);
@@ -165,9 +158,9 @@ public class RestClientPlayer extends Player {
         String unitNumMesg = "Please specify the number of units to move";
         out.println(welcome);
 
-        Territory source = null;
-        Territory target = null;
-        int unitMove = 0;
+        Territory source;
+        Territory target;
+        int unitMove;
 
         ActionChecker checker = new ActionChecker();
         source = checkSource(checker, sourceTerMesg);
@@ -179,7 +172,7 @@ public class RestClientPlayer extends Player {
         moveActions.add(move);
 
         out.println("Move Successful ~");
-        System.out.println("**-------------------------------------------------------------------------------------**");
+        out.println("**-------------------------------------------------------------------------------------**");
     }
 
     public void attack() throws  IOException {
@@ -188,9 +181,9 @@ public class RestClientPlayer extends Player {
         String targetTerMesg = "Please specify the target territory with the territory name: ";
         String unitNumMesg = "Please specify the number of units use to attack";
         out.println(welcome);
-        Territory source = null;
-        Territory target = null;
-        int unitAttack = 0;
+        Territory source;
+        Territory target;
+        int unitAttack;
 
         ActionChecker checker = new ActionChecker();
         source = checkSource(checker, sourceTerMesg);
@@ -230,7 +223,7 @@ public class RestClientPlayer extends Player {
                 + getMyTerritoryName() + "with the format: <unit1> <unit2> ... <unitN>, where N is the number of your territory. ";
         String unitsInput;
         out.println(prompt);
-        ArrayList<Territory> terList = new ArrayList<>();
+        ArrayList<Territory> terList;
         while (true) {
             try {
                 unitsInput = inputReader.readLine();
@@ -251,23 +244,23 @@ public class RestClientPlayer extends Player {
                         }
                         break;
                 }
-                System.out.println("initUnitPlacement" + getTerritories().size());
+                out.println("initUnitPlacement" + getTerritories().size());
                 terList = parseUnitsPlacement(unitsInput);
                 break;
             } catch (IllegalArgumentException | IOException e) {
-                System.out.println("initUnitPlacement" + e.getStackTrace());
-                System.out.println(e.getMessage());
+                out.println("initUnitPlacement" + e.getStackTrace());
+                out.println(e.getMessage());
             }
         }
         out.println("Unit Placement Success!");
-        System.out.println("**-------------------------------------------------------------------------------------**");
+        out.println("**-------------------------------------------------------------------------------------**");
         return terList;
     }
 
     // parse the input from user and update its Territories
     private ArrayList<Territory> parseUnitsPlacement(String prompt) {
         ArrayList<Territory> myTerritory = getTerritories();
-        ArrayList<Integer> numList = new ArrayList();
+        ArrayList<Integer> numList = new ArrayList<>();
         String[] parts = prompt.split(" ");
         int sumUnits = 0;
         for (int i = 0; i < parts.length; ++i) {
@@ -301,7 +294,7 @@ public class RestClientPlayer extends Player {
                 out.println(name + ", your options: M for move, A for attack, D for Done");
                 String s = inputReader.readLine().toUpperCase();
                 if (s.equals("D")) {
-                    System.out.println("D" + moveActions.size());
+                    out.println("D" + moveActions.size());
                     break;
                 }
                 switch (s) {
@@ -316,7 +309,7 @@ public class RestClientPlayer extends Player {
                 }
             }
         } catch(IOException error) {
-            System.out.println(error.getMessage());
+            out.println(error.getMessage());
         }
     }
 

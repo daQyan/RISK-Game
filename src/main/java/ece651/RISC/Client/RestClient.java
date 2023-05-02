@@ -18,11 +18,11 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 
 public class RestClient {
-    private String server = "http://127.0.0.1:8080";
-    private RestTemplate rest;
-    private HttpHeaders headers;
+    private final String server = "http://127.0.0.1:8080";
+    private final RestTemplate rest;
+    private final HttpHeaders headers;
     private HttpStatus httpStatus;
-    private RestClientPlayer player;
+    private final RestClientPlayer player;
     OnlineClient2Server msgMaker;
     public RestClient() {
         this.rest = new RestTemplate();
@@ -37,7 +37,6 @@ public class RestClient {
 
     public String get(String uri) {
         HttpEntity<String> requestEntity = new HttpEntity<String>("", headers);
-        System.out.println("here1");
         ResponseEntity<String> responseEntity = rest.exchange(server + uri, HttpMethod.GET, requestEntity, String.class);
 //        this.setStatus((HttpStatus) responseEntity.getStatusCode());
         return responseEntity.getBody();
@@ -48,10 +47,6 @@ public class RestClient {
         ResponseEntity<String> responseEntity = rest.exchange(server + uri, HttpMethod.POST, requestEntity, String.class);
         this.setHttpStatus((HttpStatus) responseEntity.getStatusCode());
         return responseEntity.getBody();
-    }
-
-    public HttpStatus getHttpStatus() {
-        return httpStatus;
     }
 
     public void setHttpStatus(HttpStatus httpStatus) {
@@ -68,7 +63,6 @@ public class RestClient {
     }
 
     public GameMap parseGameMap(String mapJSON) {
-        System.out.println("receiveMap" + mapJSON);
         JSONObject jsonObj = JSON.parseObject(mapJSON);
         String map = jsonObj.getString("map");
 
@@ -80,7 +74,6 @@ public class RestClient {
         ece651.RISC.shared.JSONConvertor.setRelations(adjacentsJSON, newMap, true);
         String accessiblesJSON = mapObj.getString("accessibles");
         JSONConvertor.setRelations(accessiblesJSON, newMap, false);
-        System.out.println("newMap");
 
         return newMap;
     }
@@ -98,26 +91,16 @@ public class RestClient {
         player.setInitUnits(unitNum);
     }
 
-    public void gameMapHandler(int unitNum){
-        player.setInitUnits(unitNum);
-    }
-
     public Status.gameStatus parseGameStatus(String oneTurnResultJSON) {
-        System.out.println("processing oneTurnResultJSON" + oneTurnResultJSON);
         JSONObject jsonObj = JSON.parseObject(oneTurnResultJSON);
         String statusStr = jsonObj.getString("game_status");
-        Status.gameStatus status = Status.gameStatus.valueOf(statusStr);
-
-        return status;
+        return Status.gameStatus.valueOf(statusStr);
     }
 
     public Status.playerStatus parsePlayerStatus(String oneTurnResultJSON) {
-        System.out.println("processing oneTurnResultJSON" + oneTurnResultJSON);
         JSONObject jsonObj = JSON.parseObject(oneTurnResultJSON);
         String statusStr = jsonObj.getString("player_status");
-        Status.playerStatus status = Status.playerStatus.valueOf(statusStr);
-
-        return status;
+        return Status.playerStatus.valueOf(statusStr);
     }
 
     public void startConnect() {
@@ -138,18 +121,15 @@ public class RestClient {
         String unitNumJSON = get("/unit_num");
         int unitNum = parseUnitNum(unitNumJSON);
         unitNumHandler(unitNum);
-        System.out.println("startConnect end");
     }
 
     public void allocation(){
         // restClient.POST("/allocation");
         ArrayList<Territory> territories = player.initUnitPlacement();
         String territoriesJSON = post("/allocation", msgMaker.allocationMsg(player, territories));
-        System.out.println("territoriesJSON" + territoriesJSON);
         GameMap gameMap = parseGameMap(territoriesJSON);
         setMapToPlayer(gameMap);
         player.displayMap();
-        System.out.println("allocation end");
     }
 
     public void playing(){
@@ -158,14 +138,12 @@ public class RestClient {
         while(gameStatus != Status.gameStatus.FINISHED) {
             player.readActions();
             String oneTurnResultJSON = post("/playing", msgMaker.actionsMsg(player, player.getMoveActions(), player.getAttackActions()));
-            System.out.println("territoriesJSON" + oneTurnResultJSON);
             gameStatus = parseGameStatus(oneTurnResultJSON);
             Status.playerStatus playerStatus = parsePlayerStatus(oneTurnResultJSON);
             player.setStatus(playerStatus);
             GameMap gameMap = parseGameMap(oneTurnResultJSON);
             setMapToPlayer(gameMap);
             player.displayMap();
-            System.out.println("playing one turn end");
         }
         if(player.getStatus() == Status.playerStatus.WIN || player.getStatus() == Status.playerStatus.LOSE){
             System.out.println(player.getName() + player.getStatus() + " !");

@@ -44,24 +44,24 @@ public class GameController {
     }
 
     @PostMapping("/{gameId}/join")
-    public ResponseEntity<?> joinGame(@PathVariable Long gameId, @RequestBody JoinGameRequest joinGameRequest) {
+    public synchronized ResponseEntity<?> joinGame(@PathVariable Long gameId, @RequestBody JoinGameRequest joinGameRequest) {
         long userId = joinGameRequest.getUserId();
         User user = userRepository.getUser(userId);
         Game game = gameRepository.getGameById(gameId);
-        if(!game.getStatus().equals(Status.gameStatus.WAITINGPLAYER)){
+
+        if (!game.getStatus().equals(Status.gameStatus.WAITINGPLAYER)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        String msg = game.tryAddPlayer((int)userId, user.getUsername());
+        String msg = game.tryAddPlayer((int) userId, user.getUsername());
         if (msg == null) {
             LOGGER.info("Player " + userId + " joined game " + gameId);
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            LOGGER.error("Player " + userId + " joined game " + gameId + "failed, " + msg);
+            LOGGER.error("Player " + userId + " joined game " + gameId + " failed, " + msg);
             return new ResponseEntity<>(msg, HttpStatus.BAD_REQUEST);
         }
     }
-
     @GetMapping("/all")
     public ResponseEntity<GetAllGamesResponse> allRooms() {
         Map<Long, Game> games = gameRepository.getAllGames();

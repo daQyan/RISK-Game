@@ -41,9 +41,9 @@ public class UnitAllocationControllerEVO2 {
         JSONObject jsonObject = JSON.parseObject(allocationJSON);
         // allocation Json has player and territories
         String playerJSON = jsonObject.getString("player");
-        String territoriesJSON = jsonObject.getString("territories");
+        String mapJSON = jsonObject.getString("territories");
         Player player = JSON.parseObject(playerJSON, Player.class);
-        List<Territory> territories = JSON.parseArray(territoriesJSON, Territory.class);
+        List<Territory> territories = JSON.parseArray(mapJSON, Territory.class);
         serverGame.playerAllocate(player, (ArrayList<Territory>) territories);
 
         lock.lock();

@@ -185,21 +185,4 @@ public class Player {
         return costTechUpgrade(level - 1) + 25 * (level - 1);
     }
 
-    public static void main(String[] args) {
-        Player p = new Player();
-        p.updateTechResource(300);
-        System.out.println("tech level: " + p.getTechLevel() + ", techResource: " + p.getTechResource() + "\n");
-
-        p.upgradeTechLevel();
-        System.out.println("tech level: " + p.getTechLevel() + ", techResource: " + p.getTechResource());
-        p.upgradeTechLevel();
-        System.out.println("tech level: " + p.getTechLevel() + ", techResource: " + p.getTechResource());
-        p.upgradeTechLevel();
-        System.out.println("tech level: " + p.getTechLevel() + ", techResource: " + p.getTechResource());
-        p.upgradeTechLevel();
-        System.out.println("tech level: " + p.getTechLevel() + ", techResource: " + p.getTechResource());
-        p.upgradeTechLevel();
-        System.out.println("tech level: " + p.getTechLevel() + ", techResource: " + p.getTechResource());
-
-    }
 }

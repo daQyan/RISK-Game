@@ -26,14 +26,16 @@ public class UserController {
     @PostMapping("/signup")
     public synchronized ResponseEntity<CreateUserResponse> signUp(@RequestBody CreateUserRequest createUserRequest) {
         User user = new User(createUserRequest.getUsername(), createUserRequest.getPassword());
-        String createUserRequestJsonString = JSON.toJSONString(createUserRequest);
-        LOGGER.info("New user created: " + createUserRequestJsonString);
-        boolean isAdded = userRepository.tryAddUser(userIDCounter, user);
-        if(isAdded) {
+        // try to add the user to the database
+        String msg = userRepository.tryAddUser(userIDCounter, user);
+        if(msg == null) {
+            String createUserRequestJsonString = JSON.toJSONString(createUserRequest);
+            LOGGER.info("New user created: " + createUserRequestJsonString);
             CreateUserResponse response = new CreateUserResponse(userIDCounter);
             userIDCounter++;
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } else {
+            LOGGER.info(msg);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

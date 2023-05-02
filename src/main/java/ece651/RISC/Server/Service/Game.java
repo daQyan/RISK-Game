@@ -140,7 +140,7 @@ public class Game {
         Player player = new Player(userId, username);
         players.add(player);
 
-        if(players.size() >= playerSize) {
+        if(players.size() == playerSize) {
             // allocate the territories
             switch (playerSize) {
                 case 2:
@@ -155,6 +155,7 @@ public class Game {
                     break;
             }
             myStatus = Status.gameStatus.WAITINGPLAYERALLOCATE;
+            LOGGER.info("game has enough player, they can allocate");
         }
         return null;
     }
@@ -164,6 +165,8 @@ public class Game {
     }
 
     public void playerAllocate(Player player, ArrayList<Territory> territories) {
+        System.out.println("The territory is allocated to the player: " + player.getId());
+
         for(Territory territory: territories) {
             Territory serverSideTerritory = myMap.getTerritory(territory.getId());
             if(serverSideTerritory.getOwner().equals(player)){
@@ -181,7 +184,7 @@ public class Game {
             myMap.updateAccessible();
             myMap.setAccessibleIdsFromAccessible();
 
-            System.out.println("Game can begin");
+            LOGGER.info("Allocation end, Game can begin");
             this.round = new Round(players, myMap, resourceGrow);
         }
     }
@@ -200,15 +203,23 @@ public class Game {
     public void handleActions(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
         //TODO parse actions
         ArrayList<MoveAction> newMoves = parseMoves(moveActions);
-        ArrayList<AttackAction> nwewAtks = parseAtk(attackActions);
+        ArrayList<AttackAction> newAttacks = parseAtk(attackActions);
+        // print the move actions and attack actions
+        System.out.println("Move actions:");
+        for(MoveAction moveAction: newMoves) {
+            System.out.println(moveAction.getSourceTerritory().getName() + " -> " + moveAction.getTargetTerritory().getName() + " " + moveAction.getHitUnits());
+        }
+        System.out.println("Attack actions:");
+        for(AttackAction attackAction: newAttacks) {
+            System.out.println(attackAction.getSourceTerritory().getName() + " -> " + attackAction.getTargetTerritory().getName() + " " + attackAction.getHitUnits());
+        }
 
-        System.out.println("playerOneTurn" + moveActions.size() +","+ attackActions.size());
-        int operatedPlayerNum = round.playerOneTurn(player, newMoves, nwewAtks);
+        int operatedPlayerNum = round.playerOneTurn(player, newMoves, newAttacks);
         setOperatedPlayerNum(operatedPlayerNum);
         if(operatedPlayerNum == playerSize){
             playOneTurn();
         }
-        // TODO: what kinds of information should return
+
     }
 
     // TODO

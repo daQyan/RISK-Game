@@ -11,15 +11,15 @@ public class UserRepository {
     private final Map<Long, User> userMap = new LinkedHashMap<>();
     private final Map<String, Long> usernameToIdMap = new LinkedHashMap<>();
 
-    public boolean tryAddUser(long userId, User user) {
+    public String tryAddUser(long userId, User user) {
         if(checkIfUserExist(user.getUsername())) {
-            return false;
+            return "Username already exists";
         }
 
         user.setId(userId);
         userMap.put(userId, user);
         usernameToIdMap.put(user.getUsername(), userId);
-        return true;
+        return null;
     }
 
     public boolean checkIfUserExist(String userName) {
