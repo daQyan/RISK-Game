@@ -49,6 +49,7 @@ public class Round {
         for(AttackAction a: attackActions){
             String checkAttack = a.getMyAC().checkAttackRule(a.getOwner(), a.getSourceTerritory(), a.getTargetTerritory(), a.getHitUnits());
             if(checkAttack == null){
+                breakAlliance(a);
                 a.getSourceTerritory().updateUnits(-a.getHitUnits());
                 a.getOwner().updateFoodResource(-a.getHitUnits());
             }
@@ -98,6 +99,36 @@ public class Round {
                 AttackAction attack = attackActions.get(order);
                 attack.attackTerritoryEVO2(myMap, attack.getSourceTerritory().getId(), attack.getTargetTerritory().getId());
                 attackActions.remove(order);
+            }
+        }
+    }
+
+    public void breakAlliance(AttackAction a){
+        if(a.getSourceTerritory().getOwner().getAllyPlayer().getId() == a.getTargetTerritory().getOwnerId()){
+            //if there's ally's units in the territory, send them back to their owner's territory
+            for(Territory t1: a.getSourceTerritory().getOwner().getTerritories()){
+                returnAllyUnits(t1);
+            }
+            for(Territory t2: a.getTargetTerritory().getOwner().getTerritories()){
+                returnAllyUnits(t2);
+            }
+            //set both the players' ally player as null
+            a.getSourceTerritory().getOwner().setAllyPlayer(null);
+            a.getTargetTerritory().getOwner().setAllyPlayer(null);
+        }
+    }
+
+    private void returnAllyUnits(Territory t) {
+        if(t.getNumAllyUnits() > 0){
+            //select one former ally's territory and send the units
+            for(Territory dest: t.getAccessibles().keySet()){
+                if(dest.getOwnerId() ==t.getAllyOwner().getId()){
+                    ArrayList<Integer> returnUnits = t.getAllyUnits();
+                    for(int i = 0; i < 7; ++i){
+                        dest.updateAllyUnits(i, returnUnits.get(i));
+                    }
+                    break;
+                }
             }
         }
     }
