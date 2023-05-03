@@ -34,6 +34,7 @@ public class Player {
     protected int techLevel;
 
 
+
     public void setStatus(Status.playerStatus status) {
         this.status = status;
     }
