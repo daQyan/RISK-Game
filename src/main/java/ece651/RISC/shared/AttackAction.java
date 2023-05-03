@@ -85,7 +85,7 @@ public class AttackAction extends Action {
         }
         return attackResult;
     }
-    //problem here
+    //find the boundary of the highest and lowest units
     private void findStartingUnit(AtomicInteger minSelf, AtomicInteger minEnemy, AtomicInteger maxSelf, AtomicInteger maxEnemy){
         while(minSelf.get() <= 6){
             if(myUnits.get(minSelf.get()) > 0){

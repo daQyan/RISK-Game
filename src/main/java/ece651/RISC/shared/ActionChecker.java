@@ -6,21 +6,50 @@ public class ActionChecker {
         if (checkSource(owner, sourceTerritory, "attack") != null) return checkSource(owner, sourceTerritory, "attack");
         if (checkUnits(sourceTerritory, units, "attack") != null) return checkUnits(sourceTerritory, units, "attack");
         if (checkAtkTarget(sourceTerritory, targetTerritory) != null) return checkAtkTarget(sourceTerritory, targetTerritory);
-        if(checkFoodResource(sourceTerritory, targetTerritory, units, "attack") != null) return checkFoodResource(sourceTerritory, targetTerritory, units, "attack");
+        if(checkFoodResource(owner, sourceTerritory, targetTerritory, units, "attack") != null) return checkFoodResource(owner, sourceTerritory, targetTerritory, units, "attack");
 
         return null;
     }
 
-
     public String checkMoveRule(Player owner, Territory sourceTerritory, Territory targetTerritory, int units) {
         System.out.println("checkMoveRule "+ owner.getName() + owner.getId() + ", " +sourceTerritory.getOwner().getName() + sourceTerritory.getOwner().getId());
+        Status.moveSourceStatus getSource = getMoveSource(owner, sourceTerritory);
+        if (getSource == Status.moveSourceStatus.OWNED) {
+            if (sourceTerritory.getNumUnits() < units) {
+                return ("The move action is not valid: there's not enough soldiers in the " + sourceTerritory.getName() + "!");
+            }
+//            if(sourceTerritory.getNumUnits() < 0){
+//                return ("The move action is not valid: you should at least deploy 1 soldier !");
+//            }
+        }
+        else if (getSource == Status.moveSourceStatus.ALLY) {
+            if (sourceTerritory.getNumAllyUnits() < units) {
+                return ("The move action is not valid: the source territory does not have enough units !");
+            }
+        }
+        else return "The move action is not valid: this is not a valid Territory name or owner name.";
 
-        if (checkSource(owner, sourceTerritory, "move") != null) return checkSource(owner, sourceTerritory, "move");
-        if (checkUnits(sourceTerritory, units, "move") != null) return checkUnits(sourceTerritory, units, "move");
         if (checkAccess(sourceTerritory, targetTerritory) != null) return checkAccess(sourceTerritory, targetTerritory);
-        if(checkFoodResource(sourceTerritory, targetTerritory, units, "move") != null) return checkFoodResource(sourceTerritory, targetTerritory, units, "move");
-
+        if (checkFoodResource(owner, sourceTerritory, targetTerritory, units, "move") != null) return checkFoodResource(owner, sourceTerritory, targetTerritory, units, "move");
         return null;
+    }
+
+
+    // check if the source territory is owned by the player or the ally
+    private Status.moveSourceStatus getMoveSource(Player owner, Territory sourceTerritory) {
+        if (sourceTerritory == null) {
+            return Status.moveSourceStatus.INVALID;
+        }
+        if (owner == null) {
+            return Status.moveSourceStatus.INVALID;
+        }
+        if (owner.equals(sourceTerritory.getOwner())){
+            return Status.moveSourceStatus.OWNED;
+        }
+        if (owner.equals(sourceTerritory.getAllyOwner())){
+            return Status.moveSourceStatus.ALLY;
+        }
+        return Status.moveSourceStatus.INVALID;
     }
 
     // Check if owner has access to source territory
@@ -28,10 +57,10 @@ public class ActionChecker {
         if (sourceTerritory == null) {
             return ("The " + actionType + " action is not valid: this is not a valid Territory name !");
         }
-        if(owner == null) {
+        if (owner == null) {
             return ("The " + actionType + " action is not valid: this is not a valid Player name !");
         }
-        if(!owner.equals(sourceTerritory.getOwner())){
+        if (!owner.equals(sourceTerritory.getOwner())){
             return ("The " + actionType + " action is not valid: " + owner.getId() +  " does not own " + sourceTerritory.getName() + "!");
         }
         return null;
@@ -41,9 +70,6 @@ public class ActionChecker {
     public String checkUnits(Territory sourceTerritory, int units, String actionType) {
         if(sourceTerritory.getNumUnits() < units){
             return ("The " + actionType + " action is not valid: there's not enough soldiers in the " + sourceTerritory.getName() + "!");
-        }
-        if(sourceTerritory.getNumUnits() <= 0){
-            return ("The " + actionType + " action is not valid: you should at least deploy 1 soldier !");
         }
         return null;
     }
@@ -74,21 +100,20 @@ public class ActionChecker {
         return null;
     }
 
-    public String checkFoodResource(Territory sourceTerritory, Territory targetTerritory, int units, String actionType){
+    public String checkFoodResource(Player owner, Territory sourceTerritory, Territory targetTerritory, int units, String actionType){
         if(actionType.equals("attack")){
-            if(sourceTerritory.getOwner().getFoodResource() < units){
+            if(owner.getFoodResource() < units){
                 return("The attack action is invalid: there's not enough food resource!");
             }
         }
         else if(actionType.equals("move")){
-            if(sourceTerritory.getOwner().getFoodResource() < sourceTerritory.getAccessibles().get(targetTerritory) * units){
+            if(owner.getFoodResource() < sourceTerritory.getAccessibles().get(targetTerritory) * units){
                 return("The move action is invalid: there's not enough food resource!");
             }
 
         }
         return null;
     }
-
 
 }
 

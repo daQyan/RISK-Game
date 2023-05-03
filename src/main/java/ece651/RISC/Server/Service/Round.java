@@ -1,5 +1,6 @@
 package ece651.RISC.Server.Service;
 
+import ch.qos.logback.core.joran.sanity.Pair;
 import ece651.RISC.shared.*;
 
 import java.util.*;
@@ -11,8 +12,9 @@ public class Round {
     private final ArrayList<Player> players;
     private final GameMap myMap;
     private final int resourceGrow;
-    private final ArrayList<UpgradeTechAction> UTAction = new ArrayList<>();
-    private final ArrayList<UpgradeUnitAction> UUAction = new ArrayList<>();
+    private final ArrayList<UpgradeTechAction> UpgradeTechAction = new ArrayList<>();
+    private final ArrayList<UpgradeUnitAction> UpgradeUnitAction = new ArrayList<>();
+    private final ArrayList<FormAllyAction> allyActions = new ArrayList<>();
 
 
     public Round(ArrayList<Player> players, GameMap map, int resourceGrow) {
@@ -33,6 +35,7 @@ public class Round {
      */
     public void executeMoves(ArrayList<MoveAction> moveActions) {
         for (MoveAction move: moveActions) {
+            //for evo3, need to change checker for move
             move.moveTerritory(myMap, move.getSourceTerritory().getId(), move.getTargetTerritory().getId());
             //for evo 2: deduct the food resource
             int resourceConsumed = -move.getHitUnits() * move.getSourceTerritory().getAccessibles().get(move.getTargetTerritory());
@@ -112,6 +115,21 @@ public class Round {
             a.upgradeUnitLevel();
         }
     }
+
+
+    // first traverse the allyActions list to see if there are two players who want to ally with each other
+    // if there are, add them as each other's ally
+    public void executeAllyActions(ArrayList<FormAllyAction> allyActions){
+        for(FormAllyAction faa1 : allyActions) {
+            for (FormAllyAction faa2 : allyActions) {
+                if (faa1.getPlayer().getId() == faa2.getTargetPlayer().getId() && faa1.getTargetPlayer().getId() == faa2.getPlayer().getId()) {
+                    faa1.getPlayer().addAlly(faa2.getTargetPlayer());
+                    faa2.getPlayer().addAlly(faa1.getTargetPlayer());
+                }
+            }
+        }
+    }
+
     public void naturalUnitIncrease(){
         for(Territory t: myMap.getTerritories()){
             t.updateUnits(1);
@@ -119,7 +137,6 @@ public class Round {
         }
     }
 
-    //TODO implement this
     public void naturalResourceIncrease() {
         for (Player p : players) {
             p.updateTechResource(resourceGrow * p.getTerritories().size());
@@ -150,8 +167,8 @@ public class Round {
     }
     //play one turn of the game
     public Status.gameStatus playOneTurn() {
-        executeUpgradeTech(UTAction);
-        executeUpgradeUnit(UUAction);
+        executeUpgradeTech(UpgradeTechAction);
+        executeUpgradeUnit(UpgradeUnitAction);
         executeMoves(moveActions);
         executeAttacks(attackActions);
 
