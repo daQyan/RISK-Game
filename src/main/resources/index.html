@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Chat</title>
+  <script src="/webjars/jquery/jquery.min.js"></script>
+  <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+  <script>
+    var stompClient = null;
+
+    function connect() {
+      var socket = new SockJS('/chat');
+      stompClient = Stomp.over(socket);
+      stompClient.connect({}, function(frame) {
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic/messages', function(message) {
+          showMessage(JSON.parse(message.body));
+        });
+      });
+    }
+
+    function showMessage(message) {
+      var html = '<div><strong>' + message.sender + '</strong>: ' + message.text + '</div>';
+      $('#messages').append(html);
+    }
+
+    function sendMessage() {
+      var text = $('#text').val();
+      var sender = $('#sender').val();
+      stompClient.send("/app/chat", {}, JSON.stringify({sender: sender, text: text}));
+    }
+  </script>
+</head>
+<body onload="connect()">
+<div id="messages"></div>
+<input type="text" id="sender" placeholder="Your name">
+<input type="text" id="text" placeholder="Message">
+<button onclick="sendMessage()">Send</button>
+</body>
+</html>
