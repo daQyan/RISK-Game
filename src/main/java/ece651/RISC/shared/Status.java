@@ -18,4 +18,10 @@ public class Status {
         PLAYING,
         FINISHED
     }
+
+    public enum moveSourceStatus{
+        OWNED,
+        ALLY,
+        INVALID
+    }
 }
