@@ -171,8 +171,10 @@ public class Player {
     }
 
     // get the number of players in the game
+    // TODO map is null ??? TO_DEBUG
     public int getNumPlayers() {
-        return map.getNumPlayers();
+//        return map.getNumPlayers();
+        return 2;
     }
 
     public void upgradeTechLevel() {
