@@ -171,6 +171,7 @@ public class Game {
             Territory serverSideTerritory = myMap.getTerritory(territory.getId());
             if(serverSideTerritory.getOwner().equals(player)){
                 serverSideTerritory.setNumUnits(territory.getNumUnits());
+                serverSideTerritory.updateMyUnits(0,territory.getNumUnits());
                 System.out.println(serverSideTerritory.getName() + ":" + serverSideTerritory.getNumUnits() + "," + territory.getNumUnits());
             }
         }

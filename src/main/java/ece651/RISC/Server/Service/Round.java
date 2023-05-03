@@ -91,12 +91,14 @@ public class Round {
     }
     public void executeAttacks(ArrayList<AttackAction> attackActions) {
         Random rand = new Random();
-        attackActions = parseAttacks(attackActions);
-        while(attackActions.size() > 0){
-            int order = rand.nextInt(attackActions.size());
-            AttackAction attack = attackActions.get(order);
-            attack.attackTerritoryEVO2(myMap, attack.getSourceTerritory().getId(), attack.getTargetTerritory().getId());
-            attackActions.remove(order);
+        if(!attackActions.equals(null)){
+            attackActions = parseAttacks(attackActions);
+            while(attackActions.size() > 0){
+                int order = rand.nextInt(attackActions.size());
+                AttackAction attack = attackActions.get(order);
+                attack.attackTerritoryEVO2(myMap, attack.getSourceTerritory().getId(), attack.getTargetTerritory().getId());
+                attackActions.remove(order);
+            }
         }
     }
 
