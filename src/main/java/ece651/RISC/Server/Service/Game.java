@@ -1,13 +1,7 @@
 package ece651.RISC.Server.Service;
 
 import ece651.RISC.Server.MapFactory;
-import ece651.RISC.shared.AttackAction;
-import ece651.RISC.shared.GameMap;
-import ece651.RISC.shared.MapController;
-import ece651.RISC.shared.MoveAction;
-import ece651.RISC.shared.Player;
-import ece651.RISC.shared.Status;
-import ece651.RISC.shared.Territory;
+import ece651.RISC.shared.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -201,10 +195,11 @@ public class Game {
         return operatedPlayerNum;
     }
 
-    public void handleActions(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
-        //TODO parse actions
+    public void handleActions(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions, ArrayList<UpgradeTechAction> upgradeTechActions, ArrayList<UpgradeUnitAction> upgradeUnitActions) {
+        // parse actions
         ArrayList<MoveAction> newMoves = parseMoves(moveActions);
         ArrayList<AttackAction> newAttacks = parseAtk(attackActions);
+        ArrayList<UpgradeUnitAction> newUpgradedUnitActions = parseUpgradeUnit(upgradeUnitActions);
         // print the move actions and attack actions
         System.out.println("Move actions:");
         for(MoveAction moveAction: newMoves) {
@@ -215,15 +210,21 @@ public class Game {
             System.out.println(attackAction.getSourceTerritory().getName() + " -> " + attackAction.getTargetTerritory().getName() + " " + attackAction.getHitUnits());
         }
 
-        int operatedPlayerNum = round.playerOneTurn(player, newMoves, newAttacks);
+        int operatedPlayerNum = round.playerOneTurn(player, newMoves, newAttacks, upgradeTechActions, newUpgradedUnitActions);
         setOperatedPlayerNum(operatedPlayerNum);
         if(operatedPlayerNum == playerSize){
             playOneTurn();
         }
-
     }
 
-    // TODO
+    private ArrayList<UpgradeUnitAction> parseUpgradeUnit(ArrayList<UpgradeUnitAction> upgradeUnitActions) {
+        for (UpgradeUnitAction upgradeUnitAct : upgradeUnitActions) {
+            // replace each territory
+            upgradeUnitAct.setTerritory(myMap.getTerritory(upgradeUnitAct.getTerritory().getId()));
+        }
+        return upgradeUnitActions;
+    }
+
     private ArrayList<AttackAction> parseAtk(ArrayList<AttackAction> attackActions) {
         for (AttackAction atk : attackActions) {
             // replace each territory
@@ -233,7 +234,6 @@ public class Game {
         return attackActions;
     }
 
-    // TODO
     private ArrayList<MoveAction> parseMoves(ArrayList<MoveAction> moveActions) {
         for (MoveAction atk : moveActions) {
             // replace each territory

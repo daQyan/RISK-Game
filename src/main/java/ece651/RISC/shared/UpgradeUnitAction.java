@@ -1,9 +1,15 @@
 package ece651.RISC.shared;
 
+import com.alibaba.fastjson2.annotation.JSONField;
+import lombok.Data;
+
+@Data
 public class UpgradeUnitAction {
     private int oldType;
     private int newType;
     private int unitNum;
+
+    @JSONField(serializeUsing = Territory.class)
     private Territory territory;
 
     public UpgradeUnitAction(int oldType, int newType, int unitNum, Territory territory) {
@@ -23,8 +29,8 @@ public class UpgradeUnitAction {
 
     private int getUnitUpgradeCost(int oldType, int newType, Player owner, int unitNum) {
         // check tech level
-        Unit unitRefrence = new Unit();
-        int[] diction = unitRefrence.getDiction();
+        Unit unitReference = new Unit();
+        int[] diction = unitReference.getDiction();
         int oldunits = territory.getMyUnits().get(oldType);
         if (oldunits < unitNum) {
             throw new IllegalArgumentException("cannot upgrade! you need " + unitNum + " of " + oldType + " but you only have " +

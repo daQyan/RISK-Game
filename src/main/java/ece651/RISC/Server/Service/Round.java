@@ -23,9 +23,11 @@ public class Round {
         this.resourceGrow = resourceGrow;
     }
 
-    public int playerOneTurn(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions) {
+    public int playerOneTurn(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions, ArrayList<UpgradeTechAction> UpgradeTechAction, ArrayList<UpgradeUnitAction> UpgradeUnitAction) {
         this.moveActions.addAll(moveActions);
         this.attackActions.addAll(attackActions);
+        this.UpgradeTechAction.addAll(UpgradeTechAction);
+        this.UpgradeUnitAction.addAll(UpgradeUnitAction);
         this.operatedPlayers.add(player);
         return operatedPlayers.size();
     }
@@ -155,9 +157,10 @@ public class Round {
     public void executeAllyActions(ArrayList<FormAllyAction> allyActions){
         for(FormAllyAction faa1 : allyActions) {
             for (FormAllyAction faa2 : allyActions) {
-                if (faa1.getPlayer().getId() == faa2.getTargetPlayer().getId() && faa1.getTargetPlayer().getId() == faa2.getPlayer().getId()) {
-                    faa1.getPlayer().addAlly(faa2.getTargetPlayer());
-                    faa2.getPlayer().addAlly(faa1.getTargetPlayer());
+                if (faa1.getPlayer().getId() == faa2.getTargetPlayer().getId()
+                        && faa1.getTargetPlayer().getId() == faa2.getPlayer().getId()
+                        && faa1.getPlayer().getAllyPlayer() == null) {
+                    faa1.formAlliance();
                 }
             }
         }
