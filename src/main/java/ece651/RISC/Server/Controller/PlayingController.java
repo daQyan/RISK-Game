@@ -4,10 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import ece651.RISC.Server.Service.Game;
 import ece651.RISC.Server.Service.OnlineServer2Client;
-import ece651.RISC.shared.AttackAction;
-import ece651.RISC.shared.MoveAction;
-import ece651.RISC.shared.Player;
-import ece651.RISC.shared.Status;
+import ece651.RISC.shared.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -41,11 +38,18 @@ public class PlayingController {
         JSONObject jsonObject = JSON.parseObject(actionsJSON);
         String playerJSON = jsonObject.getString("player");
         Player player = JSON.parseObject(playerJSON, Player.class);
+        // parse actions from json
         String moveActionsJSON = jsonObject.getString("moveActions");
         String attackActionsJSON = jsonObject.getString("attackActions");
+        String upgradeTechLevelJSON = jsonObject.getString("upgradeTechActions");
+        String upgradeUnitLevelJSON = jsonObject.getString("upgradeUnitActions");
         List<MoveAction> moveActions = JSON.parseArray(moveActionsJSON, MoveAction.class);
         List<AttackAction> attackActions = JSON.parseArray(attackActionsJSON, AttackAction.class);
-        serverGame.handleActions(player, (ArrayList<MoveAction>) moveActions, (ArrayList<AttackAction>) attackActions);
+        List<UpgradeTechAction> upgradeTechActions = JSON.parseArray(upgradeTechLevelJSON, UpgradeTechAction.class);
+        List<UpgradeUnitAction> upgradeUnitActions = JSON.parseArray(upgradeUnitLevelJSON, UpgradeUnitAction.class);
+        serverGame.handleActions(player, (ArrayList<MoveAction>) moveActions, (ArrayList<AttackAction>) attackActions,
+                (ArrayList<UpgradeTechAction>) upgradeTechActions, (ArrayList<UpgradeUnitAction>) upgradeUnitActions);
+
         System.out.println(serverGame.getOperatedPlayerNum() + " serverGame.getOperatedPlayerSize()");
         lock.lock();
         try {
