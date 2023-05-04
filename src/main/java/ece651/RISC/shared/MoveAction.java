@@ -32,7 +32,7 @@ public class MoveAction extends Action {
                 targetTerritoryReceive(gameMap, targetTerritoryId, moved);
             }
             //moving the ally player's units
-            else if(this.owner.getId() == gameMap.getTerritory(sourceTerritoryId).getAllyOwner().getId()){
+            else if(gameMap.getTerritory(sourceTerritoryId).getAllyOwner() != null && this.owner.getId() == gameMap.getTerritory(sourceTerritoryId).getAllyOwner().getId()){
                 gameMap.getTerritory(sourceTerritoryId).updateAllyUnitsNum(-hitUnits);
                 //for evo 2: by default moving out from the highest level of units
                 ArrayList<Integer> moved = gameMap.getTerritory(sourceTerritoryId).deployAllyUnits(this.hitUnits);
@@ -51,7 +51,7 @@ public class MoveAction extends Action {
             }
         }
         //moving to ally's territory
-        else if(this.owner.getId() == gameMap.getTerritory(targetTerritoryId).getAllyOwner().getId()){
+        else if(gameMap.getTerritory(targetTerritoryId).getAllyOwner() != null && this.owner.getId() == gameMap.getTerritory(targetTerritoryId).getAllyOwner().getId()){
             gameMap.getTerritory(targetTerritoryId).updateAllyUnitsNum(hitUnits);
             for(int i = 0; i < moved.size(); ++i){
                 gameMap.getTerritory(targetTerritoryId).updateAllyUnits(i, moved.get(i));
