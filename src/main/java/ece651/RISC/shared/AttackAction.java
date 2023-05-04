@@ -107,10 +107,12 @@ public class AttackAction extends Action {
                     ArrayList<Integer> returnUnits = t.getAllyUnits();
                     for(int i = 0; i < 7; ++i){
                         dest.updateAllyUnits(i, returnUnits.get(i));
+                        t.updateAllyUnits(i, -1 * returnUnits.get(i));
                     }
                     break;
                 }
             }
+            t.setAllyOwner(null);
         }
     }
     //find the boundary of the highest and lowest units

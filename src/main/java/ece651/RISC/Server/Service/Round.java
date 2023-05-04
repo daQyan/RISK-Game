@@ -108,7 +108,7 @@ public class Round {
     }
 
     public void breakAlliance(AttackAction a){
-        if(a.getSourceTerritory().getOwner().getAllyPlayer() != null && a.getSourceTerritory().getAllyOwner().getId() == a.getTargetTerritory().getOwnerId()){
+        if(a.getOwner().getAllyPlayer() != null && a.getSourceTerritory().getAllyOwner().getId() == a.getTargetTerritory().getOwnerId()){
             //if there's ally's units in the territory, send them back to their owner's territory
             for(Territory t1: a.getSourceTerritory().getOwner().getTerritories()){
                 a.returnAllyUnits(t1);
