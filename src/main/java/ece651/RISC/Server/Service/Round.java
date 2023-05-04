@@ -37,11 +37,13 @@ public class Round {
      */
     public void executeMoves(ArrayList<MoveAction> moveActions) {
         for (MoveAction move: moveActions) {
-            //for evo3, need to change checker for move
-            move.moveTerritory(myMap, move.getSourceTerritory().getId(), move.getTargetTerritory().getId());
-            //for evo 2: deduct the food resource
-            int resourceConsumed = -move.getHitUnits() * move.getSourceTerritory().getAccessibles().get(move.getTargetTerritory());
-            move.getOwner().updateFoodResource(resourceConsumed);
+            if(move.getMyAC().checkMoveRule(move.getOwner(), move.getSourceTerritory(),move.getTargetTerritory(), move.getHitUnits()) == null){
+                //for evo3, need to change checker for move
+                move.moveTerritory(myMap, move.getSourceTerritory().getId(), move.getTargetTerritory().getId());
+                //for evo 2: deduct the food resource
+                int resourceConsumed = -move.getHitUnits() * move.getSourceTerritory().getAccessibles().get(move.getTargetTerritory());
+                move.getOwner().updateFoodResource(resourceConsumed);
+            }
         }
     }
 

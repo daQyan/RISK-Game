@@ -25,10 +25,10 @@ public class GameMap {
             visited.add(t);
             Queue<Territory> next = new LinkedList<>();
             for(Territory n : t.getAdjacents()){
-                if(n.getOwner().equals(p)){
+                if(n.getOwnerId() == p.getId()){
                     next.add(n);
                 }
-                else if(n.getAllyOwner() != null && n.getAllyOwner().equals(ally)){
+                else if(n.getAllyOwner() != null && ally != null && n.getOwnerId() == ally.getId()){
                     next.add(n);
                 }
             }
@@ -71,9 +71,9 @@ public class GameMap {
                 if(!visited.contains(temp)){
                     visited.add(temp);
                     t.addAccessible(temp, cost);
-                    if(temp.getOwner().equals(owner) || (temp.getAllyOwner() != null && temp.getAllyOwner().equals(ally))){
+                    if(temp.getOwner().equals(owner) || (temp.getAllyOwner() != null && temp.getOwner().equals(ally))){
                         for(Territory i : temp.getAdjacents()){
-                            if(i.getOwner().equals(owner) || (i.getAllyOwner() != null && i.getAllyOwner().equals(ally))) {
+                            if(i.getOwner().equals(owner) || (i.getAllyOwner() != null && i.getOwner().equals(ally))) {
                                 next.add(i);
                             }
                         }
