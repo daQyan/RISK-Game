@@ -49,8 +49,11 @@ public class GameController {
         User user = userRepository.getUser(userId);
         Game game = gameRepository.getGameById(gameId);
 
+        if (game == null) {
+            return new ResponseEntity<>("There's no such game.", HttpStatus.BAD_REQUEST);
+        }
         if (!game.getStatus().equals(Status.gameStatus.WAITINGPLAYER)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Game is in invalid status.", HttpStatus.BAD_REQUEST);
         }
 
         String msg = game.tryAddPlayer((int) userId, user.getUsername());
@@ -83,6 +86,9 @@ public class GameController {
     public ResponseEntity<GetGameInfoResponse> getGameInfo(@PathVariable Long gameId) {
         Map<Long, Game> games = gameRepository.getAllGames();
         Game game = games.get(gameId);
+        if (game == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         // parse game map into JSon format
         String territoriesJSON = JSON.toJSONString(game.getMyMap().getTerritories());
         // parse game player into JSON format

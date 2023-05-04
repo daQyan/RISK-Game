@@ -1,12 +1,9 @@
 package ece651.RISC.shared;
 
-import ece651.RISC.shared.Player;
-import ece651.RISC.shared.Territory;
+import com.alibaba.fastjson2.JSON;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedHashMap;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TerritoryTest {
@@ -40,6 +37,18 @@ class TerritoryTest {
         assertEquals(5, territory.getNumUnits());
     }
 
+    @Test
+    public void testParseJSON() {
+        Player cp = new Player();
+        Territory t = new Territory(1, "test", 10, cp);
+        LinkedHashMap<String, Integer> lmp = new LinkedHashMap<>();
+        lmp.put("1", 1);
+        t.setAccessibleIds(lmp);
+        String json = t.toJSON();
+        System.out.println(json);
+        Territory t2 = JSON.parseObject(json, Territory.class);
+        System.out.println(t2.toJSON());
+    }
 //    @Test
 //    void testGetAdjacents() {
 //        // Create some territories and set up their adjacencies

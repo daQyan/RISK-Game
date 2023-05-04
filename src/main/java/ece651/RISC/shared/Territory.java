@@ -3,6 +3,7 @@ package ece651.RISC.shared;
 import java.util.*;
 
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.annotation.JSONField;
 import lombok.Data;
 
@@ -38,9 +39,10 @@ public class Territory {
     @JSONField(serialize = false, deserialize = false)
     private LinkedHashMap<Territory, Integer> accessibles = new LinkedHashMap<>();
     @JSONField(name = "accessiblesID")
-    private LinkedHashMap<Integer, Integer> accessibleIds = new LinkedHashMap<>();
+    private LinkedHashMap<String, Integer> accessibleIds = new LinkedHashMap<>();
     @JSONField(name = "size")
     private int size;
+
     @JSONField(name = "foodResourceGrow")
     private int foodResourceGrow;
 
@@ -56,7 +58,7 @@ public class Territory {
     public Territory() {}
     public Territory(int id, String name, int unit, Player owner,
                      ArrayList<Territory> adjacents, ArrayList<Integer> adjacentIds, LinkedHashMap<Territory, Integer> accessibles,
-                     LinkedHashMap<Integer, Integer> accessibleIds, ArrayList<Integer> myUnits, Player allyPlayer, int numAllyUnits) {
+                     LinkedHashMap<String, Integer> accessibleIds, ArrayList<Integer> myUnits, Player allyPlayer, int numAllyUnits) {
         this.id = id;
         this.name = name;
         this.numUnits = unit;
@@ -87,7 +89,8 @@ public class Territory {
     public void setAccessibleIdsFromItsAccessible(HashMap<Territory, Integer> accessibles) {
         // set the accessibleIds from its accessibles
         for (Map.Entry<Territory, Integer> entry : accessibles.entrySet()) {
-            this.accessibleIds.put(entry.getKey().getId(), entry.getValue());
+            // put the territory id as the key and the cost as the value
+            this.accessibleIds.put(String.valueOf(entry.getKey().getId()), entry.getValue());
         }
     }
 
@@ -216,9 +219,6 @@ public class Territory {
         this.allyUnits = newUnits;
     }
 
-    public String toJSON(){
-        return JSON.toJSONString(this);
-    }
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -239,22 +239,24 @@ public class Territory {
         return id == otherTerritory.getId();
     }
 
-    public static void main(String[] args) {
-        Player cp = new Player();
-        Territory t = new Territory(1, "test", 10, cp);
-        LinkedHashMap<Integer, Integer> lmp = new LinkedHashMap<>();
-        lmp.put(1, 1);
-        t.setAccessibleIds(lmp);
-        String json = t.toJSON();
-        System.out.println(json);
-        Territory t2 = JSON.parseObject(json, Territory.class);
-        System.out.println(t2.toJSON());
+    public String toJSON() {
+        // Convert the LinkedHashMap to a JSON string
+        String accessibleIdsJSON = JSON.toJSONString(accessibleIds);
+
+        // Create a JSON object for the Territory
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", id);
+        jsonObject.put("name", name);
+        jsonObject.put("num_units", numUnits);
+        // ... include other fields as needed
+
+        // Add the accessibleIds JSON string to the JSON object
+        jsonObject.put("accessibleIds", accessibleIdsJSON);
+
+        // Convert the JSON object to a string and return it
+        return jsonObject.toJSONString();
     }
 
-    @Override
-    public String toString() {
-        return name;
-    }
 }
 
 

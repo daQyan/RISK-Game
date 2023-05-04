@@ -1,7 +1,7 @@
 package ece651.RISC.Server.Repository;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import ece651.RISC.Server.Service.Game;
 import org.springframework.stereotype.Repository;
@@ -12,7 +12,7 @@ public class GameRepository {
     private long gameIdCounter;
 
     public GameRepository() {
-        this.games = new LinkedHashMap<>();
+        this.games = new ConcurrentHashMap<>();
         this.gameIdCounter = 0;
     }
 
