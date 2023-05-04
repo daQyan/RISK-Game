@@ -209,6 +209,11 @@ public class Game {
         for(AttackAction attackAction: newAttacks) {
             System.out.println(attackAction.getSourceTerritory().getName() + " -> " + attackAction.getTargetTerritory().getName() + " " + attackAction.getHitUnits());
         }
+        // print the upgrade actions
+        System.out.println("Upgrade actions:");
+        for(UpgradeUnitAction upgradeUnitAction: newUpgradedUnitActions) {
+            System.out.println(upgradeUnitAction.getTerritory().getName() + " " + upgradeUnitAction.getOldType() + " -> " + upgradeUnitAction.getNewType() + " nums:" + upgradeUnitAction.getUnitNum());
+        }
 
         int operatedPlayerNum = round.playerOneTurn(player, newMoves, newAttacks, upgradeTechActions, newUpgradedUnitActions);
         setOperatedPlayerNum(operatedPlayerNum);

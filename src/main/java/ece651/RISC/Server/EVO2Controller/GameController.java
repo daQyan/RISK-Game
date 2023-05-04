@@ -1,6 +1,7 @@
 package ece651.RISC.Server.EVO2Controller;
 
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONWriter;
 import ece651.RISC.Server.Model.GameInfo;
 import ece651.RISC.Server.Model.Payload.Request.CreateGameRequest;
 import ece651.RISC.Server.Model.Payload.Request.JoinGameRequest;
@@ -90,7 +91,8 @@ public class GameController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         // parse game map into JSon format
-        String territoriesJSON = JSON.toJSONString(game.getMyMap().getTerritories());
+        String territoriesJSON = JSON.toJSONString(game.getMyMap().getTerritories(), JSONWriter.Feature.PrettyFormat);
+        System.out.println(territoriesJSON);
         // parse game player into JSON format
         String playersJSON = JSON.toJSONString(game.getPlayers());
         GameInfo gameInfo = new GameInfo(territoriesJSON, playersJSON, gameId, game.getPlayerSize(), game.getPlayers().size(), game.getPlayerInitUnits(), game.getStatus());

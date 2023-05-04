@@ -3,7 +3,6 @@ package ece651.RISC.shared;
 import java.util.*;
 
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.annotation.JSONField;
 import lombok.Data;
 
@@ -28,9 +27,6 @@ public class Territory {
     @JSONField(name = "ownerId")
     private int ownerId;
 
-    @JSONField(name = "fee")
-    private int fee;
-    // TODO change to using ID
     @JSONField(serialize = false, deserialize = false)
     private ArrayList<Territory> adjacents = new ArrayList<>();
 
@@ -67,7 +63,6 @@ public class Territory {
         this.accessibleIds = accessibleIds;
         this.adjacents = adjacents;
         this.adjacentIds = adjacentIds;
-        //fixed size of cost
         this.size = 2;
         this.foodResourceGrow = 5;
         this.techResourceGrow = 5;
@@ -239,22 +234,8 @@ public class Territory {
         return id == otherTerritory.getId();
     }
 
-    public String toJSON() {
-        // Convert the LinkedHashMap to a JSON string
-        String accessibleIdsJSON = JSON.toJSONString(accessibleIds);
-
-        // Create a JSON object for the Territory
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", id);
-        jsonObject.put("name", name);
-        jsonObject.put("num_units", numUnits);
-        // ... include other fields as needed
-
-        // Add the accessibleIds JSON string to the JSON object
-        jsonObject.put("accessibleIds", accessibleIdsJSON);
-
-        // Convert the JSON object to a string and return it
-        return jsonObject.toJSONString();
+    public String toJSON(){
+        return JSON.toJSONString(this);
     }
 
 }
