@@ -24,7 +24,7 @@ public class MoveAction extends Action {
         String checkMove = myAC.checkMoveRule(this.owner, this.sourceTerritory, this.targetTerritory, hitUnits);
         if(checkMove == null){
             //moving the player's own units
-            if(this.owner.getId() == gameMap.getTerritory(sourceTerritoryId).getOwner().getId()){
+            if(this.owner.getId() == gameMap.getTerritory(sourceTerritoryId).getOwnerId()){
                 gameMap.getTerritory(sourceTerritoryId).updateUnits(-hitUnits);
                 //for evo 2: by default moving out from the highest level of units
                 ArrayList<Integer> moved = gameMap.getTerritory(sourceTerritoryId).deployMyUnits(this.hitUnits);

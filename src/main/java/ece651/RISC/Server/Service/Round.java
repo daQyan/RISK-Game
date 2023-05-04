@@ -37,13 +37,13 @@ public class Round {
      */
     public void executeMoves(ArrayList<MoveAction> moveActions) {
         for (MoveAction move: moveActions) {
-            if(move.getMyAC().checkMoveRule(move.getOwner(), move.getSourceTerritory(),move.getTargetTerritory(), move.getHitUnits()) == null){
-                //for evo3, need to change checker for move
-                move.moveTerritory(myMap, move.getSourceTerritory().getId(), move.getTargetTerritory().getId());
-                //for evo 2: deduct the food resource
-                int resourceConsumed = -move.getHitUnits() * move.getSourceTerritory().getAccessibles().get(move.getTargetTerritory());
-                move.getOwner().updateFoodResource(resourceConsumed);
-            }
+            //if(move.getMyAC().checkMoveRule(move.getOwner(), move.getSourceTerritory(),move.getTargetTerritory(), move.getHitUnits()) == null){
+            //for evo3, need to change checker for move
+            move.moveTerritory(myMap, move.getSourceTerritory().getId(), move.getTargetTerritory().getId());
+            //for evo 2: deduct the food resource
+            int resourceConsumed = -move.getHitUnits() * move.getSourceTerritory().getAccessibles().get(move.getTargetTerritory());
+            move.getOwner().updateFoodResource(resourceConsumed);
+            //}
         }
     }
 
@@ -98,7 +98,7 @@ public class Round {
         Random rand = new Random();
         if(!attackActions.equals(null)){
             attackActions = parseAttacks(attackActions);
-            while(attackActions.size() > 0){
+            while(attackActions != null && attackActions.size() > 0){
                 int order = rand.nextInt(attackActions.size());
                 AttackAction attack = attackActions.get(order);
                 attack.attackTerritoryEVO2(myMap, attack.getSourceTerritory().getId(), attack.getTargetTerritory().getId());

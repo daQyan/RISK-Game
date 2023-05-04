@@ -3,9 +3,9 @@ package ece651.RISC.shared;
 import ece651.RISC.Server.MapFactory;
 import org.junit.jupiter.api.Test;
 
-public class AttackActionTest {
+public class MoveActionTest {
     @Test
-    public void testAttackAction(){
+    public void testMoveTerritory(){
         GameMap mp = new MapFactory().createMap(3);
         Player p0 = new Player("0");
         Player p1 = new Player("1");
@@ -24,17 +24,9 @@ public class AttackActionTest {
             t.updateMyUnits(0, 5);
         }
         mp.updateAccessible();
-        //attack self
-        AttackAction aa0 = new AttackAction(mp.getTerritory(0), mp.getTerritory(1),2, Status.actionStatus.ATTACK, p0);
-//        System.out.println(aa0.attackTerritory());
-        mp.getTerritory(2).setNumUnits(15);
-        mp.getTerritory(2).updateMyUnits(0, 10);
-        AttackAction aa1 = new AttackAction(mp.getTerritory(2), mp.getTerritory(4), 6, Status.actionStatus.ATTACK, p0);
-        System.out.println(aa1.attackTerritoryEVO2(mp, 2, 4));
-        System.out.println(mp.getTerritory(2).getNumUnits());
-        System.out.println(mp.getTerritory(2).getOwner());
-        System.out.println(mp.getTerritory(3).getNumUnits());
-        System.out.println(mp.getTerritory(3).getOwner());
-    }
+        mp.setAccessibleIdsFromAccessible();
+        MoveAction mv0 = new MoveAction(mp.getTerritory(0), mp.getTerritory(1), 3, Status.actionStatus.MOVE, p0);
+        mv0.moveTerritory(mp, 0, 1);
 
+    }
 }
