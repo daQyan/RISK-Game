@@ -41,7 +41,6 @@ public class AttackAction extends Action {
         if (targetTerritory.getNumUnits() <= 0 && hitUnits > 0) {
             targetTerritory.setOwner(this.owner);
             targetTerritory.setOwnerId(this.owner.getId());
-
             targetTerritory.setNumUnits(hitUnits);
             attackResult = this.owner.getName() + " has taken over " + targetTerritory.getName() + "!";
         }
@@ -78,12 +77,32 @@ public class AttackAction extends Action {
             gameMap.getTerritory(targetTerritoryId).setOwnerId(this.owner.getId());
             gameMap.getTerritory(targetTerritoryId).setNumUnits(hitUnits);
             gameMap.getTerritory(targetTerritoryId).setMyUnits(myUnits);
+            //if the target territory has a ally owner, change the ally status
+            if(!targetTerritory.getAllyOwner().equals(null)){
+                //return the territory's ally's units back
+                returnAllyUnits(targetTerritory);
+            }
+            targetTerritory.setAllyOwner(this.owner.getAllyPlayer());
             attackResult = this.owner.getName() + " has taken over " + gameMap.getTerritory(targetTerritoryId).getName() + "!";
         }
         else{
             attackResult = this.owner.getName() + " has failed in the attack on " + gameMap.getTerritory(targetTerritoryId).getName() + "!";
         }
         return attackResult;
+    }
+    public void returnAllyUnits(Territory t) {
+        if(t.getNumAllyUnits() > 0){
+            //select one former ally's territory and send the units
+            for(Territory dest: t.getAccessibles().keySet()){
+                if(dest.getOwnerId() ==t.getAllyOwner().getId()){
+                    ArrayList<Integer> returnUnits = t.getAllyUnits();
+                    for(int i = 0; i < 7; ++i){
+                        dest.updateAllyUnits(i, returnUnits.get(i));
+                    }
+                    break;
+                }
+            }
+        }
     }
     //find the boundary of the highest and lowest units
     private void findStartingUnit(AtomicInteger minSelf, AtomicInteger minEnemy, AtomicInteger maxSelf, AtomicInteger maxEnemy){

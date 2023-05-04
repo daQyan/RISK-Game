@@ -106,13 +106,13 @@ public class Round {
     }
 
     public void breakAlliance(AttackAction a){
-        if(a.getSourceTerritory().getOwner().getAllyPlayer().getId() == a.getTargetTerritory().getOwnerId()){
+        if(a.getSourceTerritory().getOwner().getAllyPlayer() != null && a.getSourceTerritory().getOwner().getAllyPlayer().getId() == a.getTargetTerritory().getOwnerId()){
             //if there's ally's units in the territory, send them back to their owner's territory
             for(Territory t1: a.getSourceTerritory().getOwner().getTerritories()){
-                returnAllyUnits(t1);
+                a.returnAllyUnits(t1);
             }
             for(Territory t2: a.getTargetTerritory().getOwner().getTerritories()){
-                returnAllyUnits(t2);
+                a.returnAllyUnits(t2);
             }
             //set both the players' ally player as null
             a.getSourceTerritory().getOwner().setAllyPlayer(null);
@@ -120,20 +120,6 @@ public class Round {
         }
     }
 
-    private void returnAllyUnits(Territory t) {
-        if(t.getNumAllyUnits() > 0){
-            //select one former ally's territory and send the units
-            for(Territory dest: t.getAccessibles().keySet()){
-                if(dest.getOwnerId() ==t.getAllyOwner().getId()){
-                    ArrayList<Integer> returnUnits = t.getAllyUnits();
-                    for(int i = 0; i < 7; ++i){
-                        dest.updateAllyUnits(i, returnUnits.get(i));
-                    }
-                    break;
-                }
-            }
-        }
-    }
 
     public void executeUpgradeTech(ArrayList<UpgradeTechAction> UTAction){
         for(UpgradeTechAction uta: UTAction){
