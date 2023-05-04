@@ -51,6 +51,15 @@ public class AttackAction extends Action {
     }
 
     public String attackTerritoryEVO2(GameMap gameMap, int sourceTerritoryId, int targetTerritoryId){
+        //attack should not happen between two allies here as we have checked it in round's parseAttack
+        if(gameMap.getTerritory(sourceTerritoryId).getAllyOwner() != null && gameMap.getTerritory(sourceTerritoryId).getAllyOwner().getId() == gameMap.getTerritory(targetTerritoryId).getOwnerId()){
+            //move myUnits to targetTerritory
+            for(int i = 0; i < 7; ++i){
+                gameMap.getTerritory(targetTerritoryId).updateAllyUnits(i, myUnits.get(i));
+            }
+            gameMap.getTerritory(targetTerritoryId).updateAllyUnitsNum(hitUnits);
+            return("Successfully moved to the designated ally's territory");
+        }
         String attackResult;
         AtomicInteger minSelf = new AtomicInteger(0);
         AtomicInteger minEnemy = new AtomicInteger(0);
@@ -77,10 +86,10 @@ public class AttackAction extends Action {
             gameMap.getTerritory(targetTerritoryId).setOwnerId(this.owner.getId());
             gameMap.getTerritory(targetTerritoryId).setNumUnits(hitUnits);
             gameMap.getTerritory(targetTerritoryId).setMyUnits(myUnits);
-            //if the target territory has a ally owner, change the ally status
-            if(!targetTerritory.getAllyOwner().equals(null)){
+            //if the target territory has an ally owner, change the ally owner's status
+            if(!gameMap.getTerritory(targetTerritoryId).getAllyOwner().equals(null)){
                 //return the territory's ally's units back
-                returnAllyUnits(targetTerritory);
+                returnAllyUnits(gameMap.getTerritory(targetTerritoryId));
             }
             targetTerritory.setAllyOwner(this.owner.getAllyPlayer());
             attackResult = this.owner.getName() + " has taken over " + gameMap.getTerritory(targetTerritoryId).getName() + "!";
