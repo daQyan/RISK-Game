@@ -111,10 +111,10 @@ public class Round {
         if(a.getOwner().getAllyPlayer() != null && a.getSourceTerritory().getAllyOwner().getId() == a.getTargetTerritory().getOwnerId()){
             //if there's ally's units in the territory, send them back to their owner's territory
             for(Territory t1: a.getSourceTerritory().getOwner().getTerritories()){
-                a.returnAllyUnits(t1);
+                a.returnAllyUnits(t1, myMap);
             }
             for(Territory t2: a.getTargetTerritory().getOwner().getTerritories()){
-                a.returnAllyUnits(t2);
+                a.returnAllyUnits(t2, myMap);
             }
             //set both the players' ally player as null
             a.getSourceTerritory().getOwner().setAllyPlayer(null);

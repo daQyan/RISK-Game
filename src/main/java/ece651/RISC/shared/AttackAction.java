@@ -82,16 +82,16 @@ public class AttackAction extends Action {
         }
         // if the attack wins
         if (gameMap.getTerritory(targetTerritoryId).getNumUnits() <= 0 && hitUnits > 0) {
+            //if the target territory has an ally owner, change the ally owner's status
+            if(gameMap.getTerritory(targetTerritoryId).getAllyOwner() != null){
+                //return the territory's ally's units back
+                returnAllyUnits(gameMap.getTerritory(targetTerritoryId), gameMap);
+            }
             gameMap.getTerritory(targetTerritoryId).setOwner(this.owner);
             gameMap.getTerritory(targetTerritoryId).setOwnerId(this.owner.getId());
             gameMap.getTerritory(targetTerritoryId).setNumUnits(hitUnits);
             gameMap.getTerritory(targetTerritoryId).setMyUnits(myUnits);
-            //if the target territory has an ally owner, change the ally owner's status
-            if(!gameMap.getTerritory(targetTerritoryId).getAllyOwner().equals(null)){
-                //return the territory's ally's units back
-                returnAllyUnits(gameMap.getTerritory(targetTerritoryId));
-            }
-            targetTerritory.setAllyOwner(this.owner.getAllyPlayer());
+            targetTerritory.setAllyOwner(this.sourceTerritory.getAllyOwner());
             attackResult = this.owner.getName() + " has taken over " + gameMap.getTerritory(targetTerritoryId).getName() + "!";
         }
         else{
@@ -99,20 +99,22 @@ public class AttackAction extends Action {
         }
         return attackResult;
     }
-    public void returnAllyUnits(Territory t) {
+    public void returnAllyUnits(Territory t, GameMap mp) {
         if(t.getNumAllyUnits() > 0){
             //select one former ally's territory and send the units
-            for(Territory dest: t.getAccessibles().keySet()){
+            for(Territory dest: mp.getTerritories()){
                 if(dest.getOwnerId() ==t.getAllyOwner().getId()){
                     ArrayList<Integer> returnUnits = t.getAllyUnits();
                     for(int i = 0; i < 7; ++i){
-                        dest.updateAllyUnits(i, returnUnits.get(i));
+                        dest.updateMyUnits(i, returnUnits.get(i));
                         t.updateAllyUnits(i, -1 * returnUnits.get(i));
                     }
+                    dest.updateUnits(t.getNumAllyUnits());
                     break;
                 }
             }
             t.setAllyOwner(null);
+            t.setNumAllyUnits(0);
         }
     }
     //find the boundary of the highest and lowest units

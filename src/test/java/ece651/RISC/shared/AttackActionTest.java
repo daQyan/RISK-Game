@@ -3,6 +3,9 @@ package ece651.RISC.shared;
 import ece651.RISC.Server.MapFactory;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class AttackActionTest {
     @Test
     public void testAttackAction(){
@@ -29,12 +32,14 @@ public class AttackActionTest {
 //        System.out.println(aa0.attackTerritory());
         mp.getTerritory(2).setNumUnits(15);
         mp.getTerritory(2).updateMyUnits(0, 10);
-        AttackAction aa1 = new AttackAction(mp.getTerritory(2), mp.getTerritory(4), 6, Status.actionStatus.ATTACK, p0);
+        ArrayList<Integer> deploy = new ArrayList<>(Collections.nCopies(7, 0));
+        deploy.set(0, 6);
+        AttackAction aa1 = new AttackAction(mp.getTerritory(2), mp.getTerritory(4), 6, Status.actionStatus.ATTACK, p0, deploy);
         System.out.println(aa1.attackTerritoryEVO2(mp, 2, 4));
         System.out.println(mp.getTerritory(2).getNumUnits());
         System.out.println(mp.getTerritory(2).getOwner());
-        System.out.println(mp.getTerritory(3).getNumUnits());
-        System.out.println(mp.getTerritory(3).getOwner());
+        System.out.println(mp.getTerritory(4).getNumUnits());
+        System.out.println(mp.getTerritory(4).getOwner());
     }
 
 }
