@@ -167,8 +167,10 @@ public class Round {
 
     public void naturalResourceIncrease() {
         for (Player p : players) {
-            p.updateTechResource(resourceGrow * p.getTerritories().size());
-            p.updateFoodResource(resourceGrow * p.getTerritories().size());
+            // change 4 with num of territories, now increase 20 resources per turn
+            // p.getTerritories().size() is 0;
+            p.updateTechResource(resourceGrow * 4);
+            p.updateFoodResource(resourceGrow * 4);
         }
     }
 
