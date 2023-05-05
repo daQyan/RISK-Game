@@ -1,12 +1,16 @@
 package ece651.RISC.shared;
 
+import com.alibaba.fastjson2.annotation.JSONField;
+
 import java.util.ArrayList;
 
 /**
  * This class represents a form ally action between two players.
  */
 public class FormAllyAction {
+    @JSONField(serialize = false, deserialize = false)
     private Player myPlayer;
+    @JSONField(serialize = false, deserialize = false)
     private Player targetPlayer;
 
     /**
@@ -48,9 +52,9 @@ public class FormAllyAction {
      * tries to form an alliance with himself/herself.
      */
     public void checkFormAllyRule(Player player, Player targetPlayer, int numPlayers) {
-        if (numPlayers < 3) {
-            throw new IllegalArgumentException("There are less than 3 players in the game, you cannot form ally");
-        }
+//        if (numPlayers < 3) {
+//            throw new IllegalArgumentException("There are less than 3 players in the game, you cannot form ally");
+//        }
         if (player.getId() == targetPlayer.getId()) {
             throw new IllegalArgumentException("You cannot form ally with yourself");
         }
