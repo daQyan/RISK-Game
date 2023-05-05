@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -93,8 +92,7 @@ public class PlayingController {
         List<AttackAction> attackActions = JSON.parseArray(attackActionsJSON, AttackAction.class);
         List<UpgradeTechAction> upgradeTechActions = JSON.parseArray(upgradeTechLevelJSON, UpgradeTechAction.class);
         List<UpgradeUnitAction> upgradeUnitActions = JSON.parseArray(upgradeUnitLevelJSON, UpgradeUnitAction.class);
-        serverGame.handleActions(player, (ArrayList<MoveAction>) moveActions, (ArrayList<AttackAction>) attackActions,
-                (ArrayList<UpgradeTechAction>) upgradeTechActions, (ArrayList<UpgradeUnitAction>) upgradeUnitActions);
+
 
         System.out.println(serverGame.getOperatedPlayerNum() + " serverGame.getOperatedPlayerSize()");
         lock.lock();

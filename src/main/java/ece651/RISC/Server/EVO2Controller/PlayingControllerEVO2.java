@@ -52,15 +52,22 @@ public class PlayingControllerEVO2 {
         Player player = JSON.parseObject(playerJSON, Player.class);
         // parse actions from json
         String moveActionsJSON = jsonObject.getString("moveActions");
-        String attackActionsJSON = jsonObject.getString("attackActions");
-        String upgradeTechLevelJSON = jsonObject.getString("upgradeTechActions");
-        String upgradeUnitLevelJSON = jsonObject.getString("upgradeUnitActions");
         List<MoveAction> moveActions = JSON.parseArray(moveActionsJSON, MoveAction.class);
+
+        String attackActionsJSON = jsonObject.getString("attackActions");
         List<AttackAction> attackActions = JSON.parseArray(attackActionsJSON, AttackAction.class);
+
+        String upgradeTechLevelJSON = jsonObject.getString("upgradeTechActions");
         List<UpgradeTechAction> upgradeTechActions = JSON.parseArray(upgradeTechLevelJSON, UpgradeTechAction.class);
+
+        String upgradeUnitLevelJSON = jsonObject.getString("upgradeUnitActions");
         List<UpgradeUnitAction> upgradeUnitActions = JSON.parseArray(upgradeUnitLevelJSON, UpgradeUnitAction.class);
+
+        String formAllyActionsJSON = jsonObject.getString("formAllyActions");
+        List<FormAllyAction> formAllyActions = JSON.parseArray(formAllyActionsJSON, FormAllyAction.class);
+
         serverGame.handleActions(player, (ArrayList<MoveAction>) moveActions, (ArrayList<AttackAction>) attackActions,
-                (ArrayList<UpgradeTechAction>) upgradeTechActions, (ArrayList<UpgradeUnitAction>) upgradeUnitActions);
+                (ArrayList<UpgradeTechAction>) upgradeTechActions, (ArrayList<UpgradeUnitAction>) upgradeUnitActions, (ArrayList<FormAllyAction>) formAllyActions) ;
 
         // until all players have finished their actions
         lock.lock();
@@ -76,4 +83,5 @@ public class PlayingControllerEVO2 {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 }

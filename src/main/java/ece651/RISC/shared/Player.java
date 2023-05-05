@@ -48,8 +48,9 @@ public class Player {
         return status;
     }
 
+    @JSONField(serialize = false, deserialize = false)
     protected GameMap map;
-
+    @JSONField(serialize = false, deserialize = false)
     protected MapTextView view = new MapTextView(map);
 
     public Player(int id, String name, ArrayList<Territory> territories, ArrayList<Integer> territoriesId, int techResource, int foodResource) {

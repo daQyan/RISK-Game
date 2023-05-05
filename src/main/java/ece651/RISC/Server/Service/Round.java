@@ -16,7 +16,7 @@ public class Round {
     private final int resourceGrow;
     private final ArrayList<UpgradeTechAction> UpgradeTechAction = new ArrayList<>();
     private final ArrayList<UpgradeUnitAction> UpgradeUnitAction = new ArrayList<>();
-    private final ArrayList<FormAllyAction> allyActions = new ArrayList<>();
+    private final ArrayList<FormAllyAction> formAllyActions = new ArrayList<>();
 
 
     public Round(ArrayList<Player> players, GameMap map, int resourceGrow) {
@@ -25,11 +25,14 @@ public class Round {
         this.resourceGrow = resourceGrow;
     }
 
-    public int playerOneTurn(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions, ArrayList<UpgradeTechAction> UpgradeTechAction, ArrayList<UpgradeUnitAction> UpgradeUnitAction) {
+    public int playerOneTurn(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions,
+                             ArrayList<UpgradeTechAction> UpgradeTechAction, ArrayList<UpgradeUnitAction> UpgradeUnitAction, ArrayList<FormAllyAction> formAllyActions) {
         this.moveActions.addAll(moveActions);
         this.attackActions.addAll(attackActions);
         this.UpgradeTechAction.addAll(UpgradeTechAction);
         this.UpgradeUnitAction.addAll(UpgradeUnitAction);
+        this.formAllyActions.addAll(formAllyActions);
+
         this.operatedPlayers.add(player);
         return operatedPlayers.size();
     }

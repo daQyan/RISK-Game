@@ -251,7 +251,8 @@ public class Game {
      * @param upgradeTechActions the list of upgrade tech actions
      * @param upgradeUnitActions the list of upgrade unit actions
      */
-    public void handleActions(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions, ArrayList<UpgradeTechAction> upgradeTechActions, ArrayList<UpgradeUnitAction> upgradeUnitActions) {
+    public void handleActions(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions, ArrayList<UpgradeTechAction> upgradeTechActions,
+                              ArrayList<UpgradeUnitAction> upgradeUnitActions, ArrayList<FormAllyAction> formAllyActions) {
         // parse actions
         ArrayList<MoveAction> newMoves = parseMoves(moveActions);
         ArrayList<AttackAction> newAttacks = parseAtk(attackActions);
@@ -271,7 +272,7 @@ public class Game {
             System.out.println(upgradeUnitAction.getTerritory().getName() + " " + upgradeUnitAction.getOldType() + " -> " + upgradeUnitAction.getNewType() + " nums:" + upgradeUnitAction.getUnitNum());
         }
 
-        int operatedPlayerNum = round.playerOneTurn(player, newMoves, newAttacks, upgradeTechActions, newUpgradedUnitActions);
+        int operatedPlayerNum = round.playerOneTurn(player, newMoves, newAttacks, upgradeTechActions, newUpgradedUnitActions, formAllyActions);
         setOperatedPlayerNum(operatedPlayerNum);
         if (operatedPlayerNum == playerSize) {
             playOneTurn();
