@@ -151,7 +151,7 @@ public class Round {
                 if (faa1.getPlayer().getId() == faa2.getTargetPlayer().getId()
                         && faa1.getTargetPlayer().getId() == faa2.getPlayer().getId()
                         && faa1.getPlayer().getAllyPlayer() == null) {
-                    faa1.formAlliance();
+                    faa1.formAlliance(getTerritoriesFromMap(faa1.getPlayer()));
                 }
             }
         }

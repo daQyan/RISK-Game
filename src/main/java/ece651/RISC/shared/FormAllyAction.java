@@ -1,5 +1,7 @@
 package ece651.RISC.shared;
 
+import java.util.ArrayList;
+
 public class FormAllyAction {
     private Player myPlayer;
     private Player targetPlayer;
@@ -30,8 +32,8 @@ public class FormAllyAction {
     }
 
     // execute ally-action，update the ally list of both players
-    public void formAlliance() {
-        myPlayer.addAlly(targetPlayer);
-        targetPlayer.addAlly(myPlayer);
+    public void formAlliance(ArrayList<Territory> territories) {
+        myPlayer.addAlly(targetPlayer, territories);
+        targetPlayer.addAlly(myPlayer, territories);
     }
 }
