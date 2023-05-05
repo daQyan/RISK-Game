@@ -1,4 +1,5 @@
 package ece651.RISC.Server.config;
+import ece651.RISC.Server.Controller.ChatWebSocketHandler;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -46,5 +47,18 @@ public class WebSocketConfig implements WebSocketConfigurer {
                 registry.addHandler(textWebSocketHandler, endpoint);
             }
         });
+        // Register the chatWebSocketHandler() handler which will receive WebSocket
+        // connections from
+        // the /chat endpoint and allow requests from any origin.
+        registry.addHandler(chatWebSocketHandler(), "/chat").setAllowedOrigins("*");
     }
+
+    //evo3: chat room
+    //Create and return a new instance of the ChatWebSocketHandler handler.
+    private TextWebSocketHandler chatWebSocketHandler() {
+        return new ChatWebSocketHandler();
+    }
+
+
+
 }

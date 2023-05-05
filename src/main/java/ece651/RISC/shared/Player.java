@@ -40,6 +40,7 @@ public class Player {
     @JSONField(name = "allyPlayer")
     protected Player allyPlayer;
 
+
     public void setStatus(Status.playerStatus status) {
         this.status = status;
     }
