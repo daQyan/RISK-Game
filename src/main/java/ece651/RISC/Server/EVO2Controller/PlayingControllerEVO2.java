@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import ece651.RISC.Server.Repository.GameRepository;
 import ece651.RISC.Server.Service.Game;
-import ece651.RISC.Server.Service.OnlineServer2Client;
 import ece651.RISC.shared.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,10 @@ import java.util.List;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
+/**
+ * This class handles the playing actions of the game, including move, attack, upgrade tech level and upgrade unit level
+ * for a player in a specific game.
+ */
 
 @Slf4j
 @RestController
@@ -28,6 +30,15 @@ public class PlayingControllerEVO2 {
     public GameRepository gameRepository;
     private final Lock lock = new ReentrantLock();
     private final Condition actionComplete = lock.newCondition();
+
+    /**
+     * This method handles the playing actions of a player in a game.
+     *
+     * @param actionsJSON the JSON string containing the player's actions
+     * @param gameId      the ID of the game the player is in
+     * @return an HTTP response with status code 200 if the request is successful, or an error message and status code 400 if the request is invalid
+     * @throws InterruptedException if the thread is interrupted while waiting for other players to finish their actions
+     */
     @PostMapping("{gameId}/playing")
     public ResponseEntity<?> PlayingEVO2(@RequestBody String actionsJSON, @PathVariable Long gameId) throws InterruptedException {
         Game serverGame = gameRepository.getGameById(gameId);

@@ -4,8 +4,13 @@ import ece651.RISC.shared.GameMap;
 import ece651.RISC.shared.Territory;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+/**
+ * MapFactory class is responsible for creating the game map for the RISC game. It has a method to create the game map
+ * <p>
+ * based on the number of players. It creates territories with their unique ids and names, adds adjacent territories,
+ * <p>
+ * and finally creates the game map object with the created territories. It does not support players more than 5 or less than 2.
+ */
 
 public class MapFactory {
     public GameMap createMap(int numPlayers){

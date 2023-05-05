@@ -2,7 +2,11 @@ package ece651.RISC.shared;
 
 import com.alibaba.fastjson2.annotation.JSONField;
 import lombok.Data;
-
+/**
+ * This class defines a generic action that can be performed by a player in the game.
+ * It contains the source and target territories, the number of units to hit, the action type,
+ * the owner of the action and an action checker object.
+ */
 @Data
 public class Action {
     @JSONField(serializeUsing = Territory.class)
@@ -34,6 +38,16 @@ public class Action {
     @JSONField(serializeUsing = Player.class)
     protected Player owner;
 
+    /**
+     * Constructor for creating a new action.
+     *
+     * @param sourceTerritory the source territory of the action.
+     * @param targetTerritory the target territory of the action.
+     * @param hitUnits        the number of units to hit.
+     * @param type            the type of the action.
+     * @param owner           the owner of the action.
+     */
+
     public Action(Territory sourceTerritory, Territory targetTerritory, int hitUnits, Status.actionStatus type, Player owner) {
         this.sourceTerritory = sourceTerritory;
         this.targetTerritory = targetTerritory;
@@ -42,7 +56,7 @@ public class Action {
         this.owner = owner;
         this.myAC = new ActionChecker();
     }
-    
+
 
     public int getHitUnits(){
         return hitUnits;
