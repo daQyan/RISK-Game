@@ -1,6 +1,5 @@
 package ece651.RISC.Server.Service;
 
-import ch.qos.logback.core.joran.sanity.Pair;
 import ece651.RISC.shared.*;
 
 import java.util.*;
@@ -182,10 +181,10 @@ public class Round {
     public void executeAllyActions(ArrayList<FormAllyAction> allyActions){
         for(FormAllyAction faa1 : allyActions) {
             for (FormAllyAction faa2 : allyActions) {
-                if (faa1.getPlayer().getId() == faa2.getTargetPlayer().getId()
-                        && faa1.getTargetPlayer().getId() == faa2.getPlayer().getId()
-                        && faa1.getPlayer().getAllyPlayer() == null) {
-                    faa1.formAlliance(getTerritoriesFromMap(faa1.getPlayer()));
+                if (faa1.getMyPlayer().getId() == faa2.getTargetPlayer().getId()
+                        && faa1.getTargetPlayer().getId() == faa2.getMyPlayer().getId()
+                        && faa1.getMyPlayer().getAllyPlayer() == null) {
+                    faa1.formAlliance(getTerritoriesFromMap(faa1.getMyPlayer()));
                 }
             }
         }
@@ -248,10 +247,13 @@ public class Round {
 
     //play one turn of the game
     public Status.gameStatus playOneTurn() {
-        executeUpgradeTech(UpgradeTechAction);
+
+        executeAllyActions(formAllyActions);
         executeUpgradeUnit(UpgradeUnitAction);
         executeMoves(moveActions);
         executeAttacks(attackActions);
+
+        executeUpgradeTech(UpgradeTechAction);
 
         naturalUnitIncrease();
         naturalResourceIncrease();

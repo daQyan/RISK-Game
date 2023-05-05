@@ -19,11 +19,19 @@ public class FormAllyAction {
         this.targetPlayer = targetPlayer;
     }
 
+    public void setMyPlayer(Player myPlayer) {
+        this.myPlayer = myPlayer;
+    }
+
+    public void setTargetPlayer(Player targetPlayer) {
+        this.targetPlayer = targetPlayer;
+    }
+
     /**
      * Getter method for the initiating player.
      * @return The player who initiates the ally request.
      */
-    public Player getPlayer() {
+    public Player getMyPlayer() {
         return myPlayer;
     }
 
