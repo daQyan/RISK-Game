@@ -68,7 +68,6 @@ public class RestClientPlayer extends Player {
         super();
         this.inputReader = inputReader;
         this.out = out;
-        this.status = Status.playerStatus.INIT;
     }
 
     /**
