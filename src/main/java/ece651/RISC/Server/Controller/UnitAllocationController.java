@@ -31,6 +31,16 @@ public class UnitAllocationController {
     public OnlineServer2Client msgMaker;
     private final Lock lock = new ReentrantLock();
     private final Condition allocationComplete = lock.newCondition();
+
+    /**
+     * The greeting method receives the territory allocation request from a player and allocates the
+     * requested territories to the player. It then waits for all players to finish their allocation
+     * before returning an allocation message to all players.
+     *
+     * @param allocationJSON The JSON string containing the player and territory information
+     * @return The allocation message to all players
+     * @throws InterruptedException if the thread is interrupted while waiting for other players to finish their allocation
+     */
     @PostMapping("/allocation")
     public String greeting(@RequestBody String allocationJSON) throws InterruptedException {
         // check status first

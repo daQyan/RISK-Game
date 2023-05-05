@@ -6,16 +6,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * annotate Handler for automatically register
- *
- * @author  reference cloudgyb
- * @since 2022/4/4 19:11
+ * Annotation used to annotate Handler for automatic registration.
+ * This annotation is used to mark WebSocket handlers that should be automatically registered
+ * with the Spring WebSocketHandlerRegistry.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface WebSocketEndpoint {
     /**
-     * WebSocket 端点路径
+     * Specifies the WebSocket endpoint path.
      */
     String value();
 }

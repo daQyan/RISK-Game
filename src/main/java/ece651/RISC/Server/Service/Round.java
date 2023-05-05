@@ -1,10 +1,12 @@
 package ece651.RISC.Server.Service;
 
-import ch.qos.logback.core.joran.sanity.Pair;
 import ece651.RISC.shared.*;
 
 import java.util.*;
-
+/**
+ * This class represents a round of the game, which consists of each player taking one turn.
+ * It contains the methods for executing move, attack, upgrade tech, upgrade unit, form alliance, and checking game status.
+ */
 public class Round {
     private final Set<Player> operatedPlayers = new HashSet<>();
     private final ArrayList<MoveAction> moveActions = new ArrayList<>();
@@ -36,7 +38,7 @@ public class Round {
      * do all the move action in the list
      */
     public void executeMoves(ArrayList<MoveAction> moveActions) {
-        for (MoveAction move: moveActions) {
+        for (MoveAction move : moveActions) {
             //for evo3, need to change checker for move
             move.moveTerritory(myMap, move.getSourceTerritory().getId(), move.getTargetTerritory().getId());
             //for evo 2: deduct the food resource
@@ -45,17 +47,24 @@ public class Round {
         }
     }
 
-    public ArrayList<AttackAction> parseAttacks(ArrayList<AttackAction> attackActions){
+    /**
+     * This method parses the given list of AttackActions and groups together all AttackActions with the same target Territory
+     * and same owner Player. It also checks the attack rule for each AttackAction and breaks alliances if necessary.
+     * Then it merges the grouped AttackActions and returns a new ArrayList of AttackActions.
+     *
+     * @param attackActions the list of AttackActions to parse and group
+     * @return a new ArrayList of AttackActions that have been grouped and merged
+     */
+    public ArrayList<AttackAction> parseAttacks(ArrayList<AttackAction> attackActions) {
         //check the attack rule first
         //minus the deployed soldiers from the source territory first
-        for(AttackAction a: attackActions){
+        for (AttackAction a : attackActions) {
             String checkAttack = a.getMyAC().checkAttackRule(a.getOwner(), a.getSourceTerritory(), a.getTargetTerritory(), a.getHitUnits());
-            if(checkAttack == null){
+            if (checkAttack == null) {
                 breakAlliance(a);
                 a.getSourceTerritory().updateUnits(-a.getHitUnits());
                 a.getOwner().updateFoodResource(-a.getHitUnits());
-            }
-            else{
+            } else {
                 System.out.println(checkAttack);
                 return null;
             }
@@ -92,11 +101,19 @@ public class Round {
         }
         return parsed;
     }
+
+    /**
+     * Executes a list of AttackActions by calling their corresponding attackTerritoryEVO2() method,
+     * after grouping them based on their target territories and owners. It first calls the parseAttacks() method
+     * to group the AttackActions, and then randomly selects an action to execute until all AttackActions have been executed.
+     *
+     * @param attackActions the list of AttackActions to execute
+     */
     public void executeAttacks(ArrayList<AttackAction> attackActions) {
         Random rand = new Random();
-        if(!attackActions.equals(null)){
+        if (!attackActions.equals(null)) {
             attackActions = parseAttacks(attackActions);
-            while(attackActions.size() > 0){
+            while (attackActions.size() > 0) {
                 int order = rand.nextInt(attackActions.size());
                 AttackAction attack = attackActions.get(order);
                 attack.attackTerritoryEVO2(myMap, attack.getSourceTerritory().getId(), attack.getTargetTerritory().getId());
@@ -105,13 +122,20 @@ public class Round {
         }
     }
 
-    public void breakAlliance(AttackAction a){
-        if(a.getSourceTerritory().getOwner().getAllyPlayer() != null && a.getSourceTerritory().getOwner().getAllyPlayer().getId() == a.getTargetTerritory().getOwnerId()){
+    /**
+     * This method is called when an attack is made between two territories and the attacked territory belongs to an ally player.
+     * This method breaks the alliance between the two players, returns all ally units to their respective territories, and sets the
+     * ally player of both players to null.
+     *
+     * @param a the attack action that is breaking the alliance
+     */
+    public void breakAlliance(AttackAction a) {
+        if (a.getSourceTerritory().getOwner().getAllyPlayer() != null && a.getSourceTerritory().getOwner().getAllyPlayer().getId() == a.getTargetTerritory().getOwnerId()) {
             //if there's ally's units in the territory, send them back to their owner's territory
-            for(Territory t1: a.getSourceTerritory().getOwner().getTerritories()){
+            for (Territory t1 : a.getSourceTerritory().getOwner().getTerritories()) {
                 a.returnAllyUnits(t1);
             }
-            for(Territory t2: a.getTargetTerritory().getOwner().getTerritories()){
+            for (Territory t2 : a.getTargetTerritory().getOwner().getTerritories()) {
                 a.returnAllyUnits(t2);
             }
             //set both the players' ally player as null
@@ -120,11 +144,18 @@ public class Round {
         }
     }
 
+    /**
+     * This method executes the upgrade tech action for a list of UpgradeTechAction objects.
+     * It iterates through each action in the list and finds the player object corresponding to the action's player ID.
+     * It then calls the upgradeTechLevel method on the player object to increase their tech level by 1.
+     *
+     * @param UTAction the list of UpgradeTechAction objects to be executed
+     */
 
-    public void executeUpgradeTech(ArrayList<UpgradeTechAction> UTAction){
-        for(UpgradeTechAction uta: UTAction){
-            for(int i = 0; i < players.size(); ++i){
-                if(uta.getPlayerID() == players.get(i).getId()){
+    public void executeUpgradeTech(ArrayList<UpgradeTechAction> UTAction) {
+        for (UpgradeTechAction uta : UTAction) {
+            for (int i = 0; i < players.size(); ++i) {
+                if (uta.getPlayerID() == players.get(i).getId()) {
                     players.get(i).upgradeTechLevel();
                 }
             }
@@ -166,27 +197,35 @@ public class Round {
         }
     }
 
-    public Status.gameStatus checkStatus(){
+    /**
+     * Checks the current game status, whether the game is still playing, one of the players has won, or all players have lost.
+     * Uses a hashmap to store the grouped territories owned by each player.
+     * Iterates over all players and checks whether they still own at least one territory or not. If a player doesn't own any territory, their status is set to LOSE.
+     * If a player owns all territories on the map, their status is set to WIN and the method returns FINISHED.
+     *
+     * @return the current game status, either PLAYING, FINISHED (if a player has won), or ALL_LOSE (if all players have lost)
+     */
+    public Status.gameStatus checkStatus() {
         //change how to determine win/lose
         //use a hashmap to store the grouped territories
         HashMap<Player, ArrayList<Territory>> sorted = new HashMap<>();
-        for(Territory t : myMap.getTerritories()){
-            if(!sorted.containsKey(t.getOwner())){
+        for (Territory t : myMap.getTerritories()) {
+            if (!sorted.containsKey(t.getOwner())) {
                 sorted.put(t.getOwner(), new ArrayList<>());
             }
             sorted.get(t.getOwner()).add(t);
         }
-        for(Player sp : players){
-            if(!sorted.containsKey(sp)){
+        for (Player sp : players) {
+            if (!sorted.containsKey(sp)) {
                 sp.setStatus(Status.playerStatus.LOSE);
-            }
-            else if(sorted.get(sp).size() == myMap.getMapSize()){
+            } else if (sorted.get(sp).size() == myMap.getMapSize()) {
                 sp.setStatus(Status.playerStatus.WIN);
                 return Status.gameStatus.FINISHED;
             }
         }
         return Status.gameStatus.PLAYING;
     }
+
     //play one turn of the game
     public Status.gameStatus playOneTurn() {
         executeUpgradeTech(UpgradeTechAction);

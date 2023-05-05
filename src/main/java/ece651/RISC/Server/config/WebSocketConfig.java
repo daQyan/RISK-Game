@@ -7,20 +7,35 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 /**
- * Start WebSocket and register Handler
- *
- * @author reference cloudgyb
- * @since 2022/4/4 19:00
+ * Configuration class for starting WebSocket and registering Handler.
+ * The WebSocketConfig class implements WebSocketConfigurer interface
+ * to configure WebSocket handlers and endpoints.
+ * It enables WebSocket functionality in the Spring application.
  */
 @Configuration
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
+    /**
+     * An ObjectProvider is used to provide instances of TextWebSocketHandler.
+     * It is injected through the constructor.
+     */
     private final ObjectProvider<TextWebSocketHandler> webSocketHandlers;
 
+    /**
+     * Constructor for WebSocketConfig class.
+     *
+     * @param webSocketHandlers an ObjectProvider instance providing instances of TextWebSocketHandler
+     */
     public WebSocketConfig(ObjectProvider<TextWebSocketHandler> webSocketHandlers) {
         this.webSocketHandlers = webSocketHandlers;
     }
 
+    /**
+     * Overrides registerWebSocketHandlers method of WebSocketConfigurer interface.
+     * This method registers WebSocket handlers and their endpoints.
+     *
+     * @param registry a WebSocketHandlerRegistry instance used for registering WebSocket handlers and endpoints
+     */
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         webSocketHandlers.forEach(textWebSocketHandler -> {
