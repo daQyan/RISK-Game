@@ -42,7 +42,11 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         String playerId = getPlayerIdFromSessionUri(session.getUri().getQuery());
         String gameId = getGameIdFromSessionUri(session.getUri().getQuery());
         playerSessions.put(playerId, session);
-        String broadcastMessage = String.format("Game %s, Player %s join the chat", gameId, playerId);
+        Map<String, Object> broadcastJson = new HashMap<>();
+        broadcastJson.put("gameId", gameId);
+        broadcastJson.put("playerId", -1);
+        broadcastJson.put("message", String.format("Player %s join the chat", playerId));
+        String broadcastMessage = objectMapper.writeValueAsString(broadcastJson);
         broadcast(broadcastMessage, gameId);
     }
 
@@ -61,14 +65,14 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
         // Parse the message as JSON
         Map<String, Object> messageJson = objectMapper.readValue(payload, HashMap.class);
-        int id = (int) messageJson.get("playerID");
-        String text = messageJson.get("text message").toString();
+        int id = (int) messageJson.get("playerId");
+        String text = messageJson.get("message").toString();
 
         // Broadcast the message as a JSON object
         Map<String, Object> broadcastJson = new HashMap<>();
-        broadcastJson.put("gameID", gameId);
-        broadcastJson.put("playerID", id);
-        broadcastJson.put("text message", text);
+        broadcastJson.put("gameId", gameId);
+        broadcastJson.put("playerId", id);
+        broadcastJson.put("message", text);
         String broadcastMessage = objectMapper.writeValueAsString(broadcastJson);
         broadcast(broadcastMessage, gameId);
     }
@@ -91,7 +95,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     /**
      * This method extracts the player ID from the query string of a WebSocket session URI.
-     * The query string is in the format "playerID=<id>".
+     * The query string is in the format "playerId=<id>".
      *
      * @param uriQuery The query string of a WebSocket session URI.
      * @return The player ID extracted from the query string.
