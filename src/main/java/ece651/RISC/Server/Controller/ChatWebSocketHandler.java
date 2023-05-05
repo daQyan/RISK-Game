@@ -19,7 +19,7 @@ import java.util.Map;
  * The objectMapper is used to parse incoming JSON messages and to create JSON messages that are sent as broadcasts.
  */
 @Component
-@WebSocketEndpoint("/{gameID}/chat")
+@WebSocketEndpoint("/chat")
 public class ChatWebSocketHandler extends TextWebSocketHandler {
     /**
      * The playerSessions map is a HashMap that keeps track of all active WebSocket sessions of players that have joined the chat for a particular game.
@@ -40,7 +40,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         String playerId = getPlayerIdFromSessionUri(session.getUri().getQuery());
-        String gameId = getGameIdFromSessionUri(session.getUri().getPath());
+        String gameId = getGameIdFromSessionUri(session.getUri().getQuery());
         playerSessions.put(playerId, session);
         String broadcastMessage = String.format("Game %s, Player %s join the chat", gameId, playerId);
         broadcast(broadcastMessage, gameId);
@@ -57,7 +57,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
         String playerId = getPlayerIdFromSessionUri(session.getUri().getQuery());
-        String gameId = getGameIdFromSessionUri(session.getUri().getPath());
+        String gameId = getGameIdFromSessionUri(session.getUri().getQuery());
 
         // Parse the message as JSON
         Map<String, Object> messageJson = objectMapper.readValue(payload, HashMap.class);
@@ -83,7 +83,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         String playerId = getPlayerIdFromSessionUri(session.getUri().getQuery());
-        String gameId = getGameIdFromSessionUri(session.getUri().getPath());
+        String gameId = getGameIdFromSessionUri(session.getUri().getQuery());
         playerSessions.remove(playerId);
         String broadcastMessage = String.format("Game %s, Player %s left the chat", gameId, playerId);
         broadcast(broadcastMessage, gameId);
@@ -108,8 +108,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
      * @return The game ID extracted from the path string.
      */
 
-    private String getGameIdFromSessionUri(String uriPath) {
-        return uriPath.split("/")[1];
+    private String getGameIdFromSessionUri(String uriQuery) {
+        return uriQuery.split("=")[2];
     }
 
     /**
@@ -120,7 +120,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
      */
     private void broadcast(String message, String gameId) throws Exception {
         for (WebSocketSession session : playerSessions.values()) {
-            String sessionGameId = getGameIdFromSessionUri(session.getUri().getPath());
+            String sessionGameId = getGameIdFromSessionUri(session.getUri().getQuery());
             if (sessionGameId.equals(gameId)) {
                 session.sendMessage(new TextMessage(message));
             }
