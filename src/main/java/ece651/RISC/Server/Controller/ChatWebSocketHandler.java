@@ -42,6 +42,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         String playerId = getPlayerIdFromSessionUri(session.getUri().getQuery());
         String gameId = getGameIdFromSessionUri(session.getUri().getQuery());
         playerSessions.put(playerId, session);
+
         Map<String, Object> broadcastJson = new HashMap<>();
         broadcastJson.put("gameId", gameId);
         broadcastJson.put("playerId", -1);
@@ -89,7 +90,11 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         String playerId = getPlayerIdFromSessionUri(session.getUri().getQuery());
         String gameId = getGameIdFromSessionUri(session.getUri().getQuery());
         playerSessions.remove(playerId);
-        String broadcastMessage = String.format("Game %s, Player %s left the chat", gameId, playerId);
+        Map<String, Object> broadcastJson = new HashMap<>();
+        broadcastJson.put("gameId", gameId);
+        broadcastJson.put("playerId", -1);
+        broadcastJson.put("message", String.format("Player %s left the chat", playerId));
+        String broadcastMessage = objectMapper.writeValueAsString(broadcastJson);
         broadcast(broadcastMessage, gameId);
     }
 
