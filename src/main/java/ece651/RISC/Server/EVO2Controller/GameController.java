@@ -23,6 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The GameController class handles the game-related REST API requests from clients.
+ * It provides methods for creating a new game, joining an existing game, retrieving
+ * a list of all games, and retrieving the game information for a specific game.
+ */
 @RestController
 @CrossOrigin
 @RequestMapping("/api/game")
@@ -33,6 +38,12 @@ public class GameController {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Creates a new game with the specified room size and initial unit.
+     *
+     * @param createGameRequest the request object containing the room size and initial unit
+     * @return the response object containing the new game ID and an HTTP status code
+     */
     @PostMapping("/create")
     public ResponseEntity<CreateGameResponse> createGame(@RequestBody CreateGameRequest createGameRequest) {
         // create a new game with the specified room size and initial unit
@@ -44,6 +55,13 @@ public class GameController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    /**
+     * Joins an existing game with the specified game ID and user ID.
+     *
+     * @param gameId          the ID of the game to join
+     * @param joinGameRequest the request object containing the user ID
+     * @return an HTTP response entity containing a success or error message and an HTTP status code
+     */
     @PostMapping("/{gameId}/join")
     public synchronized ResponseEntity<?> joinGame(@PathVariable Long gameId, @RequestBody JoinGameRequest joinGameRequest) {
         long userId = joinGameRequest.getUserId();
@@ -66,6 +84,12 @@ public class GameController {
             return new ResponseEntity<>(msg, HttpStatus.BAD_REQUEST);
         }
     }
+
+    /**
+     * Returns a list of all available games.
+     *
+     * @return an HTTP response entity containing a list of game info objects and an HTTP status code
+     */
     @GetMapping("/all")
     public ResponseEntity<GetAllGamesResponse> allRooms() {
         Map<Long, Game> games = gameRepository.getAllGames();
@@ -83,6 +107,12 @@ public class GameController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Returns information about the game with the specified game ID.
+     *
+     * @param gameId the ID of the game to get information about
+     * @return an HTTP response entity containing a game info object and an HTTP status code
+     */
     @GetMapping("/{gameId}/game_info")
     public ResponseEntity<GetGameInfoResponse> getGameInfo(@PathVariable Long gameId) {
         Map<Long, Game> games = gameRepository.getAllGames();

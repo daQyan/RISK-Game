@@ -1,23 +1,36 @@
 package ece651.RISC.shared;
 
-import ece651.RISC.shared.Status;
-import ece651.RISC.shared.Action;
-import ece651.RISC.shared.Territory;
-import ece651.RISC.shared.Player;
-
 import java.util.ArrayList;
-
+/**
+ * The MoveAction class extends the Action class and represents a move action in the game.
+ */
 public class MoveAction extends Action {
+    /**
+     * Constructor for a MoveAction object
+     *
+     * @param sourceTerritory the territory that the units are moving from
+     * @param targetTerritory the territory that the units are moving to
+     * @param hitUnits        the number of units being moved
+     * @param type            the type of the action
+     * @param owner           the player who is performing the action
+     */
     public MoveAction(Territory sourceTerritory, Territory targetTerritory, int hitUnits, Status.actionStatus type, Player owner) {
         super(sourceTerritory, targetTerritory, hitUnits, type, owner);
     }
-    public void moveOut(){
+
+    public void moveOut() {
         sourceTerritory.updateUnits(-hitUnits);
         targetTerritory.updateUnits(hitUnits);
     }
 
+
     /**
-     * move the units from one territory to the target one
+     * Method to move the units from one territory to another
+     *
+     * @param gameMap           the game map containing the territories
+     * @param sourceTerritoryId the id of the territory that the units are moving from
+     * @param targetTerritoryId the id of the territory that the units are moving to
+     * @return an error message if there was an issue with the move, null otherwise
      */
     public String moveTerritory(GameMap gameMap, int sourceTerritoryId, int targetTerritoryId) {
         // check adjacent and owned
@@ -43,10 +56,18 @@ public class MoveAction extends Action {
         return checkMove;
     }
 
+    /**
+     * Helper method to move units to the target territory
+     *
+     * @param gameMap           the game map containing the territories
+     * @param targetTerritoryId the id of the territory that the units are moving to
+     * @param moved             the list of units that are being moved
+     */
+
     private void targetTerritoryReceive(GameMap gameMap, int targetTerritoryId, ArrayList<Integer> moved) {
-        if(this.owner.getId() == gameMap.getTerritory(targetTerritoryId).getOwner().getId()){
+        if (this.owner.getId() == gameMap.getTerritory(targetTerritoryId).getOwner().getId()) {
             gameMap.getTerritory(targetTerritoryId).updateUnits(hitUnits);
-            for(int i = 0; i < moved.size(); ++i){
+            for (int i = 0; i < moved.size(); ++i) {
                 gameMap.getTerritory(targetTerritoryId).updateMyUnits(i, moved.get(i));
             }
         }

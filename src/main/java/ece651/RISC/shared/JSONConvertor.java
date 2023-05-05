@@ -2,22 +2,39 @@ package ece651.RISC.shared;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class provides methods for converting JSON to GameMap object and vice versa.
+ */
 public class JSONConvertor {
+    /**
+     * Converts a JSON string representing a list of territories to a GameMap object.
+     * @param json the JSON string
+     * @return the GameMap object
+     */
     public static GameMap convertTerritories(String json) {
         List<Territory> territories = JSON.parseArray(json, Territory.class);
         return new GameMap((ArrayList<Territory>) territories);
     }
+
+    /**
+     * Sets the adjacent or accessible territories for each territory in the GameMap using the specified JSON string.
+     * @param json the JSON string
+     * @param gm the GameMap object to modify
+     * @param adjacent whether the JSON string represents adjacent territories or accessible territories
+     */
+
     public static void setRelations(String json, GameMap gm, boolean adjacent) {
         List<TerritoryRelation> relations = JSON.parseArray(json, TerritoryRelation.class);
-        for(TerritoryRelation relation: relations) {
-            int selfId =  relation.getSelfId();
+        for (TerritoryRelation relation : relations) {
+            int selfId = relation.getSelfId();
             Territory selfTerritory = gm.getTerritory(selfId);
-            for(int id: relation.getRelatedIds()){
+            for (int id : relation.getRelatedIds()) {
                 Territory relatedTerritory = gm.getTerritory(id);
-                if(adjacent) {
+                if (adjacent) {
                     selfTerritory.addAdjacent(relatedTerritory);
                 } else {
                     //need change here
@@ -26,6 +43,12 @@ public class JSONConvertor {
             }
         }
     }
+
+    /**
+     * Converts a GameMap object to a JSON string.
+     * @param gm the GameMap object
+     * @return the JSON string
+     */
 
     public static String map2JSON(GameMap gm) {
         JSONObject jsonObject = new JSONObject();

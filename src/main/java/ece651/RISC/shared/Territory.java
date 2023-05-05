@@ -1,11 +1,18 @@
 package ece651.RISC.shared;
 
-import java.util.*;
-
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.annotation.JSONField;
 import lombok.Data;
 
+import java.util.*;
+
+/**
+ * This class represents a territory in the game map.
+ * It contains information about the territory's ID, name, owner, number of units,
+ * adjacent territories, accessible territories and ally owner.
+ * It also has methods for updating units, setting adjacents and accessibles,
+ * and deploying units to move or attack.
+ */
 @Data
 public class Territory {
     @JSONField(name = "id")
@@ -51,7 +58,24 @@ public class Territory {
 
     private int numAllyUnits;
 
-    public Territory() {}
+    public Territory() {
+    }
+
+    /**
+     * Constructor for Territory class.
+     *
+     * @param id            ID of the territory.
+     * @param name          Name of the territory.
+     * @param unit          Number of units in the territory.
+     * @param owner         Player object that owns the territory.
+     * @param adjacents     ArrayList of adjacent Territory objects.
+     * @param adjacentIds   ArrayList of IDs of adjacent territories.
+     * @param accessibles   LinkedHashMap of accessible Territory objects with their costs.
+     * @param accessibleIds LinkedHashMap of IDs of accessible territories with their costs.
+     * @param myUnits       ArrayList of integers representing the number of units in each level.
+     * @param allyPlayer    Player object representing the ally owner of the territory.
+     * @param numAllyUnits  Number of ally units in the territory.
+     */
     public Territory(int id, String name, int unit, Player owner,
                      ArrayList<Territory> adjacents, ArrayList<Integer> adjacentIds, LinkedHashMap<Territory, Integer> accessibles,
                      LinkedHashMap<String, Integer> accessibleIds, ArrayList<Integer> myUnits, Player allyPlayer, int numAllyUnits) {
@@ -146,6 +170,7 @@ public class Territory {
     public Boolean equals(Territory rhs){
         return this.getId() == rhs.getId();
     }
+
     public ArrayList<Territory> getAdjacents() {
         return adjacents;
     }
@@ -175,8 +200,16 @@ public class Territory {
         //need to call updateAccessible() in the GameMap after using this function
     }
 
-    public ArrayList<Integer> getMyUnits(){ return this.myUnits;}
+    public ArrayList<Integer> getMyUnits(){ return this.myUnits;
+    }
 
+    /**
+
+     Deploy units from the given units arraylist, using the given number of units.
+     @param num The number of units to deploy.
+     @param units The arraylist of units to deploy from.
+     @return An arraylist of the deployed units.
+     */
     private ArrayList<Integer> deployUnits(int num, ArrayList<Integer> units){
         int index = 6;
         ArrayList<Integer> deploy = new ArrayList<>(Collections.nCopies(7, 0));
@@ -184,8 +217,7 @@ public class Territory {
             if(units.get(index) > 0){
                 units.set(index, units.get(index) - 1);
                 deploy.set(index, deploy.get(index) + 1);
-            }
-            else{
+            } else{
                 --index;
                 continue;
             }
@@ -198,9 +230,11 @@ public class Territory {
     public ArrayList<Integer> deployMyUnits(int num){
         return deployUnits(num, this.myUnits);
     }
+
     public ArrayList<Integer> deployAllyUnits(int num){
         return deployUnits(num, this.allyUnits);
     }
+
     public void updateMyUnits(int unitIndex, int numUnits){
         this.myUnits.set(unitIndex, myUnits.get(unitIndex) + numUnits);
     }

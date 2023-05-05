@@ -1,46 +1,47 @@
 package ece651.RISC.Client;
 
 import com.alibaba.fastjson2.annotation.JSONField;
-import ece651.RISC.shared.ActionChecker;
-import ece651.RISC.shared.AttackAction;
-import ece651.RISC.shared.GameMap;
-import ece651.RISC.shared.MoveAction;
-import ece651.RISC.shared.Player;
-import ece651.RISC.shared.Status;
-import ece651.RISC.shared.Territory;
+import ece651.RISC.shared.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
+/***
+ * The RestClientPlayer class represents a player that can interact with the game through a client application.
+ * It extends the abstract Player class and overrides its methods to enable player actions, such as moving and attacking.
+ */
 public class RestClientPlayer extends Player {
 
     private final BufferedReader inputReader;
     private final PrintStream out;
+    private int initUnits;
+    private Status.playerStatus status;
+    private MapTextView view;
+    private GameMap map;
 
     public GameMap getMap() {
         return map;
     }
 
-    private GameMap map;
-
+    /**
+     * Sets the GameMap for the player and initializes the MapTextView for displaying the map.
+     * Sets the player's territories to be the territories on the map that are owned by this player.
+     *
+     * @param map The GameMap to be set for the player.
+     */
     public void setMap(GameMap map) {
         this.map = map;
         this.view = new MapTextView(map);
         setTerritories(new ArrayList<>());
-        for(Territory t: map.getTerritories()){
-            if(this.equals(t.getOwner())) {
+        for (Territory t : map.getTerritories()) {
+            if (this.equals(t.getOwner())) {
                 addTerritories(t);
             }
         }
     }
 
-    private int initUnits;
-
-    private Status.playerStatus status;
-
-    private MapTextView view;
 
     @Override
     public void setStatus(Status.playerStatus status) {
@@ -57,15 +58,24 @@ public class RestClientPlayer extends Player {
     @JSONField(serialize = false, deserialize = false)
     public ArrayList<AttackAction> attackActions = new ArrayList<>();
 
-    public RestClientPlayer(BufferedReader inputReader, PrintStream out){
+    /**
+     * Constructs a RestClientPlayer with the specified BufferedReader and PrintStream.
+     *
+     * @param inputReader The BufferedReader to be used for input.
+     * @param out         The PrintStream to be used for output.
+     */
+    public RestClientPlayer(BufferedReader inputReader, PrintStream out) {
         super();
         this.inputReader = inputReader;
         this.out = out;
         this.status = Status.playerStatus.INIT;
     }
 
+    /**
+     * Prompts the player to enter their name and sets it as the player's name.
+     */
     public void readPlayerName() {
-        try{
+        try {
             while (true) {
                 out.println("WELCOME TO THE GAME. Please give yourself a name: ");
 
@@ -73,11 +83,17 @@ public class RestClientPlayer extends Player {
                 this.setName(myName);
                 break;
             }
-        } catch(IOException error) {
+        } catch (IOException error) {
             System.out.println(error.getMessage());
         }
     }
 
+    /**
+     * Returns the Territory object with the specified name, or null if it does not exist.
+     *
+     * @param terName The name of the Territory to be returned.
+     * @return The Territory object with the specified name, or null if it does not exist.
+     */
     public Territory getTerritoryByName(String terName) {
         if (terName == null) return null;
         for (Territory t : map.getTerritories()) {
@@ -88,6 +104,14 @@ public class RestClientPlayer extends Player {
         return null;
     }
 
+    /**
+     * Method that checks and returns the source territory selected by the player.
+     *
+     * @param checker       an instance of ActionChecker to check if the player's move is valid
+     * @param sourceTerMesg a message prompt to ask the player to enter the name of the source territory
+     * @return the Territory object corresponding to the source territory entered by the player
+     * @throws IOException if there's an issue reading input from the player
+     */
     private Territory checkSource(ActionChecker checker, String sourceTerMesg) throws IOException {
         Territory source;
         while (true) {
@@ -107,6 +131,16 @@ public class RestClientPlayer extends Player {
         return source;
     }
 
+    /**
+     * Method that checks and returns the target territory selected by the player.
+     *
+     * @param checker       an instance of ActionChecker to check if the player's move is valid
+     * @param targetTerMesg a message prompt to ask the player to enter the name of the target territory
+     * @param source        the source territory of the move or attack
+     * @param status        the type of action being performed, move or attack
+     * @return the Territory object corresponding to the target territory entered by the player
+     * @throws IOException if there's an issue reading input from the player
+     */
     private Territory checkTarget(ActionChecker checker, String targetTerMesg, Territory source, Status.actionStatus status) throws IOException {
         Territory target;
         while (true) {
@@ -117,8 +151,7 @@ public class RestClientPlayer extends Player {
                 String result;
                 if (status == Status.actionStatus.MOVE) {
                     result = checker.checkAccess(source, target);
-                }
-                else result = checker.checkAtkTarget(source, target);
+                } else result = checker.checkAtkTarget(source, target);
                 if (result != null) {
                     throw new IllegalArgumentException(result);
                 }
@@ -130,7 +163,16 @@ public class RestClientPlayer extends Player {
         return target;
     }
 
-
+    /**
+     * Method that checks and returns the number of units selected by the player for a move or attack.
+     *
+     * @param checker         an instance of ActionChecker to check if the player's move is valid
+     * @param unitNumMesg     a message prompt to ask the player to enter the number of units
+     * @param sourceTerritory the source territory of the move or attack
+     * @param type            the type of action being performed, move or attack
+     * @return the number of units entered by the player
+     * @throws IOException if there's an issue reading input from the player
+     */
     private int checkUnits(ActionChecker checker, String unitNumMesg, Territory sourceTerritory, String type) throws IOException {
         int units;
         while (true) {
@@ -142,14 +184,20 @@ public class RestClientPlayer extends Player {
                     throw new IllegalArgumentException(result);
                 }
                 break;
-            }
-            catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
         }
         return units;
     }
 
+    /**
+     * Allows the player to move units between their own territories.
+     * Checks the validity of the source territory, target territory, and number of units to move.
+     * Creates and adds a MoveAction to the player's list of actions.
+     *
+     * @throws IOException If an I/O error occurs while reading user input.
+     */
 
     public void move() throws IOException {
         String welcome = "Player " + this.name + ", you can move units within your accessible territories: " + getMyTerritoryName();
@@ -175,7 +223,14 @@ public class RestClientPlayer extends Player {
         out.println("**-------------------------------------------------------------------------------------**");
     }
 
-    public void attack() throws  IOException {
+    /**
+     * Allows the player to attack an enemy territory.
+     * Checks the validity of the source territory, target territory, and number of units to use in the attack.
+     * Creates and adds an AttackAction to the player's list of actions.
+     *
+     * @throws IOException If an I/O error occurs while reading user input.
+     */
+    public void attack() throws IOException {
         String welcome = "Player " + this.name + ", which territory would you want to attack? " + getMyTerritoryName();
         String sourceTerMesg = "Please specify the source territory with the territory name: ";
         String targetTerMesg = "Please specify the target territory with the territory name: ";
@@ -198,6 +253,11 @@ public class RestClientPlayer extends Player {
         System.out.println("**-------------------------------------------------------------------------------------**");
     }
 
+    /**
+     * Returns the player's owned territories as a string, formatted for display to the user.
+     *
+     * @return The player's owned territories as a string.
+     */
 
     // must init myTerritory first before call this
     private String getMyTerritoryName() {
@@ -216,6 +276,13 @@ public class RestClientPlayer extends Player {
         this.view.displayMap();
     }
 
+    /**
+     * Initializes unit placement for each territory for the player.
+     * Prompts the player to enter the number of units they want to place
+     * in each of their territories and updates the territories accordingly.
+     *
+     * @return ArrayList of territories owned by the player
+     */
     public ArrayList<Territory> initUnitPlacement() {
         displayMap();
         int numTer = this.territories.size();
@@ -257,6 +324,13 @@ public class RestClientPlayer extends Player {
         return terList;
     }
 
+    /**
+     * Parses the input from user and updates the units for each territory owned by the player.
+     *
+     * @param prompt input string from user
+     * @return ArrayList of territories owned by the player with updated units
+     * @throws IllegalArgumentException if the input is not valid
+     */
     // parse the input from user and update its Territories
     private ArrayList<Territory> parseUnitsPlacement(String prompt) {
         ArrayList<Territory> myTerritory = getTerritories();
@@ -273,22 +347,24 @@ public class RestClientPlayer extends Player {
             for (int i = 0; i < numList.size(); i++) {
                 myTerritory.get(i).updateUnits(numList.get(i));
             }
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("Total input units beyond or below scope!\n");
         }
 
         return myTerritory;
     }
 
+    /**
+     * Clear the previous move and attack actions, and read new actions from the player
+     */
     // player play one turn with move and attack orders
-    public void readActions()  {
+    public void readActions() {
         moveActions.clear();
         attackActions.clear();
         if (checkLose()) return;
         if (checkWin()) return;
         // keep receiving order input until (D)one
-        try{
+        try {
             while (true) {
 //                view.displayMap();
                 out.println(name + ", your options: M for move, A for attack, D for Done");
@@ -308,19 +384,34 @@ public class RestClientPlayer extends Player {
                         out.println("Invalid input, please input again");
                 }
             }
-        } catch(IOException error) {
+        } catch (IOException error) {
             out.println(error.getMessage());
         }
     }
 
+    /**
+     * Get the move actions made by the player
+     *
+     * @return an ArrayList of MoveAction
+     */
     public ArrayList<MoveAction> getMoveActions() {
         return moveActions;
     }
 
+    /**
+     * Get the attack actions made by the player
+     *
+     * @return an ArrayList of AttackAction
+     */
     public ArrayList<AttackAction> getAttackActions() {
         return attackActions;
     }
 
+    /**
+     * Check if the player has lost the game by losing all of their territories
+     *
+     * @return true if the player has lost, false otherwise
+     */
     private boolean checkLose() {
         if (status == Status.playerStatus.LOSE) {
             out.println("Sorry, you have lost all your territories, you lose the game !");
@@ -329,6 +420,11 @@ public class RestClientPlayer extends Player {
         return false;
     }
 
+    /**
+     * Check if the player has won the game by conquering all territories
+     *
+     * @return true if the player has won, false otherwise
+     */
     private boolean checkWin() {
         if (status == Status.playerStatus.WIN) {
             out.println("Hooray! You win the game !");

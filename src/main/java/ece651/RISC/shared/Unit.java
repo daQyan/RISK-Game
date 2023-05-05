@@ -1,7 +1,9 @@
 package ece651.RISC.shared;
 
-import java.util.ArrayList;
-
+/**
+ * Unit class represents the level of military units that a player can have in a territory.
+ * It also handles the upgrading of the units to a higher level by a player.
+ */
 public class Unit {
     private int myType;
     private int[] diction;
@@ -17,17 +19,28 @@ public class Unit {
 
     public Unit() {
         this.myType = 0;
-        diction = new int[] {0, 3, 11, 30, 55, 90, 140};
-        bonus = new int[] {0, 1, 3, 5, 8, 11, 15};
-    }
-    public Unit(int Type) {
-        this.myType = Type;
-        diction = new int[] {0, 3, 11, 30, 55, 90, 140};
-        bonus = new int[] {0, 1, 3, 5, 8, 11, 15};
+        diction = new int[]{0, 3, 11, 30, 55, 90, 140};
+        bonus = new int[]{0, 1, 3, 5, 8, 11, 15};
     }
 
-    // upgrade the unit based on the given new level
-    public void upgradeUnit(int newType, Player owner){
+    /**
+     * Constructor that initializes the unit with the given level
+     *
+     * @param Type the level of the unit
+     */
+    public Unit(int Type) {
+        this.myType = Type;
+        diction = new int[]{0, 3, 11, 30, 55, 90, 140};
+        bonus = new int[]{0, 1, 3, 5, 8, 11, 15};
+    }
+
+    /**
+     * Method to upgrade the unit to a higher level
+     *
+     * @param newType the level to which the unit needs to be upgraded
+     * @param owner   the player who is upgrading the unit
+     */
+    public void upgradeUnit(int newType, Player owner) {
         int cost = getUnitUpgradeCost(newType, owner);
         //for checker:
         //use checker to check if the resource is enough to upgrade
@@ -41,10 +54,17 @@ public class Unit {
         return myType;
     }
 
-    public int getBonusByType(int type){
+    public int getBonusByType(int type) {
         return bonus[type];
     }
 
+    /**
+     * Method to calculate the cost of upgrading a unit to a higher level
+     *
+     * @param newType the level to which the unit needs to be upgraded
+     * @param owner   the player who is upgrading the unit
+     * @return the cost of the unit upgrade
+     */
     private int getUnitUpgradeCost(int newType, Player owner) {
         // check tech level
         if (newType <= this.myType) {
@@ -64,14 +84,22 @@ public class Unit {
         }
         return cost;
     }
-    public Boolean equals(Unit rhs){
+
+    /**
+     * Method to check if two units are equal
+     *
+     * @param rhs the other unit to be compared with
+     * @return true if the units are equal, false otherwise
+     */
+    public Boolean equals(Unit rhs) {
         return this.myType == rhs.myType;
     }
+
     public static void main(String[] args) {
         Player p = new Player();
         p.updateTechResource(300);
         Unit u1 = new Unit();
-        Unit u2= new Unit();
+        Unit u2 = new Unit();
         Unit u3 = new Unit(2);
 
         System.out.println("tech level: " + p.getTechLevel() + ", techResource: " + p.getTechResource() + ", unit1: " + u1.myType);

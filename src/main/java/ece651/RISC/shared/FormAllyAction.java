@@ -2,15 +2,27 @@ package ece651.RISC.shared;
 
 import java.util.ArrayList;
 
+/**
+ * This class represents a form ally action between two players.
+ */
 public class FormAllyAction {
     private Player myPlayer;
     private Player targetPlayer;
 
+    /**
+     * Constructor for the FormAllyAction class.
+     * @param myPlayer The player who initiates the ally request.
+     * @param targetPlayer The player who is requested to become an ally.
+     */
     public FormAllyAction(Player myPlayer, Player targetPlayer) {
         this.myPlayer = myPlayer;
         this.targetPlayer = targetPlayer;
     }
 
+    /**
+     * Getter method for the initiating player.
+     * @return The player who initiates the ally request.
+     */
     public Player getPlayer() {
         return myPlayer;
     }
@@ -19,8 +31,14 @@ public class FormAllyAction {
         return targetPlayer;
     }
 
-    // check at least 3 players in the game
-    // check the target player is not the player himself
+    /**
+     * Check the rules for forming an alliance.
+     * @param player The initiating player.
+     * @param targetPlayer The player who is requested to become an ally.
+     * @return null if the action is valid, an error message if not.
+     * @throws IllegalArgumentException if there are less than 3 players in the game, or if the initiating player
+     * tries to form an alliance with himself/herself.
+     */
     public String checkFormAllyRule(Player player, Player targetPlayer) {
         if (player.getNumPlayers() < 3) {
             throw new IllegalArgumentException("There are less than 3 players in the game, you cannot form ally");

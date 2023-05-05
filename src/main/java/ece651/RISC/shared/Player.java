@@ -2,10 +2,14 @@ package ece651.RISC.shared;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.annotation.JSONField;
-import lombok.Data;
 import ece651.RISC.Client.MapTextView;
+import lombok.Data;
 
 import java.util.ArrayList;
+
+/**
+ * This class represent a player in the game.
+ */
 @Data
 public class Player {
 
@@ -36,6 +40,7 @@ public class Player {
     @JSONField(name = "allyPlayer")
     protected Player allyPlayer;
 
+
     public void setStatus(Status.playerStatus status) {
         this.status = status;
     }
@@ -44,8 +49,9 @@ public class Player {
         return status;
     }
 
+    @JSONField(serialize = false, deserialize = false)
     protected GameMap map;
-
+    @JSONField(serialize = false, deserialize = false)
     protected MapTextView view = new MapTextView(map);
 
     public Player(int id, String name, ArrayList<Territory> territories, ArrayList<Integer> territoriesId, int techResource, int foodResource) {
@@ -71,9 +77,11 @@ public class Player {
     public Player(int id, String name) {
         this(id, name, new ArrayList<>(), new ArrayList<>(), 1000, 1000);
     }
+
     public Player(String name) {
         this(-1, name);
     }
+
     public Player() {
         this(-1, "");
     }
