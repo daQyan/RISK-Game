@@ -22,18 +22,33 @@ public class RoundTest {
         mp.getTerritory(0).setOwner(p0);
         mp.getTerritory(1).setOwner(p0);
         mp.getTerritory(2).setOwner(p0);
+        ArrayList<Territory> tp0 = new ArrayList<>();
+        tp0.add(mp.getTerritory(0));
+        tp0.add(mp.getTerritory(1));
+        tp0.add(mp.getTerritory(2));
+        p0.setTerritories(tp0);
         mp.getTerritory(3).setOwner(p1);
         mp.getTerritory(4).setOwner(p1);
         mp.getTerritory(5).setOwner(p1);
+        ArrayList<Territory> tp1 = new ArrayList<>();
+        tp1.add(mp.getTerritory(3));
+        tp1.add(mp.getTerritory(4));
+        tp1.add(mp.getTerritory(5));
+        p1.setTerritories(tp1);
         mp.getTerritory(6).setOwner(p2);
         mp.getTerritory(7).setOwner(p2);
         mp.getTerritory(8).setOwner(p2);
+        ArrayList<Territory> tp2 = new ArrayList<>();
+        tp2.add(mp.getTerritory(6));
+        tp2.add(mp.getTerritory(7));
+        tp2.add(mp.getTerritory(8));
+        p2.setTerritories(tp2);
         for(Territory t: mp.getTerritories()){
             t.setNumUnits(10);
             t.updateMyUnits(0, 10);
         }
         mp.updateAccessible();
-        Round r = new Round(players, mp, 0);
+        Round r = new Round(players, mp, 5);
         mp.getTerritory(2).setAllyOwner(p4);
         mp.getTerritory(4).setNumUnits(5);
         ArrayList<Integer> t2Units = new ArrayList<>(Arrays.asList(0, 0, 0, 2, 3, 0, 5));
@@ -65,6 +80,10 @@ public class RoundTest {
         ArrayList<Integer> t6Units = new ArrayList<>(Arrays.asList(0, 0, 0, 2, 3, 0, 5));
         mp.getTerritory(0).setMyUnits(t0Units);
         mp.getTerritory(6).setMyUnits(t6Units);
+        mp.getTerritory(6).setAllyOwner(p0);
+        mp.getTerritory(0).setAllyOwner(p2);
+        p0.setAllyPlayer(p2);
+        p2.setAllyPlayer(p0);
         //ArrayList<Integer> deploy1 = new ArrayList<>(Arrays.asList(0, 0, 0, 2, 3, 0, 5));
         //ArrayList<Integer> deploy2 = new ArrayList<>(Arrays.asList(0, 0, 0, 2, 3, 0, 5));
         AttackAction aa2 = new AttackAction(mp.getTerritory(0), mp.getTerritory(6),10, Status.actionStatus.ATTACK, p0);

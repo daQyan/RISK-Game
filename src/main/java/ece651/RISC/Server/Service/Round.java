@@ -11,7 +11,7 @@ public class Round {
     private final ArrayList<AttackAction> attackActions = new ArrayList<>();
     private final ArrayList<Player> players;
     private final GameMap myMap;
-    private final int resourceGrow;
+    private final int resourceGrow = 5;
     private final ArrayList<UpgradeTechAction> UpgradeTechAction = new ArrayList<>();
     private final ArrayList<UpgradeUnitAction> UpgradeUnitAction = new ArrayList<>();
     private final ArrayList<FormAllyAction> allyActions = new ArrayList<>();
@@ -20,7 +20,7 @@ public class Round {
     public Round(ArrayList<Player> players, GameMap map, int resourceGrow) {
         this.players = players;
         this.myMap = map;
-        this.resourceGrow = resourceGrow;
+        //this.resourceGrow = resourceGrow;
     }
 
     public int playerOneTurn(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions, ArrayList<UpgradeTechAction> UpgradeTechAction, ArrayList<UpgradeUnitAction> UpgradeUnitAction) {
@@ -108,13 +108,17 @@ public class Round {
     }
 
     public void breakAlliance(AttackAction a){
-        if(a.getOwner().getAllyPlayer() != null && a.getSourceTerritory().getAllyOwner().getId() == a.getTargetTerritory().getOwnerId()){
+        if(a.getSourceTerritory().getAllyOwner() != null && a.getSourceTerritory().getAllyOwner().getId() == a.getTargetTerritory().getOwnerId()){
             //if there's ally's units in the territory, send them back to their owner's territory
             for(Territory t1: a.getSourceTerritory().getOwner().getTerritories()){
                 a.returnAllyUnits(t1, myMap);
+                t1.setAllyOwner(null);
+                t1.setNumAllyUnits(0);
             }
             for(Territory t2: a.getTargetTerritory().getOwner().getTerritories()){
                 a.returnAllyUnits(t2, myMap);
+                t2.setAllyOwner(null);
+                t2.setNumAllyUnits(0);
             }
             //set both the players' ally player as null
             a.getSourceTerritory().getOwner().setAllyPlayer(null);

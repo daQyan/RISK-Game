@@ -86,6 +86,8 @@ public class AttackAction extends Action {
             if(gameMap.getTerritory(targetTerritoryId).getAllyOwner() != null){
                 //return the territory's ally's units back
                 returnAllyUnits(gameMap.getTerritory(targetTerritoryId), gameMap);
+                gameMap.getTerritory(targetTerritoryId).setNumAllyUnits(0);
+                gameMap.getTerritory(targetTerritoryId).setAllyOwner(null);
             }
             gameMap.getTerritory(targetTerritoryId).setOwner(this.owner);
             gameMap.getTerritory(targetTerritoryId).setOwnerId(this.owner.getId());
@@ -113,8 +115,6 @@ public class AttackAction extends Action {
                     break;
                 }
             }
-            t.setAllyOwner(null);
-            t.setNumAllyUnits(0);
         }
     }
     //find the boundary of the highest and lowest units
