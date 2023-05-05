@@ -82,6 +82,15 @@ public class AttackAction extends Action {
     }
 
     public String attackTerritoryEVO2(GameMap gameMap, int sourceTerritoryId, int targetTerritoryId){
+        //attack should not happen between two allies here as we have checked it in round's parseAttack
+        if(gameMap.getTerritory(sourceTerritoryId).getAllyOwner() != null && gameMap.getTerritory(sourceTerritoryId).getAllyOwner().getId() == gameMap.getTerritory(targetTerritoryId).getOwnerId()){
+            //move myUnits to targetTerritory
+            for(int i = 0; i < 7; ++i){
+                gameMap.getTerritory(targetTerritoryId).updateAllyUnits(i, myUnits.get(i));
+            }
+            gameMap.getTerritory(targetTerritoryId).updateAllyUnitsNum(hitUnits);
+            return("Successfully moved to the designated ally's territory");
+        }
         String attackResult;
         AtomicInteger minSelf = new AtomicInteger(0);
         AtomicInteger minEnemy = new AtomicInteger(0);
@@ -104,39 +113,36 @@ public class AttackAction extends Action {
         }
         // if the attack wins
         if (gameMap.getTerritory(targetTerritoryId).getNumUnits() <= 0 && hitUnits > 0) {
+            //if the target territory has an ally owner, change the ally owner's status
+            if(gameMap.getTerritory(targetTerritoryId).getAllyOwner() != null){
+                //return the territory's ally's units back
+                returnAllyUnits(gameMap.getTerritory(targetTerritoryId), gameMap);
+                gameMap.getTerritory(targetTerritoryId).setNumAllyUnits(0);
+                gameMap.getTerritory(targetTerritoryId).setAllyOwner(null);
+            }
             gameMap.getTerritory(targetTerritoryId).setOwner(this.owner);
             gameMap.getTerritory(targetTerritoryId).setOwnerId(this.owner.getId());
             gameMap.getTerritory(targetTerritoryId).setNumUnits(hitUnits);
             gameMap.getTerritory(targetTerritoryId).setMyUnits(myUnits);
-            //if the target territory has a ally owner, change the ally status
-            if (!targetTerritory.getAllyOwner().equals(null)) {
-                //return the territory's ally's units back
-                returnAllyUnits(targetTerritory);
-            }
-            targetTerritory.setAllyOwner(this.owner.getAllyPlayer());
+            targetTerritory.setAllyOwner(this.sourceTerritory.getAllyOwner());
             attackResult = this.owner.getName() + " has taken over " + gameMap.getTerritory(targetTerritoryId).getName() + "!";
-        } else {
+        }
+        else{
             attackResult = this.owner.getName() + " has failed in the attack on " + gameMap.getTerritory(targetTerritoryId).getName() + "!";
         }
         return attackResult;
     }
-
-    /**
-     * This method is called when an attack is successful and the attacker takes over a territory with an ally owner.
-     * The method will select one of the accessible territories of the newly taken-over territory whose owner is the ally owner,
-     * and send back the ally units to that territory.
-     *
-     * @param t The territory that was just taken over by the attacker.
-     */
-    public void returnAllyUnits(Territory t) {
-        if (t.getNumAllyUnits() > 0) {
+    public void returnAllyUnits(Territory t, GameMap mp) {
+        if(t.getNumAllyUnits() > 0){
             //select one former ally's territory and send the units
-            for (Territory dest : t.getAccessibles().keySet()) {
-                if (dest.getOwnerId() == t.getAllyOwner().getId()) {
+            for(Territory dest: mp.getTerritories()){
+                if(dest.getOwnerId() ==t.getAllyOwner().getId()){
                     ArrayList<Integer> returnUnits = t.getAllyUnits();
-                    for (int i = 0; i < 7; ++i) {
-                        dest.updateAllyUnits(i, returnUnits.get(i));
+                    for(int i = 0; i < 7; ++i){
+                        dest.updateMyUnits(i, returnUnits.get(i));
+                        t.updateAllyUnits(i, -1 * returnUnits.get(i));
                     }
+                    dest.updateUnits(t.getNumAllyUnits());
                     break;
                 }
             }

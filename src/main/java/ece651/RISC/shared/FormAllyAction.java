@@ -1,4 +1,7 @@
 package ece651.RISC.shared;
+
+import java.util.ArrayList;
+
 /**
  * This class represents a form ally action between two players.
  */
@@ -16,11 +19,19 @@ public class FormAllyAction {
         this.targetPlayer = targetPlayer;
     }
 
+    public void setMyPlayer(Player myPlayer) {
+        this.myPlayer = myPlayer;
+    }
+
+    public void setTargetPlayer(Player targetPlayer) {
+        this.targetPlayer = targetPlayer;
+    }
+
     /**
      * Getter method for the initiating player.
      * @return The player who initiates the ally request.
      */
-    public Player getPlayer() {
+    public Player getMyPlayer() {
         return myPlayer;
     }
 
@@ -47,8 +58,8 @@ public class FormAllyAction {
     }
 
     // execute ally-action，update the ally list of both players
-    public void formAlliance() {
-        myPlayer.addAlly(targetPlayer);
-        targetPlayer.addAlly(myPlayer);
+    public void formAlliance(ArrayList<Territory> territories) {
+        myPlayer.addAlly(targetPlayer, territories);
+        targetPlayer.addAlly(myPlayer, territories);
     }
 }

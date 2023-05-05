@@ -156,9 +156,12 @@ public class Territory {
 
     public void setOwner(Player ownerPlayer) {
         this.owner = ownerPlayer;
+        this.ownerId = ownerPlayer.getId();
     }
 
-    public void setAllyOwner(Player allyOwner){this.allyOwner = allyOwner;}
+    public void setAllyOwner(Player allyOwner){
+        this.allyOwner = allyOwner;
+    }
 
     public void setOwnerId(int ownerId) {
         this.ownerId = ownerId;

@@ -15,7 +15,7 @@ public class GameMap {
      * @param territories the list of territories to be included in the game map
      */
     public GameMap(ArrayList<Territory> territories) {
-        System.out.println("Game map:" + territories.size());
+        System.out.println("Game map:" +  territories.size());
         this.territories = territories;
     }
 
@@ -41,10 +41,11 @@ public class GameMap {
             ArrayList<Territory> visited = new ArrayList<>();
             visited.add(t);
             Queue<Territory> next = new LinkedList<>();
-            for (Territory n : t.getAdjacents()) {
-                if (n.getOwner().equals(p)) {
+            for(Territory n : t.getAdjacents()){
+                if(n.getOwnerId() == p.getId()){
                     next.add(n);
-                } else if (n.getAllyOwner() != null && n.getAllyOwner().equals(ally)) {
+                }
+                else if(n.getAllyOwner() != null && ally != null && n.getOwnerId() == ally.getId()){
                     next.add(n);
                 }
             }
@@ -99,16 +100,16 @@ public class GameMap {
         if (next.isEmpty()) {
             return;
         }
-        while (!next.isEmpty()) {
+        while(!next.isEmpty()){
             int size = next.size();
-            while (size > 0) {
+            while(size > 0){
                 Territory temp = next.peek();
-                if (!visited.contains(temp)) {
+                if(!visited.contains(temp)){
                     visited.add(temp);
                     t.addAccessible(temp, cost);
-                    if(temp.getOwner().equals(owner) || (temp.getAllyOwner() != null && temp.getAllyOwner().equals(ally))){
+                    if(temp.getOwner().equals(owner) || (temp.getAllyOwner() != null && temp.getOwner().equals(ally))){
                         for(Territory i : temp.getAdjacents()){
-                            if(i.getOwner().equals(owner) || (i.getAllyOwner() != null && i.getAllyOwner().equals(ally))) {
+                            if(i.getOwner().equals(owner) || (i.getAllyOwner() != null && i.getOwner().equals(ally))) {
                                 next.add(i);
                             }
                         }
