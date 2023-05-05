@@ -97,7 +97,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
      * @return The player ID extracted from the query string.
      */
     private String getPlayerIdFromSessionUri(String uriQuery) {
-        return uriQuery.split("=")[1];
+        return uriQuery.split("&")[0].split("=")[1];
     }
 
     /**
