@@ -110,12 +110,12 @@ public class Round {
     public void breakAlliance(AttackAction a){
         if(a.getSourceTerritory().getAllyOwner() != null && a.getSourceTerritory().getAllyOwner().getId() == a.getTargetTerritory().getOwnerId()){
             //if there's ally's units in the territory, send them back to their owner's territory
-            for(Territory t1: a.getSourceTerritory().getOwner().getTerritories()){
+            for(Territory t1: getTerritoriesFromMap(a.getSourceTerritory().getOwner())){
                 a.returnAllyUnits(t1, myMap);
                 t1.setAllyOwner(null);
                 t1.setNumAllyUnits(0);
             }
-            for(Territory t2: a.getTargetTerritory().getOwner().getTerritories()){
+            for(Territory t2: getTerritoriesFromMap(a.getSourceTerritory().getOwner())){
                 a.returnAllyUnits(t2, myMap);
                 t2.setAllyOwner(null);
                 t2.setNumAllyUnits(0);
@@ -143,7 +143,6 @@ public class Round {
         }
     }
 
-
     // first traverse the allyActions list to see if there are two players who want to ally with each other
     // if there are, add them as each other's ally
     public void executeAllyActions(ArrayList<FormAllyAction> allyActions){
@@ -167,11 +166,21 @@ public class Round {
 
     public void naturalResourceIncrease() {
         for (Player p : players) {
-            // change 4 with num of territories, now increase 20 resources per turn
-            // p.getTerritories().size() is 0;
-            p.updateTechResource(resourceGrow * 4);
-            p.updateFoodResource(resourceGrow * 4);
+            p.updateTechResource(resourceGrow * getTerritoriesFromMap(p).size());
+            p.updateFoodResource(resourceGrow * getTerritoriesFromMap(p).size());
+
         }
+    }
+
+    // get the territories list from myMap based on the given player
+    public ArrayList<Territory> getTerritoriesFromMap(Player p){
+        ArrayList<Territory> territories = new ArrayList<>();
+        for(Territory t: myMap.getTerritories()){
+            if(t.getOwner().getId() == p.getId()){
+                territories.add(t);
+            }
+        }
+        return territories;
     }
 
     public Status.gameStatus checkStatus(){
