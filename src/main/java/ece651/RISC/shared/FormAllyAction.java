@@ -47,18 +47,18 @@ public class FormAllyAction {
      * @throws IllegalArgumentException if there are less than 3 players in the game, or if the initiating player
      * tries to form an alliance with himself/herself.
      */
-    public String checkFormAllyRule(Player player, Player targetPlayer) {
-        if (player.getNumPlayers() < 3) {
+    public void checkFormAllyRule(Player player, Player targetPlayer, int numPlayers) {
+        if (numPlayers < 3) {
             throw new IllegalArgumentException("There are less than 3 players in the game, you cannot form ally");
         }
         if (player.getId() == targetPlayer.getId()) {
             throw new IllegalArgumentException("You cannot form ally with yourself");
         }
-        return null;
     }
 
     // execute ally-action，update the ally list of both players
-    public void formAlliance(ArrayList<Territory> territories) {
+    public void formAlliance(ArrayList<Territory> territories, int numPlayers) {
+        checkFormAllyRule(myPlayer, targetPlayer, numPlayers);
         myPlayer.addAlly(targetPlayer, territories);
         targetPlayer.addAlly(myPlayer, territories);
     }

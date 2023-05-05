@@ -178,12 +178,6 @@ public class Player {
         return JSON.toJSONString(this);
     }
 
-    // get the number of players in the game
-    // TODO map is null ??? TO_DEBUG
-    public int getNumPlayers() {
-//        return map.getNumPlayers();
-        return 2;
-    }
 
     public void upgradeTechLevel() {
         int cost = costTechUpgrade(this.techLevel);
@@ -193,7 +187,6 @@ public class Player {
         this.techLevel++;
     }
 
-    // TODO move to new checker class later
     private void checkTechUpgrade(int cost) {
         // check max
         if (this.techLevel == 6) {
