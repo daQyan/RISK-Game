@@ -113,7 +113,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
      * This method extracts the game ID from the path string of a WebSocket session URI.
      * The path string is in the format "/<gameID>/chat".
      *
-     * @param uriPath The path string of a WebSocket session URI.
+//     * @param uriPath The path string of a WebSocket session URI.
      * @return The game ID extracted from the path string.
      */
 

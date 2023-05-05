@@ -13,7 +13,7 @@ public class Round {
     private final ArrayList<AttackAction> attackActions = new ArrayList<>();
     private final ArrayList<Player> players;
     private final GameMap myMap;
-    private final int resourceGrow;
+    private final int resourceGrow = 5;
     private final ArrayList<UpgradeTechAction> UpgradeTechAction = new ArrayList<>();
     private final ArrayList<UpgradeUnitAction> UpgradeUnitAction = new ArrayList<>();
     private final ArrayList<FormAllyAction> formAllyActions = new ArrayList<>();
@@ -22,7 +22,7 @@ public class Round {
     public Round(ArrayList<Player> players, GameMap map, int resourceGrow) {
         this.players = players;
         this.myMap = map;
-        this.resourceGrow = resourceGrow;
+        //this.resourceGrow = resourceGrow;
     }
 
     public int playerOneTurn(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions,
@@ -41,7 +41,8 @@ public class Round {
      * do all the move action in the list
      */
     public void executeMoves(ArrayList<MoveAction> moveActions) {
-        for (MoveAction move : moveActions) {
+        for (MoveAction move: moveActions) {
+            //if(move.getMyAC().checkMoveRule(move.getOwner(), move.getSourceTerritory(),move.getTargetTerritory(), move.getHitUnits()) == null){
             //for evo3, need to change checker for move
             move.moveTerritory(myMap, move.getSourceTerritory().getId(), move.getTargetTerritory().getId());
             //for evo 2: deduct the food resource
@@ -114,9 +115,9 @@ public class Round {
      */
     public void executeAttacks(ArrayList<AttackAction> attackActions) {
         Random rand = new Random();
-        if (!attackActions.equals(null)) {
+        if(!attackActions.equals(null)){
             attackActions = parseAttacks(attackActions);
-            while (attackActions.size() > 0) {
+            while(attackActions != null && attackActions.size() > 0){
                 int order = rand.nextInt(attackActions.size());
                 AttackAction attack = attackActions.get(order);
                 attack.attackTerritoryEVO2(myMap, attack.getSourceTerritory().getId(), attack.getTargetTerritory().getId());
@@ -132,14 +133,18 @@ public class Round {
      *
      * @param a the attack action that is breaking the alliance
      */
-    public void breakAlliance(AttackAction a) {
-        if (a.getSourceTerritory().getOwner().getAllyPlayer() != null && a.getSourceTerritory().getOwner().getAllyPlayer().getId() == a.getTargetTerritory().getOwnerId()) {
+    public void breakAlliance(AttackAction a){
+        if(a.getSourceTerritory().getAllyOwner() != null && a.getSourceTerritory().getAllyOwner().getId() == a.getTargetTerritory().getOwnerId()){
             //if there's ally's units in the territory, send them back to their owner's territory
-            for (Territory t1 : a.getSourceTerritory().getOwner().getTerritories()) {
-                a.returnAllyUnits(t1);
+            for(Territory t1: getTerritoriesFromMap(a.getSourceTerritory().getOwner())){
+                a.returnAllyUnits(t1, myMap);
+                t1.setAllyOwner(null);
+                t1.setNumAllyUnits(0);
             }
-            for (Territory t2 : a.getTargetTerritory().getOwner().getTerritories()) {
-                a.returnAllyUnits(t2);
+            for(Territory t2: getTerritoriesFromMap(a.getSourceTerritory().getOwner())){
+                a.returnAllyUnits(t2, myMap);
+                t2.setAllyOwner(null);
+                t2.setNumAllyUnits(0);
             }
             //set both the players' ally player as null
             a.getSourceTerritory().getOwner().setAllyPlayer(null);
@@ -171,16 +176,15 @@ public class Round {
         }
     }
 
-
     // first traverse the allyActions list to see if there are two players who want to ally with each other
     // if there are, add them as each other's ally
     public void executeAllyActions(ArrayList<FormAllyAction> allyActions){
         for(FormAllyAction faa1 : allyActions) {
             for (FormAllyAction faa2 : allyActions) {
-                if (faa1.getPlayer().getId() == faa2.getTargetPlayer().getId()
-                        && faa1.getTargetPlayer().getId() == faa2.getPlayer().getId()
-                        && faa1.getPlayer().getAllyPlayer() == null) {
-                    faa1.formAlliance();
+                if (faa1.getMyPlayer().getId() == faa2.getTargetPlayer().getId()
+                        && faa1.getTargetPlayer().getId() == faa2.getMyPlayer().getId()
+                        && faa1.getMyPlayer().getAllyPlayer() == null) {
+                    faa1.formAlliance(getTerritoriesFromMap(faa1.getMyPlayer()));
                 }
             }
         }
@@ -195,9 +199,21 @@ public class Round {
 
     public void naturalResourceIncrease() {
         for (Player p : players) {
-            p.updateTechResource(resourceGrow * p.getTerritories().size());
-            p.updateFoodResource(resourceGrow * p.getTerritories().size());
+            p.updateTechResource(resourceGrow * getTerritoriesFromMap(p).size());
+            p.updateFoodResource(resourceGrow * getTerritoriesFromMap(p).size());
+
         }
+    }
+
+    // get the territories list from myMap based on the given player
+    public ArrayList<Territory> getTerritoriesFromMap(Player p){
+        ArrayList<Territory> territories = new ArrayList<>();
+        for(Territory t: myMap.getTerritories()){
+            if(t.getOwner().getId() == p.getId()){
+                territories.add(t);
+            }
+        }
+        return territories;
     }
 
     /**
@@ -231,10 +247,13 @@ public class Round {
 
     //play one turn of the game
     public Status.gameStatus playOneTurn() {
-        executeUpgradeTech(UpgradeTechAction);
+
+        executeAllyActions(formAllyActions);
         executeUpgradeUnit(UpgradeUnitAction);
         executeMoves(moveActions);
         executeAttacks(attackActions);
+
+        executeUpgradeTech(UpgradeTechAction);
 
         naturalUnitIncrease();
         naturalResourceIncrease();

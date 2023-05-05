@@ -191,7 +191,7 @@ public class Game {
         return null;
     }
 
-    public Player getPlayer(int playerId) {
+    public Player getPlayerById(int playerId) {
         return players.get(playerId);
     }
 
@@ -257,6 +257,8 @@ public class Game {
         ArrayList<MoveAction> newMoves = parseMoves(moveActions);
         ArrayList<AttackAction> newAttacks = parseAtk(attackActions);
         ArrayList<UpgradeUnitAction> newUpgradedUnitActions = parseUpgradeUnit(upgradeUnitActions);
+        ArrayList<FormAllyAction> newFormAllyActions = parseFormAllyActions(formAllyActions);
+
         // print the move actions and attack actions
         System.out.println("Move actions:");
         for (MoveAction moveAction : newMoves) {
@@ -272,11 +274,21 @@ public class Game {
             System.out.println(upgradeUnitAction.getTerritory().getName() + " " + upgradeUnitAction.getOldType() + " -> " + upgradeUnitAction.getNewType() + " nums:" + upgradeUnitAction.getUnitNum());
         }
 
-        int operatedPlayerNum = round.playerOneTurn(player, newMoves, newAttacks, upgradeTechActions, newUpgradedUnitActions, formAllyActions);
+        int operatedPlayerNum = round.playerOneTurn(player, newMoves, newAttacks, upgradeTechActions, newUpgradedUnitActions, newFormAllyActions);
         setOperatedPlayerNum(operatedPlayerNum);
         if (operatedPlayerNum == playerSize) {
             playOneTurn();
         }
+    }
+
+    // replace the Player in the action with the corresponding Player in the game
+    private ArrayList<FormAllyAction> parseFormAllyActions(ArrayList<FormAllyAction> formAllyActions) {
+        for (FormAllyAction formAllyAction : formAllyActions) {
+            // replace each player
+            formAllyAction.setMyPlayer(getPlayerById(formAllyAction.getMyPlayer().getId()));
+            formAllyAction.setTargetPlayer(getPlayerById(formAllyAction.getTargetPlayer().getId()));
+        }
+        return formAllyActions;
     }
 
     /**

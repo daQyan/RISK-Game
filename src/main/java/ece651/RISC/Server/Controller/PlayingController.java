@@ -106,6 +106,6 @@ public class PlayingController {
             lock.unlock();
         }
 
-        return msgMaker.oneTurnMsg(serverGame.getMyMap(), serverGame.getPlayer(player.getId()).getStatus(), serverGame.getStatus());
+        return msgMaker.oneTurnMsg(serverGame.getMyMap(), serverGame.getPlayerById(player.getId()).getStatus(), serverGame.getStatus());
     }
 }
