@@ -32,7 +32,7 @@ public class MoveAction extends Action {
      * @param targetTerritoryId the id of the territory that the units are moving to
      * @return an error message if there was an issue with the move, null otherwise
      */
-    public String moveTerritory(GameMap gameMap, int sourceTerritoryId, int targetTerritoryId) {
+    public void moveTerritory(GameMap gameMap, int sourceTerritoryId, int targetTerritoryId) {
         // check adjacent and owned
         String checkMove = myAC.checkMoveRule(this.owner, this.sourceTerritory, this.targetTerritory, hitUnits);
         if(checkMove == null){
@@ -53,7 +53,7 @@ public class MoveAction extends Action {
                 targetTerritoryReceive(gameMap, targetTerritoryId, moved);
             }
         }
-        return checkMove;
+        else throw new IllegalArgumentException(checkMove);
     }
 
     /**
