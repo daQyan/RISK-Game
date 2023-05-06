@@ -21,9 +21,24 @@ public class ActionChecker {
      */
     public String checkAttackRule(Player owner, Territory sourceTerritory, Territory targetTerritory, int units) {
 
-        if (checkSource(owner, sourceTerritory, "attack") != null) return checkSource(owner, sourceTerritory, "attack");
-        if (checkUnits(sourceTerritory, units, "attack") != null) return checkUnits(sourceTerritory, units, "attack");
-        if (checkAtkTarget(sourceTerritory, targetTerritory) != null)
+        Status.sourceStatus mySource = getSource(owner, sourceTerritory);
+        if (mySource == Status.sourceStatus.OWNED) {
+            if (sourceTerritory.getNumUnits() < units) {
+                return ("The move action is not valid: there's not enough soldiers in the " + sourceTerritory.getName() + "!");
+            }
+            if (sourceTerritory.getOwner().equals(targetTerritory.getOwner())) {
+                return ("The attack action is invalid: cannot attack your own territory!");
+            }
+        } else if (mySource == Status.sourceStatus.ALLY) {
+            if (sourceTerritory.getNumAllyUnits() < units) {
+                return ("The move action is not valid: the source territory does not have enough units !");
+            }
+            if (sourceTerritory.getAllyOwner() == targetTerritory.getOwnerId()) {
+                return ("The attack action is invalid: cannot attack your own territory!");
+            }
+        } else return "The move action is not valid: this is not a valid Territory name or owner name.";
+
+       if (checkAtkTarget(sourceTerritory, targetTerritory) != null)
             return checkAtkTarget(sourceTerritory, targetTerritory);
         if (checkFoodResource(owner, sourceTerritory, targetTerritory, units, "attack") != null)
             return checkFoodResource(owner, sourceTerritory, targetTerritory, units, "attack");
@@ -44,15 +59,12 @@ public class ActionChecker {
      */
     public String checkMoveRule(Player owner, Territory sourceTerritory, Territory targetTerritory, int units) {
         System.out.println("checkMoveRule " + owner.getName() + owner.getId() + ", " + sourceTerritory.getOwner().getName() + sourceTerritory.getOwner().getId());
-        Status.moveSourceStatus getSource = getMoveSource(owner, sourceTerritory);
-        if (getSource == Status.moveSourceStatus.OWNED) {
+        Status.sourceStatus getSource = getSource(owner, sourceTerritory);
+        if (getSource == Status.sourceStatus.OWNED) {
             if (sourceTerritory.getNumUnits() < units) {
                 return ("The move action is not valid: there's not enough soldiers in the " + sourceTerritory.getName() + "!");
             }
-//            if(sourceTerritory.getNumUnits() < 0){
-//                return ("The move action is not valid: you should at least deploy 1 soldier !");
-//            }
-        } else if (getSource == Status.moveSourceStatus.ALLY) {
+        } else if (getSource == Status.sourceStatus.ALLY) {
             if (sourceTerritory.getNumAllyUnits() < units) {
                 return ("The move action is not valid: the source territory does not have enough units !");
             }
@@ -73,20 +85,20 @@ public class ActionChecker {
      */
 
     // check if the source territory is owned by the player or the ally
-    private Status.moveSourceStatus getMoveSource(Player owner, Territory sourceTerritory) {
+    private Status.sourceStatus getSource(Player owner, Territory sourceTerritory) {
         if (sourceTerritory == null) {
-            return Status.moveSourceStatus.INVALID;
+            return Status.sourceStatus.INVALID;
         }
         if (owner == null) {
-            return Status.moveSourceStatus.INVALID;
+            return Status.sourceStatus.INVALID;
         }
         if (owner.equals(sourceTerritory.getOwner())) {
-            return Status.moveSourceStatus.OWNED;
+            return Status.sourceStatus.OWNED;
         }
-        if (owner.equals(sourceTerritory.getAllyOwner())) {
-            return Status.moveSourceStatus.ALLY;
+        if (owner.getId() == sourceTerritory.getAllyOwner()) {
+            return Status.sourceStatus.ALLY;
         }
-        return Status.moveSourceStatus.INVALID;
+        return Status.sourceStatus.INVALID;
     }
 
     /**
@@ -105,9 +117,9 @@ public class ActionChecker {
         if (owner == null) {
             return ("The " + actionType + " action is not valid: this is not a valid Player name !");
         }
-        if (!owner.equals(sourceTerritory.getOwner())) {
-            return ("The " + actionType + " action is not valid: " + owner.getId() + " does not own " + sourceTerritory.getName() + "!");
-        }
+//        if (!owner.equals(sourceTerritory.getOwner())) {
+//            return ("The " + actionType + " action is not valid: " + owner.getId() + " does not own " + sourceTerritory.getName() + "!");
+//        }
         return null;
     }
 
@@ -146,10 +158,6 @@ public class ActionChecker {
         }
         if (!sourceTerritory.getAdjacents().contains(targetTerritory)) {
             return ("The attack action is invalid: unable to attack directly from " + sourceTerritory.getName() + " to " + targetTerritory.getName() + "!");
-        }
-        //if the player is trying to attack its own territory, return error message
-        else if (sourceTerritory.getOwner().equals(targetTerritory.getOwner())) {
-            return ("The attack action is invalid: cannot attack your own territory!");
         }
         return null;
     }

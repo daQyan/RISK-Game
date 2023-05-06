@@ -17,7 +17,7 @@ public class Status {
         FINISHED
     }
 
-    public enum moveSourceStatus{
+    public enum sourceStatus {
         OWNED,
         ALLY,
         INVALID
