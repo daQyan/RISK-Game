@@ -183,7 +183,8 @@ public class Round {
                 if (faa1.getMyPlayer().getId() == faa2.getTargetPlayer().getId()
                         && faa1.getTargetPlayer().getId() == faa2.getMyPlayer().getId()
                         && faa1.getMyPlayer().getAllyPlayer() == null) {
-                    faa1.formAlliance(getTerritoriesFromMap(faa1.getMyPlayer()));
+                    System.out.println("found one alliance!");
+                    faa1.formAlliance(getTerritoriesFromMap(faa1.getMyPlayer()), players.size());
                 }
             }
         }
