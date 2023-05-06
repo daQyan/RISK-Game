@@ -109,6 +109,7 @@ public class Territory {
         // set the accessibleIds from its accessibles
         for (Map.Entry<Territory, Integer> entry : accessibles.entrySet()) {
             // put the territory id as the key and the cost as the value
+            this.accessibleIds = new LinkedHashMap<>();
             this.accessibleIds.put(String.valueOf(entry.getKey().getId()), entry.getValue());
         }
     }
