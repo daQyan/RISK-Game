@@ -38,7 +38,7 @@ public class Player {
     protected int techLevel;
 
     @JSONField(name = "allyPlayer")
-    protected int allyPlayer;
+    protected int allyPlayer = -1;
 
 
     public void setStatus(Status.playerStatus status) {

@@ -146,8 +146,8 @@ public class Round {
                 t2.setNumAllyUnits(0);
             }
             //set both the players' ally player as null
-            a.getSourceTerritory().getOwner().setAllyPlayer(0);
-            a.getTargetTerritory().getOwner().setAllyPlayer(0);
+            a.getSourceTerritory().getOwner().setAllyPlayer(-1);
+            a.getTargetTerritory().getOwner().setAllyPlayer(-1);
         }
     }
 
@@ -182,7 +182,7 @@ public class Round {
             for (FormAllyAction faa2 : allyActions) {
                 if (faa1.getMyPlayer().getId() == faa2.getTargetPlayer().getId()
                         && faa1.getTargetPlayer().getId() == faa2.getMyPlayer().getId()
-                        && faa1.getMyPlayer().getAllyPlayer() == 0) {
+                        && faa1.getMyPlayer().getAllyPlayer() == -1) {
                     System.out.println("found one alliance!");
                     faa1.formAlliance(getTerritoriesFromMap(faa1.getMyPlayer()), players.size());
                 }
