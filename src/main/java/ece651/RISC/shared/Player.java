@@ -224,7 +224,7 @@ public class Player {
     public void addAlly(Player targetPlayer, ArrayList<Territory> updatedTerritories) {
         this.allyPlayer = targetPlayer.getId();
         for(Territory t: updatedTerritories){
-            t.setAllyOwner(targetPlayer);
+            t.setAllyOwner(targetPlayer.getId());
         }
     }
 }

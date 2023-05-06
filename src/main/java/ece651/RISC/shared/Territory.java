@@ -54,7 +54,7 @@ public class Territory {
 
     //initialized as null, need to check if it's applicable
     @JSONField(name = "allyOwner")
-    private Player allyOwner;
+    private int allyOwner;
 
     private int numAllyUnits;
 
@@ -78,7 +78,7 @@ public class Territory {
      */
     public Territory(int id, String name, int unit, Player owner,
                      ArrayList<Territory> adjacents, ArrayList<Integer> adjacentIds, LinkedHashMap<Territory, Integer> accessibles,
-                     LinkedHashMap<String, Integer> accessibleIds, ArrayList<Integer> myUnits, Player allyPlayer, int numAllyUnits) {
+                     LinkedHashMap<String, Integer> accessibleIds, ArrayList<Integer> myUnits, int allyPlayer, int numAllyUnits) {
         this.id = id;
         this.name = name;
         this.numUnits = unit;
@@ -98,7 +98,7 @@ public class Territory {
     }
 
     public Territory(int id, String name, int unit, Player owner) {
-        this(id, name, unit, owner, new ArrayList<>(), new ArrayList<>(), new LinkedHashMap<>(), new LinkedHashMap<>(), new ArrayList<>(Collections.nCopies(7, 0)), null, 0);
+        this(id, name, unit, owner, new ArrayList<>(), new ArrayList<>(), new LinkedHashMap<>(), new LinkedHashMap<>(), new ArrayList<>(Collections.nCopies(7, 0)), -1, 0);
     }
 
     public Territory(int id, String name) {
@@ -161,7 +161,7 @@ public class Territory {
         this.ownerId = ownerPlayer.getId();
     }
 
-    public void setAllyOwner(Player allyOwner){
+    public void setAllyOwner(int allyOwner){
         this.allyOwner = allyOwner;
     }
 
@@ -189,7 +189,7 @@ public class Territory {
         this.accessibles = accessibles;
     }
 
-    public Player getAllyOwner() {
+    public int getAllyOwner() {
         return allyOwner;
     }
 

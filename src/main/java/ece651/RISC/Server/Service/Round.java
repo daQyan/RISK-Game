@@ -133,16 +133,16 @@ public class Round {
      * @param a the attack action that is breaking the alliance
      */
     public void breakAlliance(AttackAction a){
-        if(a.getSourceTerritory().getAllyOwner() != null && a.getSourceTerritory().getAllyOwner().getId() == a.getTargetTerritory().getOwnerId()){
+        if(a.getSourceTerritory().getAllyOwner() != -1 && a.getSourceTerritory().getAllyOwner() == a.getTargetTerritory().getOwnerId()){
             //if there's ally's units in the territory, send them back to their owner's territory
             for(Territory t1: getTerritoriesFromMap(a.getSourceTerritory().getOwner())){
                 a.returnAllyUnits(t1, myMap);
-                t1.setAllyOwner(null);
+                t1.setAllyOwner(-1);
                 t1.setNumAllyUnits(0);
             }
             for(Territory t2: getTerritoriesFromMap(a.getSourceTerritory().getOwner())){
                 a.returnAllyUnits(t2, myMap);
-                t2.setAllyOwner(null);
+                t2.setAllyOwner(-1);
                 t2.setNumAllyUnits(0);
             }
             //set both the players' ally player as null

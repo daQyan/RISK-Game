@@ -37,7 +37,7 @@ public class GameMap {
             //clear the old accessible territories
             t.setAccessibles(new LinkedHashMap<>());
             Player p = t.getOwner();
-            Player ally = t.getAllyOwner();
+            int allyId = t.getAllyOwner();
             ArrayList<Territory> visited = new ArrayList<>();
             visited.add(t);
             Queue<Territory> next = new LinkedList<>();
@@ -45,12 +45,12 @@ public class GameMap {
                 if(n.getOwnerId() == p.getId()){
                     next.add(n);
                 }
-                else if(n.getAllyOwner() != null && ally != null && n.getOwnerId() == ally.getId()){
+                else if(n.getAllyOwner() != -1 && allyId != -1 && n.getOwnerId() == allyId){
                     next.add(n);
                 }
             }
             int cost = 2;
-            searchAccessible(p, ally, t, next, visited, cost);
+            searchAccessible(p, allyId, t, next, visited, cost);
         }
 
     }
@@ -90,13 +90,13 @@ public class GameMap {
      * Searches every accessible territory starting from the given territory.
      *
      * @param owner   the player that owns the territory
-     * @param ally    the player that owns the ally territory
+     * @param allyId    the player that owns the ally territory
      * @param t       the starting territory
      * @param next    a queue of the next territories to be visited
      * @param visited a list of visited territories
      * @param cost    the cost to move from one territory to its neighbor
      */
-    public void searchAccessible(Player owner, Player ally, Territory t, Queue<Territory> next, ArrayList<Territory> visited, int cost) {
+    public void searchAccessible(Player owner, int allyId, Territory t, Queue<Territory> next, ArrayList<Territory> visited, int cost) {
         if (next.isEmpty()) {
             return;
         }
@@ -107,9 +107,9 @@ public class GameMap {
                 if(!visited.contains(temp)){
                     visited.add(temp);
                     t.addAccessible(temp, cost);
-                    if(temp.getOwner().equals(owner) || (temp.getAllyOwner() != null && temp.getOwner().equals(ally))){
+                    if(temp.getOwner().equals(owner) || (temp.getAllyOwner() != -1 && temp.getOwner().getId() == allyId)){
                         for(Territory i : temp.getAdjacents()){
-                            if(i.getOwner().equals(owner) || (i.getAllyOwner() != null && i.getOwner().equals(ally))) {
+                            if(i.getOwner().equals(owner) || (i.getAllyOwner() != -1 && i.getOwner().getId() == allyId)) {
                                 next.add(i);
                             }
                         }

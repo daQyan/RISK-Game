@@ -83,7 +83,7 @@ public class AttackAction extends Action {
 
     public String attackTerritoryEVO2(GameMap gameMap, int sourceTerritoryId, int targetTerritoryId){
         //attack should not happen between two allies here as we have checked it in round's parseAttack
-        if(gameMap.getTerritory(sourceTerritoryId).getAllyOwner() != null && gameMap.getTerritory(sourceTerritoryId).getAllyOwner().getId() == gameMap.getTerritory(targetTerritoryId).getOwnerId()){
+        if(gameMap.getTerritory(sourceTerritoryId).getAllyOwner() != -1 && gameMap.getTerritory(sourceTerritoryId).getAllyOwner() == gameMap.getTerritory(targetTerritoryId).getOwnerId()){
             //move myUnits to targetTerritory
             for(int i = 0; i < 7; ++i){
                 gameMap.getTerritory(targetTerritoryId).updateAllyUnits(i, myUnits.get(i));
@@ -114,11 +114,11 @@ public class AttackAction extends Action {
         // if the attack wins
         if (gameMap.getTerritory(targetTerritoryId).getNumUnits() <= 0 && hitUnits > 0) {
             //if the target territory has an ally owner, change the ally owner's status
-            if(gameMap.getTerritory(targetTerritoryId).getAllyOwner() != null){
+            if(gameMap.getTerritory(targetTerritoryId).getAllyOwner() != -1){
                 //return the territory's ally's units back
                 returnAllyUnits(gameMap.getTerritory(targetTerritoryId), gameMap);
                 gameMap.getTerritory(targetTerritoryId).setNumAllyUnits(0);
-                gameMap.getTerritory(targetTerritoryId).setAllyOwner(null);
+                gameMap.getTerritory(targetTerritoryId).setAllyOwner(-1);
             }
             gameMap.getTerritory(targetTerritoryId).setOwner(this.owner);
             gameMap.getTerritory(targetTerritoryId).setOwnerId(this.owner.getId());
@@ -136,7 +136,7 @@ public class AttackAction extends Action {
         if(t.getNumAllyUnits() > 0){
             //select one former ally's territory and send the units
             for(Territory dest: mp.getTerritories()){
-                if(dest.getOwnerId() ==t.getAllyOwner().getId()){
+                if(dest.getOwnerId() ==t.getAllyOwner()){
                     ArrayList<Integer> returnUnits = t.getAllyUnits();
                     for(int i = 0; i < 7; ++i){
                         dest.updateMyUnits(i, returnUnits.get(i));
