@@ -38,7 +38,7 @@ public class Player {
     protected int techLevel;
 
     @JSONField(name = "allyPlayer")
-    protected Player allyPlayer;
+    protected int allyPlayer;
 
 
     public void setStatus(Status.playerStatus status) {
@@ -134,16 +134,16 @@ public class Player {
         return techLevel;
     }
 
-    public Player getAllyPlayer() {
+    public int getAllyPlayer() {
         return allyPlayer;
     }
 
-    public void formAlliance(Player ally){
-        this.allyPlayer = ally;
-        for(Territory t: territories){
-            t.setAllyOwner(ally);
-        }
-    }
+//    public void formAlliance(Player ally){
+//        this.allyPlayer = ally;
+//        for(Territory t: territories){
+//            t.setAllyOwner(ally);
+//        }
+//    }
 
     @Override
     public String toString() {
@@ -222,7 +222,7 @@ public class Player {
     }
 
     public void addAlly(Player targetPlayer, ArrayList<Territory> updatedTerritories) {
-        this.allyPlayer = targetPlayer;
+        this.allyPlayer = targetPlayer.getId();
         for(Territory t: updatedTerritories){
             t.setAllyOwner(targetPlayer);
         }
