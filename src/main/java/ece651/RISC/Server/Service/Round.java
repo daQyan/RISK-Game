@@ -22,7 +22,6 @@ public class Round {
     public Round(ArrayList<Player> players, GameMap map, int resourceGrow) {
         this.players = players;
         this.myMap = map;
-        //this.resourceGrow = resourceGrow;
     }
 
     public int playerOneTurn(Player player, ArrayList<MoveAction> moveActions, ArrayList<AttackAction> attackActions,
@@ -225,6 +224,7 @@ public class Round {
      * @return the current game status, either PLAYING, FINISHED (if a player has won), or ALL_LOSE (if all players have lost)
      */
     public Status.gameStatus checkStatus() {
+        System.out.println("Checking status");
         //change how to determine win/lose
         //use a hashmap to store the grouped territories
         HashMap<Player, ArrayList<Territory>> sorted = new HashMap<>();
@@ -234,13 +234,17 @@ public class Round {
             }
             sorted.get(t.getOwner()).add(t);
         }
+        boolean isFinished = false;
         for (Player sp : players) {
             if (!sorted.containsKey(sp)) {
                 sp.setStatus(Status.playerStatus.LOSE);
             } else if (sorted.get(sp).size() == myMap.getMapSize()) {
                 sp.setStatus(Status.playerStatus.WIN);
-                return Status.gameStatus.FINISHED;
+                isFinished = true;
             }
+        }
+        if(isFinished){
+            return Status.gameStatus.FINISHED;
         }
         return Status.gameStatus.PLAYING;
     }
@@ -252,13 +256,15 @@ public class Round {
         executeUpgradeUnit(UpgradeUnitAction);
         executeMoves(moveActions);
         executeAttacks(attackActions);
-
         executeUpgradeTech(UpgradeTechAction);
-
+        if(checkStatus() == Status.gameStatus.FINISHED) {
+            System.out.println("The Game is finished");
+            return Status.gameStatus.FINISHED;
+        }
         naturalUnitIncrease();
         naturalResourceIncrease();
         myMap.updateAccessible();
         myMap.setAccessibleIdsFromAccessible();
-        return checkStatus();
+        return Status.gameStatus.PLAYING;
     }
 }
