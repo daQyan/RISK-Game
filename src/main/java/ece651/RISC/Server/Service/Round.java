@@ -140,7 +140,7 @@ public class Round {
                 t1.setAllyOwner(-1);
                 t1.setNumAllyUnits(0);
             }
-            for(Territory t2: getTerritoriesFromMap(a.getSourceTerritory().getOwner())){
+            for(Territory t2: getTerritoriesFromMap(a.getTargetTerritory().getOwner())){
                 a.returnAllyUnits(t2, myMap);
                 t2.setAllyOwner(-1);
                 t2.setNumAllyUnits(0);

@@ -52,12 +52,12 @@ public class GameMapTest {
             }
             System.out.print("\n");
         }
-        mp.getTerritory(3).setAllyOwner(p0);
-        mp.getTerritory(0).setAllyOwner(p1);
-        mp.getTerritory(1).setAllyOwner(p1);
-        mp.getTerritory(2).setAllyOwner(p1);
-        mp.getTerritory(4).setAllyOwner(p1);
-        mp.getTerritory(5).setAllyOwner(p1);
+        mp.getTerritory(3).setAllyOwner(p0.getId());
+        mp.getTerritory(0).setAllyOwner(p1.getId());
+        mp.getTerritory(1).setAllyOwner(p1.getId());
+        mp.getTerritory(2).setAllyOwner(p1.getId());
+        mp.getTerritory(4).setAllyOwner(p1.getId());
+        mp.getTerritory(5).setAllyOwner(p1.getId());
         mp.updateAccessible();
         System.out.print("\n");
         for(Territory t: mp.getTerritories()){
