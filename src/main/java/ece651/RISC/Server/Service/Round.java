@@ -185,6 +185,7 @@ public class Round {
                         && faa1.getMyPlayer().getAllyPlayer() == -1) {
                     System.out.println("found one alliance!");
                     faa1.formAlliance(getTerritoriesFromMap(faa1.getMyPlayer()), players.size());
+                    faa2.formAlliance(getTerritoriesFromMap(faa2.getMyPlayer()), players.size());
                 }
             }
         }

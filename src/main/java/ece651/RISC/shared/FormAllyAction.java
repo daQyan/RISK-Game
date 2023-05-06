@@ -64,6 +64,6 @@ public class FormAllyAction {
     public void formAlliance(ArrayList<Territory> territories, int numPlayers) {
         checkFormAllyRule(myPlayer, targetPlayer, numPlayers);
         myPlayer.addAlly(targetPlayer, territories);
-        targetPlayer.addAlly(myPlayer, territories);
+//        targetPlayer.addAlly(myPlayer, territories);
     }
 }
