@@ -73,9 +73,9 @@ public class Unit {
         if (newType > 6) {
             throw new IllegalArgumentException("Upgrade failed, you have reached max Unit Level !");
         }
-        if (owner.techLevel < newType) {
-            throw new IllegalArgumentException("Upgrade failed, your chosen level is beyond your tech Level: !" + owner.getTechLevel());
-        }
+//        if (owner.techLevel < newType) {
+//            throw new IllegalArgumentException("Upgrade failed, your chosen level is beyond your tech Level: !" + owner.getTechLevel());
+//        }
         // check resource
         int cost = diction[newType] - diction[this.myType];
         if (cost > owner.getTechResource()) {
